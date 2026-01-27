@@ -6,8 +6,6 @@ tags:
   - explanation
 ---
 
-# Projects
-
 **Projects** represent short-term efforts in your work or life that you're working on now. 
 
 They are defined by:

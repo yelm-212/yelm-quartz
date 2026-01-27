@@ -6,8 +6,6 @@ tags:
   - explanation
 ---
 
-# Resources
-
 **Resources** are topics or interests that may be useful in the future.
 
 This is where you collect information, notes, and ideas that don't belong to a specific project or area yet.

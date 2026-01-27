@@ -6,8 +6,6 @@ tags:
   - explanation
 ---
 
-# Archives
-
 **Archives** contain inactive items from the other three categories.
 
 Move items here when:
