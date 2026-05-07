@@ -12,6 +12,4 @@ title: Digital Garden
 
 - <a href="mailto:[EMAIL_ADDRESS]">Email</a>
 - <a href="https://github.com/yelm-212">GitHub</a>
-- <a href="https://www.linkedin.com/in/yerim-shin-8bbb75265/">LinkedIn</a>
-- [Resume](/resume)
 
