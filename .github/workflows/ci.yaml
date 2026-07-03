@@ -11,7 +11,6 @@ on:
 
 jobs:
   build-and-test:
-    if: ${{ github.repository == 'jackyzha0/quartz' }}
     strategy:
       matrix:
         os: [windows-latest, macos-latest, ubuntu-latest]
@@ -46,6 +45,19 @@ jobs:
 
       - name: Ensure Quartz builds, check bundle info
         run: npx quartz build --bundleInfo -d docs
+
+  notify-discord:
+    needs: [build-and-test]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Discord
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ needs.build-and-test.result }}
+          title: "Build and Test"
+          description: "Repo `${{ github.repository }}` · Branch `${{ github.ref_name }}` by ${{ github.actor }}"
 
   publish-tag:
     if: ${{ github.repository == 'jackyzha0/quartz' && github.ref == 'refs/heads/v4' }}
