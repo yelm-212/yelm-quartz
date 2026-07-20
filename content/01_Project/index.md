@@ -14,7 +14,3 @@ They are defined by:
 - A deadline
 
 Examples include: "Complete website redesign", "Plan summer vacation", or "Finish quarterly report".
-
-## 진행 중인 프로젝트
-
-- [[12_week_cs_study|12주 CS 학습 계획]]
