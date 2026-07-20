@@ -9,6 +9,10 @@ tags:
 
 # 1주차 - TCP/IP와 연결
 
+## OSI / TCP-IP 계층 개념
+
+<!-- TODO: OSI 7계층과 TCP/IP 모델의 계층별 역할을 비교하고, IP와 TCP/UDP가 어느 계층에서 동작하는지 설명한다. -->
+
 ## 학습 목표
 
 - TCP와 UDP의 차이와 사용 사례를 설명할 수 있다.
@@ -25,7 +29,7 @@ TCP와 UDP는 모두 네트워크 기본 계층 구조(OSI7 or TCP/IP 모델)의
 
 ### TCP : Transmission Control Protocol
 
-<!-- 연결 지향성, 신뢰성, 순서 보장, 재전송을 설명한다. -->
+<!-- TODO: TCP가 checksum, sequence/acknowledgement number, timeout, 재전송으로 오류를 감지하고 순서를 보장하는 과정을 설명한다. -->
 
 - **신뢰성**을 가지는 **연결 stream을 기반**으로, **순서를 보장**하는 프로토콜이다. 
   - 재전송 O
@@ -114,6 +118,12 @@ sequenceDiagram
 
 <!-- TODO: 네트워크 혼잡을 제어하는 목적과 congestion window의 역할을 설명한다. -->
 
+TCP endpoint는 기본 혼잡 제어 알고리즘인 slow start, 혼잡 회피, exponential backoff를 모두 구현해야 한다.
+
+- Slow Start : 패킷 전송에 필요한 가용 네트워크 대역폭을 탐색하고, 네트워크의 가용량에 따라 전송 속도를 조절하는 알고리즘.
+- 혼잡 회피:
+- exponential backoff:
+
 #### 흐름 제어와 혼잡 제어 비교
 
 | 구분      | 흐름 제어      | 혼잡 제어          |
@@ -138,6 +148,14 @@ sequenceDiagram
 ### IP
 
 <!-- TODO: IP가 네트워크에서 호스트를 식별하고 패킷을 전달하는 방식을 설명한다. -->
+
+### Subnet / Gateway / NAT
+
+<!-- TODO: Subnet mask로 같은 네트워크 여부를 판단하는 과정, Default Gateway를 거치는 조건, NAT가 사설 IP와 공인 IP를 변환하는 방식을 설명한다. -->
+
+### ARP / Routing
+
+<!-- TODO: 같은 네트워크에서 ARP로 IP 주소에 대응하는 MAC 주소를 찾는 과정과, 다른 네트워크로 보낼 때 Routing Table을 조회하는 과정을 설명한다. -->
 
 ### Port
 
@@ -168,5 +186,3 @@ sequenceDiagram
 - [MDN Web Glossary](https://developer.mozilla.org/en-US/docs/Glossary)
 - [RFC 9293: Transmission Control Protocol (TCP)](https://www.rfc-editor.org/info/rfc9293/)
 - [RFC 8095: Services Provided by IETF Transport Protocols and Congestion Control Mechanisms](https://www.rfc-editor.org/info/rfc8095)
-
-

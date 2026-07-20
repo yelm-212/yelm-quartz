@@ -51,7 +51,9 @@ tags:
 
 ### 핵심 학습
 
+- OSI / TCP-IP 계층 개념
 - TCP와 UDP
+- TCP 신뢰성 보장
 - IP, Port, Socket
 - 3-way Handshake
 - 4-way Handshake
@@ -62,16 +64,21 @@ tags:
 
 ### 추가 학습
 
+- NAT / Subnet / Gateway
+- ARP / Routing 기초
 - Connection Timeout
 - Local Port 고갈
 - TIME_WAIT 증가
 
 ### 학습 목표
 
+- OSI 모델과 TCP/IP 모델의 계층별 역할을 설명할 수 있다.
 - TCP와 UDP의 차이와 사용 사례를 설명할 수 있다.
+- TCP가 순서 보장, 오류 감지, 재전송으로 신뢰성을 보장하는 방식을 설명할 수 있다.
 - TCP 연결 생성과 종료 과정을 설명할 수 있다.
 - TIME_WAIT이 필요한 이유를 설명할 수 있다.
 - 흐름 제어와 혼잡 제어의 차이를 설명할 수 있다.
+- Subnet, Gateway, ARP, Routing, NAT가 IP 패킷 전달에 관여하는 과정을 설명할 수 있다.
 - 하나의 TCP 연결이 어떻게 생성되고 종료되는지 전체 흐름을 설명할 수 있다.
 
 ### 트러블슈팅
@@ -105,6 +112,7 @@ tags:
 - HTTP Request / Response 구조
 - HTTP Method
 - HTTP Status Code
+- HTTP 멱등성
 - HTTP/1.1
 - HTTP/2
 - HTTP/3
@@ -122,6 +130,7 @@ tags:
 ### 학습 목표
 
 - HTTP 요청과 응답 구조를 설명할 수 있다.
+- HTTP Method의 멱등성과 재시도의 관계를 설명할 수 있다.
 - HTTP/1.1, HTTP/2, HTTP/3의 주요 차이를 설명할 수 있다.
 - Keep-Alive가 연결과 성능에 어떤 영향을 주는지 설명할 수 있다.
 - Stateless한 HTTP에서 로그인 상태를 유지할 수 있는 이유를 설명할 수 있다.
@@ -204,6 +213,8 @@ DNS
 - Authentication과 Authorization
 - Same-Origin Policy
 - CORS
+- CORS Preflight
+- XSS / CSRF 기초
 - REST
 - WebSocket 개념
 - CDN 개념
@@ -224,6 +235,14 @@ DNS 조회
 → HTTP 응답
 ```
 
+### 학습 목표
+
+- Authentication과 Authorization의 차이를 설명할 수 있다.
+- Same-Origin Policy와 CORS의 관계를 설명할 수 있다.
+- 브라우저가 CORS Preflight 요청을 보내는 조건과 목적을 설명할 수 있다.
+- XSS와 CSRF의 차이와 기본 방어 방법을 설명할 수 있다.
+- REST, WebSocket, CDN의 역할을 요청 흐름과 연결해 설명할 수 있다.
+
 ---
 
 # 5~8주차 OS
@@ -234,10 +253,13 @@ DNS 조회
 
 - Program
 - Process
+- PCB / Process State
 - Thread
+- 동시성과 병렬성
 - Process Memory 영역
 - Context Switching
 - CPU Scheduling
+- 기본 Scheduling Algorithm
 - CPU Bound
 - I/O Bound
 
@@ -254,8 +276,11 @@ JVM 자체를 깊게 공부하는 것이 목적은 아니다.
 ### 학습 목표
 
 - Process와 Thread의 차이를 설명할 수 있다.
+- PCB가 관리하는 정보와 Process State의 전이 과정을 설명할 수 있다.
+- 동시성과 병렬성을 구분할 수 있다.
 - Process의 주요 Memory 영역을 설명할 수 있다.
 - Context Switching이 발생하는 이유와 비용을 설명할 수 있다.
+- FCFS, SJF, Round Robin 등 기본 Scheduling Algorithm의 차이를 설명할 수 있다.
 - CPU Bound와 I/O Bound 작업을 구분할 수 있다.
 
 ### 트러블슈팅
@@ -283,9 +308,13 @@ CPU 사용률
 ### 핵심 학습
 
 - Virtual Memory
+- Segmentation / Fragmentation
 - Paging
+- Page / Frame
 - Page Table
+- MMU / TLB
 - Page Fault
+- Thrashing / Page Replacement 기초
 - Swap
 - RSS
 - OOM
@@ -298,8 +327,12 @@ CPU 사용률
 ### 학습 목표
 
 - Virtual Memory가 필요한 이유를 설명할 수 있다.
+- Segmentation과 Paging을 구분하고 Fragmentation이 발생하는 이유를 설명할 수 있다.
+- Page와 Frame의 관계를 설명할 수 있다.
+- MMU와 TLB가 가상 주소를 물리 주소로 변환할 때 하는 역할을 설명할 수 있다.
 - Paging이 어떻게 동작하는지 설명할 수 있다.
 - Page Fault가 발생했을 때 어떤 일이 일어나는지 설명할 수 있다.
+- Page Replacement가 필요한 이유와 Thrashing이 발생하는 과정을 설명할 수 있다.
 - Swap 증가가 서버 성능에 어떤 영향을 줄 수 있는지 설명할 수 있다.
 - OOM이 발생하는 기본적인 과정을 설명할 수 있다.
 
@@ -333,6 +366,8 @@ Memory 사용량 증가
 - Mutex
 - Semaphore
 - Deadlock
+- Thread Safe / Thread Pool
+- IPC 기초
 - Blocking / Non-Blocking
 - Synchronous / Asynchronous
 - I/O Multiplexing
@@ -345,6 +380,8 @@ Memory 사용량 증가
 - Race Condition과 Critical Section을 설명할 수 있다.
 - Mutex와 Semaphore의 차이를 설명할 수 있다.
 - Deadlock의 네 가지 발생 조건을 설명할 수 있다.
+- Thread Safe의 의미와 Thread Pool을 사용하는 이유를 설명할 수 있다.
+- Process 간 데이터를 교환하는 기본 IPC 방식을 설명할 수 있다.
 - Blocking / Non-Blocking과 Synchronous / Asynchronous를 구분할 수 있다.
 - I/O Multiplexing이 필요한 이유를 설명할 수 있다.
 
@@ -375,6 +412,7 @@ CPU가 높은가?
 - System Call
 - Interrupt
 - File Descriptor
+- File System / inode 기초
 
 ### 주요 진단 도구
 
@@ -393,6 +431,7 @@ CPU가 높은가?
 
 - System Call과 User Mode / Kernel Mode의 관계를 설명할 수 있다.
 - File Descriptor가 무엇인지 설명할 수 있다.
+- File System에서 inode가 파일의 메타데이터와 데이터 블록을 연결하는 방식을 설명할 수 있다.
 - File Descriptor 고갈 시 발생할 수 있는 문제를 설명할 수 있다.
 - CPU, Memory, Disk I/O 문제를 각각 어떤 도구로 확인할지 설명할 수 있다.
 
@@ -437,6 +476,7 @@ OS 계층과 상위 Application 계층의 장애가 어떻게 연결되는지 �
 - Non-Repeatable Read
 - Phantom Read
 - MVCC
+- Undo / Redo / WAL
 
 ### 연관 학습
 
@@ -452,6 +492,7 @@ Spring 환경에서 다음 정도를 연결한다.
 - Transaction 범위를 잘못 잡았을 때 발생할 수 있는 문제를 설명할 수 있다.
 - Isolation Level별 차이를 설명할 수 있다.
 - MVCC가 무엇이며 왜 사용하는지 설명할 수 있다.
+- Undo, Redo, WAL이 Transaction의 Rollback과 장애 복구에 어떻게 사용되는지 설명할 수 있다.
 
 ### 트러블슈팅
 
@@ -477,6 +518,7 @@ Transaction 시작 시점
 
 - B+Tree
 - Index
+- Clustered Index
 - Composite Index
 - Covering Index
 - Selectivity
@@ -484,9 +526,11 @@ Transaction 시작 시점
 - Index가 사용되지 않는 경우
 - Execution Plan
 - EXPLAIN
+- EXPLAIN ANALYZE
+- Optimizer / CBO
 - Full Table Scan
 - Index Scan
-- Join 방식
+- Nested Loop / Hash Join
 
 ### 실습
 
@@ -504,10 +548,14 @@ Index 없음
 ### 학습 목표
 
 - B+Tree가 Database Index에 적합한 이유를 설명할 수 있다.
+- Clustered Index와 Non-Clustered Index의 차이를 설명할 수 있다.
 - Composite Index의 컬럼 순서가 중요한 이유를 설명할 수 있다.
 - Covering Index를 설명할 수 있다.
 - Selectivity와 Cardinality가 Index 선택에 미치는 영향을 설명할 수 있다.
 - Execution Plan에서 확인해야 할 주요 항목을 설명할 수 있다.
+- Optimizer와 CBO가 실행계획을 선택하는 방식을 설명할 수 있다.
+- EXPLAIN과 EXPLAIN ANALYZE의 차이를 설명할 수 있다.
+- Nested Loop Join과 Hash Join의 동작 방식과 선택 조건을 설명할 수 있다.
 
 ### 트러블슈팅
 
@@ -578,12 +626,21 @@ Application Thread
 
 ### 추가 복습
 
+- RDB vs NoSQL
 - Replication
 - Replication Lag
+- Sharding
+- Partitioning
 - Backup
 - Recovery
 - Normalization
 - Denormalization
+
+### 학습 목표
+
+- RDB와 NoSQL의 데이터 모델과 선택 기준을 설명할 수 있다.
+- Replication, Sharding, Partitioning의 목적과 차이를 설명할 수 있다.
+- Replication Lag이 읽기 일관성과 장애 전환에 미치는 영향을 설명할 수 있다.
 
 ### 종합 질문
 
