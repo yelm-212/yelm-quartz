@@ -6,10 +6,15 @@ tags:
   - explanation
 ---
 
-**Projects** represent short-term efforts in your work or life that you're working on now. 
+**Projects** represent short-term efforts in your work or life that you're working on now.
 
 They are defined by:
+
 - A specific goal
 - A deadline
 
 Examples include: "Complete website redesign", "Plan summer vacation", or "Finish quarterly report".
+
+## 진행 중인 프로젝트
+
+- [[12_week_cs_study|12주 CS 학습 계획]]
