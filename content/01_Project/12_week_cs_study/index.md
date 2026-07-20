@@ -13,7 +13,7 @@ tags:
 
 ## 전체 구성
 
-- 1~4주차: [[04_network|Network]]
+- 1~4주차: Network
 - 5~8주차: OS
 - 9~12주차: Database
 
@@ -29,20 +29,20 @@ tags:
 
 ## 학습 기록
 
-| 주차   | 주제                               | 학습 내용  | 트러블슈팅          | PR  |
-| ------ | ---------------------------------- | ---------- | ------------------- | --- |
-| 1주차  | TCP/IP와 연결                      | [[01_tcp]] | [[troubleshooting]] |     |
-| 2주차  | HTTP와 요청/응답                   | 작성 예정  | 작성 예정           |     |
-| 3주차  | DNS, HTTPS, Proxy, Load Balancer   | 작성 예정  | 작성 예정           |     |
-| 4주차  | Network 종합                       | 작성 예정  | 작성 예정           |     |
-| 5주차  | Process, Thread, CPU               | 작성 예정  | 작성 예정           |     |
-| 6주차  | Virtual Memory와 Paging            | 작성 예정  | 작성 예정           |     |
-| 7주차  | 동시성과 I/O                       | 작성 예정  | 작성 예정           |     |
-| 8주차  | OS 종합과 Linux 진단               | 작성 예정  | 작성 예정           |     |
-| 9주차  | Transaction, Isolation Level, MVCC | 작성 예정  | 작성 예정           |     |
-| 10주차 | Index와 Execution Plan             | 작성 예정  | 작성 예정           |     |
-| 11주차 | Lock, Connection Pool, N+1         | 작성 예정  | 작성 예정           |     |
-| 12주차 | Database 종합                      | 작성 예정  | 작성 예정           |     |
+| 주차 | 주제 | 학습 내용 | 트러블슈팅 |
+| --- | --- | --- | --- |
+| 1주차  | TCP/IP와 연결                      | [[01_tcp 학습 내용]] | [[troubleshooting 사례 역추론]] |
+| 2주차  | HTTP와 요청/응답                   | 작성 예정 | 작성 예정   |
+| 3주차  | DNS, HTTPS, Proxy, Load Balancer   | 작성 예정 | 작성 예정   |
+| 4주차  | Network 종합                       | 작성 예정 | 작성 예정   |
+| 5주차  | Process, Thread, CPU               | 작성 예정 | 작성 예정   |
+| 6주차  | Virtual Memory와 Paging            | 작성 예정 | 작성 예정   |
+| 7주차  | 동시성과 I/O                       | 작성 예정 | 작성 예정   |
+| 8주차  | OS 종합과 Linux 진단               | 작성 예정 | 작성 예정   |
+| 9주차  | Transaction, Isolation Level, MVCC | 작성 예정 | 작성 예정   |
+| 10주차 | Index와 Execution Plan             | 작성 예정 | 작성 예정   |
+| 11주차 | Lock, Connection Pool, N+1         | 작성 예정 | 작성 예정   |
+| 12주차 | Database 종합                      | 작성 예정 | 작성 예정   |
 
 ---
 
