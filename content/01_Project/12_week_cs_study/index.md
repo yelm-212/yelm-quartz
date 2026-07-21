@@ -897,3 +897,45 @@ Connection Pool
 ```
 
 12주 동안 개별 개념을 암기하는 것이 아니라 Network, OS, Database 각각에서 실제 장애 상황을 만났을 때 어떤 계층을 어떤 순서로 확인해야 하는지 판단할 수 있는 수준을 목표로 한다.
+
+---
+
+# 참고 자료
+
+## 공통
+
+- [RFC Editor](https://www.rfc-editor.org/)
+- [MDN Web Docs](https://developer.mozilla.org/en-US/)
+- [Cloudflare Blog](https://blog.cloudflare.com/)
+
+## Network
+
+- [RFC 9293 - Transmission Control Protocol](https://www.rfc-editor.org/rfc/rfc9293)
+- [RFC 9110 - HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110)
+- [RFC 9113 - HTTP/2](https://www.rfc-editor.org/rfc/rfc9113)
+- [RFC 9114 - HTTP/3](https://www.rfc-editor.org/rfc/rfc9114)
+- [RFC 9000 - QUIC](https://www.rfc-editor.org/rfc/rfc9000)
+- [Computer Networking: A Top-Down Approach Resources - UMass Amherst](https://gaia.cs.umass.edu/kurose_ross/)
+- [Computer Networking Interactive Problems - UMass Amherst](https://gaia.cs.umass.edu/kurose_ross/interactive/)
+- [Wireshark Labs - UMass Amherst](https://gaia.cs.umass.edu/kurose_ross/wireshark.php)
+- [Beej's Guide to Network Programming](https://beej.us/guide/bgnet/)
+
+## OS
+
+- [Operating Systems: Three Easy Pieces - University of Wisconsin–Madison](https://pages.cs.wisc.edu/~remzi/OSTEP/)
+- [Operating Systems Course Notes - University of Illinois Chicago](https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/)
+- [Linux Kernel Documentation](https://docs.kernel.org/)
+- [Linux man-pages](https://man7.org/linux/man-pages/)
+
+## Database
+
+- [MySQL 8.4 Reference Manual](https://dev.mysql.com/doc/refman/8.4/en/)
+- [PostgreSQL Documentation](https://www.postgresql.org/docs/current/)
+- [Spring Framework - Transaction Management](https://docs.spring.io/spring-framework/reference/data-access/transaction.html)
+- [Hibernate ORM Documentation](https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html)
+
+## 사례 reference
+
+- [Google Cloud Architecture Framework - Reliability](https://cloud.google.com/architecture/framework/reliability)
+- [Netflix TechBlog](https://netflixtechblog.com/)
+- [Uber Engineering](https://www.uber.com/blog/engineering/)
