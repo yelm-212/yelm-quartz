@@ -30,7 +30,7 @@ tags:
 
 | 주차 | 주제 | 학습 내용 | 트러블슈팅 |
 | --- | --- | --- | --- |
-| 1주차  | TCP/IP와 연결                      | [TCP IP와 연결](03_Resource/04_network/01_tcp) | [[03_Resource/04_network/01_tcp/troubleshooting|TCP 연결 장애 사례]] |
+| 1주차  | TCP/IP와 연결                      | [TCP IP와 연결](03_Resource/04_network/01_tcp) | [[03_Resource/04_network/02_tcpip_ts|TCP 연결 장애 사례]] |
 | 2주차  | HTTP와 요청/응답                   | 작성 예정 | 작성 예정   |
 | 3주차  | DNS, HTTPS, Proxy, Load Balancer   | 작성 예정 | 작성 예정   |
 | 4주차  | Network 종합                       | 작성 예정 | 작성 예정   |

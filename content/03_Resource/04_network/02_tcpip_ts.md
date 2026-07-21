@@ -1,6 +1,6 @@
 ---
 title: TCP 연결 장애 트러블슈팅 사례
-draft: false
+draft: true
 tags:
   - network
   - tcp
@@ -87,4 +87,4 @@ ss -tan | awk 'NR > 1 { count[$1]++ } END { for (state in count) print state, co
 
 ## 함께 읽기
 
-- [[01_tcp|1주차 - TCP/IP와 연결]]
+- [[03_Resource/04_network/01_tcp|1주차 - TCP/IP와 연결]]
