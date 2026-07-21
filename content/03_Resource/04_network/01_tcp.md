@@ -154,6 +154,12 @@ sequenceDiagram
     - 동일 IP/Port 조합으로 새 TCP 연결을 바로 만드는 경우, 이전 연결의 오래된 세그먼트가 새 연결의 패킷으로 오인될 위험이 있다.
     - 2 × MSL 동안 기다려 이전 연결의 세그먼트가 네트워크에서 사라질 시간을 확보한다.
 
+| 구분      | 흐름 제어      | 혼잡 제어          |
+| --------- | -------------- | ------------------ |
+| 보호 대상 | 수신 측        | 네트워크           |
+| 주요 기준 | 수신 버퍼 여유 | 네트워크 혼잡 상태 |
+| 핵심 값   | rwnd           | cwnd               |
+
 #### 흐름 제어
 
 <!-- TODO: 수신 측 처리 속도에 맞추는 목적과 receive window를 설명한다. -->
@@ -164,17 +170,18 @@ sequenceDiagram
 
 TCP endpoint는 기본 혼잡 제어 알고리즘인 slow start, 혼잡 회피, exponential backoff를 모두 구현해야 한다.
 
-- Slow Start : 패킷 전송에 필요한 가용 네트워크 대역폭을 탐색하고, 네트워크의 가용량에 따라 전송 속도를 조절하는 알고리즘.
-- 혼잡 회피:
-- exponential backoff:
+- Slow Start Phase: 
+    - 패킷 전송에 필요한 가용 네트워크 대역폭을 탐색하고, 네트워크의 가용량에 따라 전송 속도를 조절한다.
+    - congestion window(이하 cwnd) 크기가 지수적으로 증가한다.
+    - slow start threshold(ssthresh)값에 도달하면 다음 단계로 넘어간다.
+- Congestion Avoidance Phase: 
+    - congestion window(이하 cwwd) 크기를 선형적으로 증가시킨다.
+- Congestion Detection Phase:
+    - 패킷 로스나 중복 ack를 감지해 윈도우 크기를 조정해 트래픽을 조정한다.
+    1. timeout으로 재전송하는 경우: ssthresh를 현재 윈도우 크기 반으로 줄이고 cwnd = 1로 설정, slow start 재진입
+    2. ACK 패킷 중복: ssthresh를 현재 윈도우 크기 반으로 줄이고 cwnd = ssthresh로 설정, congestion avoidance 재진입
 
-#### 흐름 제어와 혼잡 제어 비교
 
-| 구분      | 흐름 제어      | 혼잡 제어          |
-| --------- | -------------- | ------------------ |
-| 보호 대상 | 수신 측        | 네트워크           |
-| 주요 기준 | 수신 버퍼 여유 | 네트워크 혼잡 상태 |
-| 핵심 값   | rwnd           | cwnd               |
 
 ### UDP : User Datagram Protocol
 
