@@ -20,7 +20,7 @@ tags:
 
 ## OSI / TCP-IP 계층 개념
 
-<!-- TODO: OSI 7계층과 TCP/IP 모델의 계층별 역할을 비교하고, IP와 TCP/UDP가 어느 계층에서 동작하는지 설명한다. -->
+<!-- OSI 7계층과 TCP/IP 모델의 계층별 역할을 비교하고, IP와 TCP/UDP가 어느 계층에서 동작하는지 설명한다. -->
 
 ![](https://d2908q01vomqb2.cloudfront.net/f6e1126cedebf23e1463aee73f9df08783640400/2022/06/24/Picture2-3.png)
 
@@ -73,15 +73,20 @@ TCP와 UDP는 모두 네트워크 기본 계층 구조(OSI7 or TCP/IP 모델)의
 
 ### TCP : Transmission Control Protocol
 
-<!-- TODO: TCP가 checksum, sequence/acknowledgement number, timeout, 재전송으로 오류를 감지하고 순서를 보장하는 과정을 설명한다. -->
+<!-- TCP가 checksum, sequence/acknowledgement number, timeout, 재전송으로 오류를 감지하고 순서를 보장하는 과정을 설명한다. -->
 
 - **신뢰성**을 가지는 **연결 stream을 기반**으로, **순서를 보장**하는 프로토콜이다. 
   - 재전송 O
 - 데이터 Flow가 양방향으로 일어날 수 있다. (방향은 선택사항)
 - 기본적으로 신뢰성을 보장하려 하는 특징이 있고, 이를 위해 Congestion Control & Flow Control 이 사용된다. (모두 *Control* 을 위해 사용한다)
-- port 번호를 사용해 다중 호스트 간 검증
+- port 번호를 사용해 호스트 내 통신 endpoint(Application)를 식별한다.
 - 기본적으로는 Unicast만 지원한다.
 - Example: FTP(20/21), Telnet(23), rcp(remote copy)...
+
+- TCP checksum을 통해 전송 중 데이터 손상을 검출한다.
+- 각 데이터 바이트에 sequence number를 부여하여 데이터의 순서를 식별하고 중복 데이터를 판별한다.
+- acknowledgement number를 통해 수신 완료된 데이터와 다음으로 필요한 데이터를 확인한다.
+- 데이터가 손실된 경우 ACK와 재전송 타이머 등을 기반으로 필요한 세그먼트를 재전송한다.
 
 #### TCP 연결 생성: 3-way Handshake
 
@@ -102,6 +107,9 @@ sequenceDiagram
 
     Note over C,S: TCP Connection Established
 ```
+
+- sequence number: 해당 TCP 세그먼트의 첫 번째 데이터 바이트가 바이트 스트림에서 가지는 번호
+- acknowledgement number: 수신자가 다음으로 받기를 기대하는 sequence number. 해당 번호 이전의 모든 바이트를 수신했음을 의미한다.
 
 #### TCP 연결 종료: 4-way Handshake
 
@@ -221,12 +229,12 @@ TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을
 
 <!-- 비연결성, 낮은 오버헤드, 데이터그램 특성을 설명한다. -->
 
-- 단방향 User Datagram을 기반으로 하는 프로토콜이며, Application 혹은 IP layer에 메시지를 전달하려 할 때 사용한다.
+- User Datagram을 단위로 데이터를 전달하는 프로토콜이며, Application 혹은 IP layer에 메시지를 전달하려 할 때 사용한다.
 - 비연결성(Connectionless)인 특징이 있다.
 - TCP와 다르게 신뢰성을 특징으로 가지지 않는다고 해서 패킷 내 Checksum이 없는것은 아니다.
 - 검증 및 재전송(TCP)을 하지 않고, 이에 의한 딜레이 및 오버헤드보다 Real-time이 더 중요한 시스템에서 사용한다.
-- Example: 영상 스트리밍, Regular DNS queries & response.
-  - DNS 질의시 timezone 변환이 일어나거나 512 byte 이상 전송이 필요한 경우 등에서 Fallback으로 TCP를 사용할 수 있다.
+- Example: 영상 스트리밍, 일반적인 DNS query & response
+  - DNS는 일반적으로 UDP를 사용할 수 있지만, 응답이 UDP로 처리하기 어려워 truncated된 경우 TCP로 재시도할 수 있으며, zone transfer 등에서는 TCP를 사용한다.
 
 ## 8. IP, Port, Socket
 
