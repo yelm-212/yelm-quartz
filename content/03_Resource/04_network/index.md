@@ -19,9 +19,9 @@ tags:
 
 ## 학습 목차
 
-### 1주차 — TCP/IP와 연결
+### 1주차
 
-- 학습내용 : [[03_Resource/04_network/01_tcp|TCP/IP와 연결]]
+- 학습내용 : [TCP IP와 연결](03_Resource/04_network/01_tcp)
 - 트러블슈팅: [[03_Resource/04_network/01_tcp/troubleshooting|TCP 연결 장애 사례]]
 
 ### 2주차

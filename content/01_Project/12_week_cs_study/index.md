@@ -30,7 +30,7 @@ tags:
 
 | 주차 | 주제 | 학습 내용 | 트러블슈팅 |
 | --- | --- | --- | --- |
-| 1주차  | TCP/IP와 연결                      | [[01_tcp 학습 내용]] | [[troubleshooting 사례 역추론]] |
+| 1주차  | TCP/IP와 연결                      | [TCP IP와 연결](03_Resource/04_network/01_tcp) | [[03_Resource/04_network/01_tcp/troubleshooting|TCP 연결 장애 사례]] |
 | 2주차  | HTTP와 요청/응답                   | 작성 예정 | 작성 예정   |
 | 3주차  | DNS, HTTPS, Proxy, Load Balancer   | 작성 예정 | 작성 예정   |
 | 4주차  | Network 종합                       | 작성 예정 | 작성 예정   |
@@ -97,11 +97,6 @@ tags:
 3. 확인할 로그, 메트릭, 명령어 정의
 4. 실제 원인 확인
 5. 가설과 실제 원인 비교
-
-### 작성 문서
-
-- [[01_tcp|1주차 - TCP/IP와 연결]]
-- [[troubleshooting|TCP 연결 장애 트러블슈팅 사례]]
 
 ---
 
