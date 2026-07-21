@@ -24,7 +24,7 @@ tags:
 - 일요일까지 PR 제출
 - 팀원 PR 1개 이상 리뷰
 
-트러블슈팅 사례는 **실제 공개 사례를 우선 사용**한다. 내가 겪은 경험 중 해당 개념과 유관한 경험이 존재하는 경우에만 관련 내용을 작성한다.
+트러블슈팅 사례는 **실제 공개 사례를 우선 사용**한다. 겪은 경험 중 해당 개념과 유관한 경험이 존재하는 경우에만 관련 내용을 작성한다.
 
 ## 학습 기록
 
@@ -197,7 +197,7 @@ DNS
 → Backend
 ```
 
-개인 Kubernetes 경험은 해당 흐름을 이해하는 데 도움이 되는 경우에만 보조적으로 연결한다.
+Kubernetes 장애 대응 경험은 해당 흐름을 이해하는 데 도움이 되는 경우에만 보조적으로 연결한다.
 
 ---
 
@@ -242,113 +242,169 @@ DNS 조회
 
 # 5~8주차 OS
 
-## 5주차 - Process, Thread, CPU
+## 5주차 - Process, Thread와 CPU Scheduling
 
 ### 핵심 학습
 
-- Program
-- Process
-- PCB / Process State
-- Thread
-- 동시성과 병렬성
-- Process Memory 영역
-- Context Switching
-- CPU Scheduling
-- 기본 Scheduling Algorithm
-- CPU Bound
-- I/O Bound
+#### Process와 Thread
+
+* Program
+* Process
+* Thread
+* Process State
+* PCB의 역할
+
+#### Process Memory
+
+* Code
+* Data
+* BSS
+* Heap
+* Stack
+* Thread별 Stack
+
+#### CPU와 Scheduling
+
+* CPU Bound
+* I/O Bound
+* CPU Scheduling의 목적
+* FCFS
+* Round Robin
+* Time Slice
+
+#### Context Switching
+
+* Context Switching
+* Process와 Thread의 Context Switching 차이
+* Context Switching 비용
+
+#### 실행 모델
+
+* 동시성
+* 병렬성
 
 ### 연관 학습
 
 Java 서버와 연결해서 다음 정도를 확인한다.
 
-- JVM은 OS 관점에서 무엇인가?
-- Java Thread와 OS Thread의 관계
-- Spring 서버의 요청 처리 Thread
+* JVM은 OS 관점에서 하나의 Process인가?
+* Java Thread와 OS Thread는 어떤 관계인가?
+* Spring 서버는 요청을 어떤 Thread에서 처리하는가?
 
-JVM 자체를 깊게 공부하는 것이 목적은 아니다.
+JVM이나 Thread 구현을 깊게 파는 것이 목적은 아니다.
 
 ### 학습 목표
 
-- Process와 Thread의 차이를 설명할 수 있다.
-- PCB가 관리하는 정보와 Process State의 전이 과정을 설명할 수 있다.
-- 동시성과 병렬성을 구분할 수 있다.
-- Process의 주요 Memory 영역을 설명할 수 있다.
-- Context Switching이 발생하는 이유와 비용을 설명할 수 있다.
-- FCFS, SJF, Round Robin 등 기본 Scheduling Algorithm의 차이를 설명할 수 있다.
-- CPU Bound와 I/O Bound 작업을 구분할 수 있다.
+* Program, Process, Thread의 차이를 설명할 수 있다.
+* Process의 주요 상태와 상태 전이를 설명할 수 있다.
+* PCB가 어떤 정보를 관리하는지 개략적으로 설명할 수 있다.
+* Process의 주요 Memory 영역을 설명할 수 있다.
+* Context Switching이 발생하는 이유와 비용을 설명할 수 있다.
+* CPU Bound와 I/O Bound 작업을 구분할 수 있다.
+* CPU Scheduling이 필요한 이유를 설명할 수 있다.
+* FCFS와 Round Robin의 기본 동작과 차이를 설명할 수 있다.
+* 동시성과 병렬성을 구분할 수 있다.
 
 ### 트러블슈팅
 
 실제 공개 사례 중 다음과 관련된 사례를 선정한다.
 
-- CPU 사용률 급증
-- 특정 Process CPU 과점유
-- 특정 Thread CPU 과점유
-- Resource Exhaustion
+* CPU 사용률 급증
+* 특정 Process 또는 Thread의 CPU 과점유
+* Context Switching 증가
+* CPU는 낮지만 Load Average가 높은 문제
+
+역추론 시 다음을 확인한다.
 
 ```text
 CPU 사용률
 → Load Average
 → Process
 → Thread
-→ CPU Bound 여부
-→ I/O Wait 여부
+→ Process State
+→ CPU Bound / I/O Bound
+→ Context Switching
 ```
 
 ---
 
-## 6주차 - Virtual Memory와 Paging
+## 6주차 - Virtual Memory와 Memory 문제
 
 ### 핵심 학습
 
-- Virtual Memory
-- Segmentation / Fragmentation
-- Paging
-- Page / Frame
-- Page Table
-- MMU / TLB
-- Page Fault
-- Thrashing / Page Replacement 기초
-- Swap
-- RSS
-- OOM
+#### Virtual Memory
+
+* Virtual Memory가 필요한 이유
+* Virtual Address
+* Physical Address
+* Page
+* Frame
+* Paging
+* Page Table
+* Page Fault
+
+#### 주소 변환
+
+* MMU의 역할
+* TLB의 역할
+* Virtual Address에서 Physical Address로 변환되는 기본 흐름
+
+#### Memory 문제
+
+* Swap
+* Thrashing
+* OOM
+* OOM Killer
 
 ### 연관 학습
 
-- Heap과 Process Memory의 차이
-- JVM Heap과 실제 Process Memory의 차이
+* Heap과 Process Memory의 차이
+* JVM Heap과 실제 Process Memory의 차이
+* RSS
+* Paging과 Segmentation의 차이
+* 내부 단편화와 외부 단편화
+
+Segmentation과 단편화는 Paging과 비교하기 위한 개념 수준으로만 학습한다.
+
+Page Replacement Algorithm과 LRU 구현은 필수 범위에서 제외한다.
 
 ### 학습 목표
 
-- Virtual Memory가 필요한 이유를 설명할 수 있다.
-- Segmentation과 Paging을 구분하고 Fragmentation이 발생하는 이유를 설명할 수 있다.
-- Page와 Frame의 관계를 설명할 수 있다.
-- MMU와 TLB가 가상 주소를 물리 주소로 변환할 때 하는 역할을 설명할 수 있다.
-- Paging이 어떻게 동작하는지 설명할 수 있다.
-- Page Fault가 발생했을 때 어떤 일이 일어나는지 설명할 수 있다.
-- Page Replacement가 필요한 이유와 Thrashing이 발생하는 과정을 설명할 수 있다.
-- Swap 증가가 서버 성능에 어떤 영향을 줄 수 있는지 설명할 수 있다.
-- OOM이 발생하는 기본적인 과정을 설명할 수 있다.
+* Virtual Memory가 필요한 이유를 설명할 수 있다.
+* Page와 Frame의 차이를 설명할 수 있다.
+* Paging과 Page Table의 역할을 설명할 수 있다.
+* MMU와 TLB가 필요한 이유를 설명할 수 있다.
+* Page Fault가 발생했을 때 어떤 일이 일어나는지 설명할 수 있다.
+* Swap이 증가하면 성능이 저하될 수 있는 이유를 설명할 수 있다.
+* Thrashing이 무엇인지 설명할 수 있다.
+* Process Memory와 JVM Heap의 차이를 설명할 수 있다.
+* OOM과 OOM Killer의 기본적인 동작을 설명할 수 있다.
 
 ### 트러블슈팅
 
 실제 공개 사례 중 다음과 관련된 사례를 선정한다.
 
-- Memory Leak
-- OOM
-- Swap 증가
-- OOM Killer
+* Memory Leak
+* Swap 증가
+* Thrashing
+* OOM
+* OOM Killer에 의한 Process 종료
+
+분석 관점:
 
 ```text
 Memory 사용량 증가
-→ Heap
-→ Native Memory
+→ Process Memory
+→ Heap / Native Memory
+→ RSS
 → Page Cache
 → Swap
-→ Memory Leak
+→ Page Fault
+→ Thrashing
 → OOM Killer
 ```
+
+모든 항목을 실제 사례에 억지로 적용하지 않고, 공개된 증상과 관련된 범위만 확인한다.
 
 ---
 
@@ -356,41 +412,72 @@ Memory 사용량 증가
 
 ### 핵심 학습
 
-- Race Condition
-- Critical Section
-- Mutex
-- Semaphore
-- Deadlock
-- Thread Safe / Thread Pool
-- IPC 기초
-- Blocking / Non-Blocking
-- Synchronous / Asynchronous
-- I/O Multiplexing
-- select
-- poll
-- epoll
+#### 동시성 제어
+
+* Race Condition
+* Critical Section
+* Mutex
+* Semaphore
+* Deadlock
+* Deadlock의 네 가지 발생 조건
+* Thread Safe
+
+#### Thread 관리
+
+* Thread Pool
+* Thread Pool을 사용하는 이유
+* Thread 수 결정 시 고려 사항
+* Thread Pool Exhaustion
+
+#### I/O Model
+
+* Blocking
+* Non-Blocking
+* Synchronous
+* Asynchronous
+* I/O Multiplexing
+* select / poll / epoll의 관계
+* epoll이 필요한 이유
+
+### 연관 학습
+
+* CPU Bound 작업과 Thread Pool
+* I/O Bound 작업과 Thread Pool
+* Lock 대기와 I/O 대기의 차이
+
+`select`, `poll`, `epoll`의 내부 구현을 자세히 비교하기보다, 기존 방식의 한계와 epoll이 필요한 이유를 중심으로 학습한다.
+
+IPC, Spin Lock, Lock-Free, Wait-Free는 필수 범위에서 제외한다.
 
 ### 학습 목표
 
-- Race Condition과 Critical Section을 설명할 수 있다.
-- Mutex와 Semaphore의 차이를 설명할 수 있다.
-- Deadlock의 네 가지 발생 조건을 설명할 수 있다.
-- Thread Safe의 의미와 Thread Pool을 사용하는 이유를 설명할 수 있다.
-- Process 간 데이터를 교환하는 기본 IPC 방식을 설명할 수 있다.
-- Blocking / Non-Blocking과 Synchronous / Asynchronous를 구분할 수 있다.
-- I/O Multiplexing이 필요한 이유를 설명할 수 있다.
+* Race Condition과 Critical Section을 설명할 수 있다.
+* Mutex와 Semaphore의 차이를 설명할 수 있다.
+* Deadlock의 네 가지 발생 조건을 설명할 수 있다.
+* Thread Safe의 의미를 설명할 수 있다.
+* Thread Pool을 사용하는 이유를 설명할 수 있다.
+* CPU Bound와 I/O Bound 작업에 따라 Thread Pool 크기 기준이 달라지는 이유를 설명할 수 있다.
+* Thread Pool이 고갈되었을 때 나타나는 증상을 설명할 수 있다.
+* Blocking / Non-Blocking과 Synchronous / Asynchronous를 구분할 수 있다.
+* I/O Multiplexing이 필요한 이유를 설명할 수 있다.
+* epoll이 다수의 연결을 처리하는 데 유리한 이유를 개략적으로 설명할 수 있다.
 
 ### 트러블슈팅
 
 실제 공개 사례 중 다음 중 하나를 선정한다.
 
-- Blocking I/O로 인한 요청 적체
-- Thread Pool Exhaustion
-- Deadlock
+* Blocking I/O로 인한 요청 적체
+* Thread Pool Exhaustion
+* Lock 대기 또는 Deadlock
+* Event Loop에서 Blocking 작업을 실행해 발생한 지연
+
+역추론 시 다음을 구분한다.
 
 ```text
-CPU가 높은가?
-→ 아니면 Thread가 대기 중인가?
+요청이 적체됨
+→ CPU 사용률 확인
+→ 실행 중인 Thread 수 확인
+→ Thread State 확인
 → I/O 대기인가?
 → Lock 대기인가?
 → Thread Pool이 고갈됐는가?
@@ -398,62 +485,109 @@ CPU가 높은가?
 
 ---
 
-## 8주차 - OS 종합과 Linux 진단
+## 8주차 - OS와 Linux 진단 종합
 
 ### 핵심 학습
 
-- Kernel Mode
-- User Mode
-- System Call
-- Interrupt
-- File Descriptor
-- File System / inode 기초
+#### Kernel Interface
 
-### 주요 진단 도구
+* User Mode
+* Kernel Mode
+* System Call
+* Application과 Kernel의 관계
 
-- top
-- ps
-- free
-- vmstat
-- iostat
-- strace
-- lsof
-- ss
+#### File Descriptor
 
-명령어 옵션 암기보다 어떤 상황에서 어떤 도구를 사용하는지 이해하는 데 집중한다.
+* File Descriptor
+* Process별 File Descriptor Table
+* File, Socket, Pipe와 File Descriptor의 관계
+* Soft Limit
+* Hard Limit
+* Process별 `nofile`
+* 시스템 전체 File Handle Limit
+* File Descriptor 고갈
+
+#### 주요 진단 도구
+
+* `top`
+* `ps`
+* `free`
+* `vmstat`
+* `iostat`
+* `lsof`
+* `ss`
+* `strace`
+* `prlimit`
+* `/proc`
+
+명령어의 모든 옵션을 외우기보다 다음을 구분하는 데 집중한다.
+
+* CPU 문제를 확인할 때 사용할 도구
+* Memory와 Swap 문제를 확인할 때 사용할 도구
+* Disk I/O 문제를 확인할 때 사용할 도구
+* Network Socket 문제를 확인할 때 사용할 도구
+* File Descriptor 문제를 확인할 때 사용할 도구
+* Process가 어떤 System Call에서 대기하는지 확인할 때 사용할 도구
 
 ### 학습 목표
 
-- System Call과 User Mode / Kernel Mode의 관계를 설명할 수 있다.
-- File Descriptor가 무엇인지 설명할 수 있다.
-- File System에서 inode가 파일의 메타데이터와 데이터 블록을 연결하는 방식을 설명할 수 있다.
-- File Descriptor 고갈 시 발생할 수 있는 문제를 설명할 수 있다.
-- CPU, Memory, Disk I/O 문제를 각각 어떤 도구로 확인할지 설명할 수 있다.
+* User Mode와 Kernel Mode를 구분하는 이유를 설명할 수 있다.
+* System Call이 Application과 Kernel을 연결하는 방식을 설명할 수 있다.
+* File Descriptor가 무엇인지 설명할 수 있다.
+* 일반 파일뿐 아니라 Socket과 Pipe도 FD로 관리되는 이유를 설명할 수 있다.
+* Process별 FD Limit과 시스템 전체 File Handle Limit을 구분할 수 있다.
+* File Descriptor가 고갈되었을 때 나타나는 증상을 설명할 수 있다.
+* CPU, Memory, Disk I/O, Network, FD 문제를 어떤 도구로 확인할지 설명할 수 있다.
 
 ### 종합 질문
 
-> 서버의 CPU 또는 Memory 사용량이 급증했을 때 어떤 순서로 원인을 확인할 것인가?
+> 서버의 CPU 또는 Memory 사용량이 급증하거나 요청 처리가 지연될 때 어떤 순서로 원인을 확인할 것인가?
+
+기본 흐름:
 
 ```text
-증상 확인
-→ Process와 Thread
-→ Memory와 Swap
-→ Disk와 Network I/O
+증상과 영향 범위 확인
+→ Process 확인
+→ CPU와 Thread 상태 확인
+→ Memory와 Swap 확인
+→ Disk / Network I/O 확인
+→ File Descriptor 확인
 → 필요 시 System Call 추적
 ```
 
 ### 트러블슈팅
 
-겉으로는 Application 또는 Database 장애처럼 보였지만 실제로는 다음과 같은 OS 계층 문제였던 실제 사례를 선정한다.
+1. 직접 경험한 Jenkins `Too many open files` 사례를 사용
+2. 실제 공개 사례 중 다음과 관련된 사례를 선정한다.
 
-- Disk I/O 지연
-- VM 또는 Host 문제
-- File Descriptor 고갈
-- Memory 문제
-
-OS 계층과 상위 Application 계층의 장애가 어떻게 연결되는지 분석한다.
 
 ---
+
+# OS 4주 완료 목표
+
+OS 면접 질문 전체를 다루는 것이 아니라, 백엔드 서버에서 발생할 수 있는 주요 문제를 OS 개념과 연결하는 것을 목표로 한다.
+
+```text
+요청 지연 또는 서버 이상
+→ Process / Thread
+→ CPU / Scheduling
+→ Virtual Memory / Memory
+→ Lock / I/O
+→ File Descriptor
+→ System Call
+```
+
+4주 완료 후에는 다음 질문에 자료 없이 답할 수 있어야 한다.
+
+* Process와 Thread는 무엇이 다른가?
+* CPU가 높은 상황과 Thread가 대기 중인 상황을 어떻게 구분할 것인가?
+* Virtual Memory와 Paging은 왜 필요한가?
+* Page Fault와 Swap은 성능에 어떤 영향을 주는가?
+* Race Condition과 Deadlock은 무엇인가?
+* Blocking / Non-Blocking과 Sync / Async는 어떻게 다른가?
+* Thread Pool이 고갈되면 어떤 현상이 나타나는가?
+* File Descriptor가 고갈되면 왜 파일과 Network 연결을 새로 열 수 없는가?
+* CPU, Memory, I/O, FD 문제를 어떤 순서와 도구로 확인할 것인가?
 
 # 9~12주차 Database
 

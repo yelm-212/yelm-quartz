@@ -158,29 +158,63 @@ sequenceDiagram
 | --------- | -------------- | ------------------ |
 | 보호 대상 | 수신 측        | 네트워크           |
 | 주요 기준 | 수신 버퍼 여유 | 네트워크 혼잡 상태 |
-| 핵심 값   | rwnd           | cwnd               |
 
 #### 흐름 제어
 
-<!-- TODO: 수신 측 처리 속도에 맞추는 목적과 receive window를 설명한다. -->
+<!-- 수신 측 처리 속도에 맞추는 목적과 receive window를 설명한다. -->
+
+TCP 흐름 제어는 송신자가 수신자의 처리 능력보다 많은 데이터를 전송하여 수신 버퍼가 넘치는 것을 방지한다.
+
+- 수신자는 ACK를 전송할 때 TCP 헤더의 Window 필드를 통해 현재 수신할 수 있는 데이터 범위인 receive window(rwnd)를 알린다.
+- 송신자는 아직 ACK를 받지 못한 데이터가 rwnd를 초과하지 않도록 sliding window 방식으로 전송량을 제한한다.
+- 데이터가 ACK되면 송신 윈도우의 왼쪽 경계가 이동하면서 새로운 데이터를 전송할 수 있게 된다.
+- 수신자는 원칙적으로 이미 송신이 허용된 데이터가 윈도우 밖으로 밀려나도록 윈도우의 오른쪽 경계를 축소하지 않아야 한다. 단, 송신자는 축소에도 대응해야 한다.
+- 수신 윈도우가 0이 되면 송신자는 새로운 데이터 전송을 중단하고, zero-window probe를 통해 윈도우가 다시 열렸는지 주기적으로 확인한다.
 
 #### 혼잡 제어
 
-<!-- TODO: 네트워크 혼잡을 제어하는 목적과 congestion window의 역할을 설명한다. -->
+<!-- 네트워크 혼잡을 제어하는 목적과 congestion window의 역할을 설명한다. -->
 
-TCP endpoint는 기본 혼잡 제어 알고리즘인 slow start, 혼잡 회피, exponential backoff를 모두 구현해야 한다.
+TCP 혼잡 제어는 송신자가 네트워크의 처리 용량보다 많은 데이터를 전송하여 네트워크 혼잡이 악화되는 것을 방지한다.
 
-- Slow Start Phase: 
-    - 패킷 전송에 필요한 가용 네트워크 대역폭을 탐색하고, 네트워크의 가용량에 따라 전송 속도를 조절한다.
-    - congestion window(이하 cwnd) 크기가 지수적으로 증가한다.
-    - slow start threshold(ssthresh)값에 도달하면 다음 단계로 넘어간다.
-- Congestion Avoidance Phase: 
-    - congestion window(이하 cwwd) 크기를 선형적으로 증가시킨다.
-- Congestion Detection Phase:
-    - 패킷 로스나 중복 ack를 감지해 윈도우 크기를 조정해 트래픽을 조정한다.
-    1. timeout으로 재전송하는 경우: ssthresh를 현재 윈도우 크기 반으로 줄이고 cwnd = 1로 설정, slow start 재진입
-    2. ACK 패킷 중복: ssthresh를 현재 윈도우 크기 반으로 줄이고 cwnd = ssthresh로 설정, congestion avoidance 재진입
+TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을 제어하며, 패킷 손실 시 fast retransmit과 fast recovery를 수행할 수 있다. 재전송 타이머가 만료되면 RTO에 exponential backoff를 적용한다.
 
+
+>[!note] 혼잡 제어 내에서 사용하는 변수
+> - congestion window(cwnd): ACK를 받기 전에 네트워크에 전송할 수 있는 데이터량의 송신 측 한도
+> - slow start threshold(ssthresh): slow start와 congestion avoidance를 구분하는 기준
+> - FlightSize: 전송되었지만 아직 누적 ACK를 받지 못한 데이터량
+> - SMSS: 송신자가 전송할 수 있는 최대 TCP 세그먼트 데이터 크기
+>
+
+- Slow Start :
+    - 일반적으로 cwnd < ssthresh일 때 사용한다.
+    - 패킷 전송에 필요한 네트워크 경로의 가용 용량을 점진적으로 탐색한다.
+    - 새 데이터를 확인하는 ACK마다 cwnd를 최대 1 SMSS씩 증가시킨다.
+    - ACK가 각 세그먼트마다 도착한다고 가정하면 cwnd는 RTT마다 대략 두 배로 증가한다.
+    - cwnd가 ssthresh에 도달하거나 이를 초과하면 congestion avoidance로 전환한다.
+
+- Congestion Avoidance :
+    - cwnd를 RTT당 약 1 SMSS씩 선형적으로 증가시키고 혼잡이 감지될 때까지 additive increase를 수행한다.
+
+- Retransmission Timeout :
+    - 재전송 타이머가 만료되면 네트워크 혼잡이 심한 것으로 판단해 이를 수행한다.
+    - 손실된 세그먼트를 재전송한 뒤 slow start로 재진입한다. cwnd가 새로 설정된 ssthresh에 도달하면 congestion avoidance로 전환한다.
+    - RTO = RTO * 2 동작을 exponential backoff라고 한다.
+
+
+>[!Note]
+> RFC에서는 다음 값 이하로 설정하도록 규정하며, 일반적으로 다음과 같이 표현한다.
+> 
+> - ssthresh ≤ max(FlightSize / 2, 2 * SMSS)
+> - cwnd ≤ 1 * SMSS
+> - RTO = RTO * 2
+> 
+
+- Three Duplicate ACKs:
+    - 세 개의 중복 ACK를 수신하면 세그먼트 손실로 판단하고, timeout을 기다리지 않고 손실된 세그먼트를 재전송하는 fast retransmit을 수행한다.
+    - ssthresh를 max(FlightSize / 2, 2 * SMSS) 이하로 설정하고, cwnd = ssthresh + 3 * SMSS로 설정하여 fast recovery에 진입한다.
+    - 손실된 데이터를 확인하는 새로운 ACK를 받으면 cwnd = ssthresh로 설정하고 congestion avoidance로 전환한다.
 
 
 ### UDP : User Datagram Protocol
@@ -233,7 +267,12 @@ TCP endpoint는 기본 혼잡 제어 알고리즘인 slow start, 혼잡 회피, 
 ## 참고 자료
 
 <!-- RFC, 공식 문서, 신뢰할 수 있는 기술 문서를 우선 기록한다. -->
+- [OSI 모델이란?](https://www.cloudflare.com/ko-kr/learning/ddos/glossary/open-systems-interconnection-model-osi/)
 - [IBM AIX - Networking](https://www.ibm.com/docs/en/aix/7.3.0?topic=networking)
 - [MDN Web Glossary](https://developer.mozilla.org/en-US/docs/Glossary)
-- [RFC 9293: Transmission Control Protocol (TCP)](https://www.rfc-editor.org/info/rfc9293/)
+- [RFC 1180: TCP/IP tutorial](https://www.rfc-editor.org/info/rfc1180)
+- [RFC 5681: TCP Congestion Control](https://www.rfc-editor.org/info/rfc5681)
 - [RFC 8095: Services Provided by IETF Transport Protocols and Congestion Control Mechanisms](https://www.rfc-editor.org/info/rfc8095)
+- [RFC 9868: Transport Options for UDP](https://www.rfc-editor.org/info/rfc9868)
+- [RFC 9293: Transmission Control Protocol (TCP)](https://www.rfc-editor.org/info/rfc9293/)
+- [RFC 9868: Transport Options for UDP](https://www.rfc-editor.org/info/rfc9868)
