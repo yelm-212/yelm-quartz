@@ -9,7 +9,7 @@ tags:
 
 네트워크의 동작 원리를 학습하고, 공개된 장애 사례를 바탕으로 문제를 역추론한 기록입니다.
 
-> 전체 일정과 진행 방식은 [[12_week_cs_study|12주 CS 학습 계획]]에서 관리합니다.
+> 전체 일정과 진행 방식은 [[01_Project/12_week_cs_study|12주 CS 학습 계획]]에서 관리합니다.
 
 ## 학습 원칙
 
@@ -21,8 +21,8 @@ tags:
 
 ### 1주차 — TCP/IP와 연결
 
-- [[01_tcp|학습 내용: TCP/IP와 연결]]
-- [[troubleshooting|트러블슈팅: TCP 연결 장애 사례]]
+- 학습내용 : [[03_Resource/04_network/01_tcp|TCP/IP와 연결]]
+- 트러블슈팅: [[03_Resource/04_network/01_tcp/troubleshooting|TCP 연결 장애 사례]]
 
 ### 2주차
 

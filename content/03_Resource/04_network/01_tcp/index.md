@@ -1,5 +1,5 @@
 ---
-title: 1주차 - TCP/IP와 연결
+title: TCP/IP와 연결
 draft: false
 tags:
   - network
