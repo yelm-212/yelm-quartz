@@ -243,32 +243,52 @@ TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을
 <!--  IP 주소가 네트워크에서 인터페이스를 식별하고, IP 패킷의 source/destination address로 사용되는 방식을 설명한다. -->
 
 - Internet Protocol은 패킷 교환 방식의 컴퓨터 네트워크 내에서 호스트 간 데이터그램을 전송하기 위해 고안된 프로토콜
-- IP Address: 네트워크에서 디바이스를 식별하기 위해 할당되는 값, 인터넷 서비스 제공업체에 의해 동적으로 할당된다.
-- IP는 각 인터넷 데이터그램을 독립적인 객체로 다루며 놀니 회로 혹은 연결이 존재하지 않음
-- Type of Service, Time to Live(TTL), Options, and Header Checksum을 주 메커니즘으로 사용.
+- IP Address: IP 네트워크에서 인터페이스를 식별하고 IP 데이터그램의 source/destination을 나타내는 주소.
+  - 주소는 네트워크 관리자에 의해 정적으로 설정되거나 DHCP 등을 통해 동적으로 할당될 수 있다.
+- IP는 각 인터넷 데이터그램을 독립적인 객체로 다루며 논리 회로 혹은 연결을 설정하지 않음
+- TTL(Time To Live): 라우터를 거칠 때마다 감소하며, 0이 되면 데이터그램을 폐기하여 패킷이 무한히 순환하는 것을 방지한다.
+- IP 주소는 정적으로 설정하거나 DHCP 등을 통해 동적으로 할당할 수 있다.
+- DHCP의 dynamic allocation에서는 일정 lease 기간 동안 IP 주소가 할당된다.
 
-- IPv4: 현재까지 사용되는 표준. 32비트 포맷으로 4개의 세트로 .에 의해 구분되는 주소 체계를 가짐
-- IPv6: ipv4 고유 주소 수 고갈나려고 해서 만든거 128비트 포맷, `:`에 의해 구분됨
-
-- 고정 IP(static): 유저에게 고정된 주소 할당
-- 동적 IP(dynamic IPs): ISP에서 유저가 인터넷에 접속하면 자동으로 IP주소 등 필요 리소스 할당시키는 방식(dhcp)
+- IPv4: 32비트 주소를 사용하며 일반적으로 4개의 8비트 값을 `.`으로 구분한 dotted-decimal notation으로 표현한다.
+- IPv6: IPv4 주소 공간 고갈 등의 문제에 대응하기 위해 설계되었으며, 128비트 주소를 사용. 16비트 단위 값을 `:`으로 구분한 hexadecimal notation으로 표현한다.
 
 <!-- network prefix와 subnet mask의 의미를 설명하고, 출발지와 목적지 IP가 같은 네트워크에 속하는지 판단하는 과정을 설명한다. -->
 
 - 서브넷: IP 네트워크를 논리적으로 나눈거 (이거 하는걸 서브네팅이라고 함)
   - 서브넷을 사용하면 대규모 네트워크를 더 작고 관리하기 쉬운 세그먼트로 나눌 수 있다.
-  - 동일 서브넷에 잇는 컴퓨터들은 IP 주소 내 most-significant bit(MSB)가 동일함
-  - subnet mask: IP 주소처럼 표현. 이 값으로 bitwise `AND` 연산 걸어서 routing prefix를 만듬. 
+  - 동일한 subnet에 속하는 주소들은 해당 subnet의 network prefix 길이만큼 동일한 최상위 비트들을 가짐.
+  - Subnet Mask: IP 주소에서 network prefix와 host 부분을 구분하기 위한 32비트 mask.
+    - IP address와 subnet mask를 bitwise AND 연산하면 해당 주소가 속한 network address를 얻을 수 있다.
   - routing prefix는 네트워크의 첫번째 주소로 표현되고, `/` 이하는 prefix의 비트 길이를 명시함
 
+> [!note]  bitwise AND 연산 예시
+> ```
+> IP      192.168.1.130
+> Mask    255.255.255.0
+> AND
+>        192.168.1.0
+> ```
+
 <!-- 이 예시 info callout으로 만들어서 한국어로 설명 -->
-For example, 198.51.100.0/24 is the prefix of the Internet Protocol version 4 network starting at the given address, having 24 bits allocated for the network prefix, and the remaining 8 bits reserved for host addressing. Addresses in the range 198.51.100.0 to 198.51.100.255 belong to this network, with 198.51.100.255 as the subnet broadcast address. The IPv6 address specification 2001:db8::/32 is a large address block with 296 addresses, having a 32-bit routing prefix. The prefix 198.51.100.0/24 would have the subnet mask 255.255.255.0.
+
+> [!info] CIDR 표현 예시
+> `198.51.100.0/24`는 IPv4 주소 공간에서 앞의 24비트가 network prefix이고,
+> 나머지 8비트가 host 부분임을 의미한다.
+>
+> 따라서 이 주소 블록은 `198.51.100.0`부터 `198.51.100.255`까지 총 256개의 주소를 포함한다.
+> 이에 대응하는 subnet mask는 `255.255.255.0`이다.
+>
+> IPv6의 `2001:db8::/32`는 앞의 32비트가 routing prefix이며,
+> 나머지 96비트가 해당 prefix 내부의 주소 공간으로 사용된다.
 
 서브네팅 한 뒤 호스트 식별자 결과
 
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Subnetting_Concept-en.svg/960px-Subnetting_Concept-en.svg.png)
 
-
+- IPv4 주소는 prefix 관점에서 network portion과 host portion으로 나눠 볼 수 있다.
+  - network portion: 어떤 network/subnet에 속하는지를 나타낸다.
+  - host portion: 해당 network 내부의 주소를 구분한다.
 
 ## IP 패킷 전달
 
