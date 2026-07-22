@@ -236,29 +236,55 @@ TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을
 - Example: 영상 스트리밍, 일반적인 DNS query & response
   - DNS는 일반적으로 UDP를 사용할 수 있지만, 응답이 UDP로 처리하기 어려워 truncated된 경우 TCP로 재시도할 수 있으며, zone transfer 등에서는 TCP를 사용한다.
 
-## 8. IP, Port, Socket
+## IP 주소와 네트워크 구분
 
-### IP
+### IP Address
 
-<!-- TODO: IP가 네트워크에서 호스트를 식별하고 패킷을 전달하는 방식을 설명한다. -->
+<!-- TODO: IP 주소가 네트워크에서 인터페이스를 식별하고, IP 패킷의 source/destination address로 사용되는 방식을 설명한다. -->
 
-### Subnet / Gateway / NAT
+- Internet Protocol Addr: 네트워크에서 디바이스를 식별하기 위해 할당되는 값, 인터넷 서비스 제공업체에 의해 동적으로 할당된다.
 
-<!-- TODO: Subnet mask로 같은 네트워크 여부를 판단하는 과정, Default Gateway를 거치는 조건, NAT가 사설 IP와 공인 IP를 변환하는 방식을 설명한다. -->
+- IPv4: 원래표준  
+- IPv6: ipv4 고유 주소 수 고갈나려고 해서 만든거
 
-### ARP / Routing
 
-<!-- TODO: 같은 네트워크에서 ARP로 IP 주소에 대응하는 MAC 주소를 찾는 과정과, 다른 네트워크로 보낼 때 Routing Table을 조회하는 과정을 설명한다. -->
+### Subnet / CIDR
+
+<!-- TODO: network prefix와 subnet mask의 의미를 설명하고, 출발지와 목적지 IP가 같은 네트워크에 속하는지 판단하는 과정을 설명한다. -->
+
+- 서브넷을 사용하면 대규모 네트워크를 더 작고 관리하기 쉬운 세그먼트로 나눌 수 있다.
+
+
+## IP 패킷 전달
+
+### Routing / Default Gateway
+
+<!-- TODO: 목적지 IP를 기준으로 Routing Table을 조회하여 next hop과 출력 인터페이스를 결정하는 과정을 설명한다. 직접 연결된 네트워크에 목적지가 없을 때 Default Gateway가 사용되는 조건을 설명한다. -->
+
+### ARP
+
+<!-- TODO: IPv4 패킷을 로컬 링크에서 전달하기 위해 next-hop IP 주소에 대응하는 MAC 주소를 ARP로 찾는 과정을 설명한다. -->
+
+
+## 주소 변환
+
+### NAT / NAPT
+
+<!-- TODO: NAT가 네트워크 경계에서 사설 IP와 공인 IP를 변환하는 방식을 설명하고, NAPT가 IP 주소와 TCP/UDP Port를 함께 변환하여 여러 내부 호스트가 하나의 공인 IP를 공유하는 방식을 설명한다. -->
+
+- NAT: IP 주소를 절약할 때 사용하는 방법. 로컬 내 여러 장치가 하나의 IP 주소를 공유하게 할 수 있다.
+
+## Transport Endpoint
 
 ### Port
 
-<!-- TODO: 한 호스트 안에서 프로세스나 서비스를 구분하는 방법을 설명한다. -->
+<!-- TODO: TCP/UDP Port가 하나의 호스트에서 애플리케이션 서비스와 통신 endpoint를 구분하는 방식을 설명한다. -->
 
-### Socket
+### Socket / TCP Connection
 
-<!-- TODO: 소켓과 TCP 연결을 식별하는 요소를 설명한다. -->
+<!-- TODO: TCP에서 socket address가 IP address와 port로 구성되는 것을 설명하고, 하나의 TCP 연결이 local socket과 remote socket의 쌍으로 식별되는 방식을 설명한다. -->
 
-## 9. 추가 학습
+## 추가 학습
 
 ### Connection Timeout
 
