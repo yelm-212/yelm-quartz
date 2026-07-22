@@ -242,25 +242,32 @@ TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을
 
 <!--  IP 주소가 네트워크에서 인터페이스를 식별하고, IP 패킷의 source/destination address로 사용되는 방식을 설명한다. -->
 
-- Internet Protocol은 패킷 교환 방식의 컴퓨터 네트워크 내에서 호스트 간 데이터그램을 전송하기 위해 고안된 프로토콜
+- Internet Protocol: 패킷 교환 방식의 컴퓨터 네트워크 내에서 호스트 간 데이터그램을 전송하기 위해 고안된 프로토콜
 - IP Address: IP 네트워크에서 인터페이스를 식별하고 IP 데이터그램의 source/destination을 나타내는 주소.
   - 주소는 네트워크 관리자에 의해 정적으로 설정되거나 DHCP 등을 통해 동적으로 할당될 수 있다.
 - IP는 각 인터넷 데이터그램을 독립적인 객체로 다루며 논리 회로 혹은 연결을 설정하지 않음
 - TTL(Time To Live): 라우터를 거칠 때마다 감소하며, 0이 되면 데이터그램을 폐기하여 패킷이 무한히 순환하는 것을 방지한다.
-- IP 주소는 정적으로 설정하거나 DHCP 등을 통해 동적으로 할당할 수 있다.
 - DHCP의 dynamic allocation에서는 일정 lease 기간 동안 IP 주소가 할당된다.
 
-- IPv4: 32비트 주소를 사용하며 일반적으로 4개의 8비트 값을 `.`으로 구분한 dotted-decimal notation으로 표현한다.
-- IPv6: IPv4 주소 공간 고갈 등의 문제에 대응하기 위해 설계되었으며, 128비트 주소를 사용. 16비트 단위 값을 `:`으로 구분한 hexadecimal notation으로 표현한다.
+- IPv4
+  - 32비트 주소를 사용
+  - 일반적으로 4개의 8비트 값을 `.`으로 구분한 dotted-decimal notation으로 표현
+- IPv6
+  - IPv4 주소 공간 고갈 등의 문제에 대응하기 위해 설계되었으며, 128비트 주소를 사용. 
+  - 16비트 단위 값을 `:`으로 구분한 hexadecimal notation으로 표현
 
 <!-- network prefix와 subnet mask의 의미를 설명하고, 출발지와 목적지 IP가 같은 네트워크에 속하는지 판단하는 과정을 설명한다. -->
 
-- 서브넷: IP 네트워크를 논리적으로 나눈거 (이거 하는걸 서브네팅이라고 함)
+- 서브넷: IP 네트워크를 논리적으로 나눈 것 (이를 수행하는 것을 서브네팅이라고 한다.)
   - 서브넷을 사용하면 대규모 네트워크를 더 작고 관리하기 쉬운 세그먼트로 나눌 수 있다.
   - 동일한 subnet에 속하는 주소들은 해당 subnet의 network prefix 길이만큼 동일한 최상위 비트들을 가짐.
   - Subnet Mask: IP 주소에서 network prefix와 host 부분을 구분하기 위한 32비트 mask.
     - IP address와 subnet mask를 bitwise AND 연산하면 해당 주소가 속한 network address를 얻을 수 있다.
   - routing prefix는 네트워크의 첫번째 주소로 표현되고, `/` 이하는 prefix의 비트 길이를 명시함
+  - Network prefix는 `[prefix-address]/[prefix-length]` 형식으로 표현한다.
+    - `/` 뒤의 값은 주소에서 network prefix로 사용되는 상위 비트 수를 의미한다.
+- CIDR(Classless Inter-Domain Routing): 기존 Class A/B/C와 같은 고정된 주소 클래스 대신 가변 길이의 network prefix를 사용하는 주소 표현 및 할당 방식이다.
+  - `address/prefix-length` 형식으로 표현한다.
 
 > [!note]  bitwise AND 연산 예시
 > ```
@@ -270,16 +277,14 @@ TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을
 >        192.168.1.0
 > ```
 
-<!-- 이 예시 info callout으로 만들어서 한국어로 설명 -->
-
 > [!info] CIDR 표현 예시
-> `198.51.100.0/24`는 IPv4 주소 공간에서 앞의 24비트가 network prefix이고,
+> - `198.51.100.0/24`는 IPv4 주소 공간에서 앞의 24비트가 network prefix이고,
 > 나머지 8비트가 host 부분임을 의미한다.
 >
-> 따라서 이 주소 블록은 `198.51.100.0`부터 `198.51.100.255`까지 총 256개의 주소를 포함한다.
+> - 따라서 이 주소 블록은 `198.51.100.0`부터 `198.51.100.255`까지 총 256개의 주소를 포함한다.
 > 이에 대응하는 subnet mask는 `255.255.255.0`이다.
 >
-> IPv6의 `2001:db8::/32`는 앞의 32비트가 routing prefix이며,
+> - IPv6의 `2001:db8::/32`는 앞의 32비트가 routing prefix이며,
 > 나머지 96비트가 해당 prefix 내부의 주소 공간으로 사용된다.
 
 서브네팅 한 뒤 호스트 식별자 결과
@@ -292,21 +297,53 @@ TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을
 
 ## IP 패킷 전달
 
-- Routing / Default Gateway
-
 <!-- 목적지 IP를 기준으로 Routing Table을 조회하여 next hop과 출력 인터페이스를 결정하는 과정을 설명한다. 직접 연결된 네트워크에 목적지가 없을 때 Default Gateway가 사용되는 조건을 설명한다. -->
 
+- Routing / Default Gateway
+  - Routing은 목적지 IP 주소에 따라 패킷을 어느 next hop 또는 interface로 전달할지 결정하는 과정이다.
+  - 여러 routing entry가 목적지 IP와 일치하는 경우, 일반적으로 가장 긴 prefix가 일치하는 route를 선택한다(Longest Prefix Match).
+  - `0.0.0.0/0`은 모든 IPv4 주소와 일치하므로 더 구체적인 route가 없는 경우 default route로 사용된다.
+1. 호스트는 목적지 IP를 기준으로 routing table을 조회한다.
+2. 목적지가 직접 연결된 network에 있으면 해당 목적지로 직접 전달한다.
+3. 직접 연결되지 않은 network라면 routing table에서 선택된 next-hop router로 전달한다.
+4. 적절한 더 구체적인 route가 없을 때 default route가 사용될 수 있다.
+  일반적으로 해당 next-hop router를 Default Gateway라고 부른다.
+  
 - ARP : Address Resolution Protocol
-  - IPv4 패킷을 로컬 링크에서 전달하기 위해 IP 주소에 해당하는 이더넷으로 패킷을 보내야 할 때 IP address에 대응하는 MAC 주소를 찾는 프로토콜
+  - ARP는 IPv4 주소에 대응하는 link-layer address를 알아내기 위해 사용한다.
+  - 실제로 어떤 IP 주소를 ARP로 resolve할지는 routing 결과에 의해 결정된다.
+    - 목적지가 직접 연결된 network에 있으면 destination IP가 대상이 된다.
+    - 다른 network에 있으면 선택된 next-hop router의 IP가 대상이 된다.
+  - ARP Request는 대상 IP 주소를 가진 호스트를 찾기 위해 local link에 broadcast된다.
+  - 해당 IP를 가진 호스트는 자신의 MAC 주소를 ARP Reply로 응답한다.
+  - 획득한 매핑은 일정 시간 ARP cache에 저장할 수 있다.
 
 
 ## 주소 변환
 
 ### NAT / NAPT
 
-<!-- TODO: NAT가 네트워크 경계에서 사설 IP와 공인 IP를 변환하는 방식을 설명하고, NAPT가 IP 주소와 TCP/UDP Port를 함께 변환하여 여러 내부 호스트가 하나의 공인 IP를 공유하는 방식을 설명한다. -->
+<!-- NAT가 네트워크 경계에서 사설 IP와 공인 IP를 변환하는 방식을 설명하고, NAPT가 IP 주소와 TCP/UDP Port를 함께 변환하여 여러 내부 호스트가 하나의 공인 IP를 공유하는 방식을 설명한다. -->
 
-- Network Address Translator(NAT): IP 주소를 절약할 때 사용하는 방법. 로컬 내 여러 장치가 하나의 IP 주소를 공유하게 할 수 있다.
+- NAT(Network Address Translation): 패킷이 네트워크 경계를 통과할 때 IP address를 다른 address로 변환하는 방식이다.
+- Basic NAT:
+  - 내부 IP address와 외부의 globally routable IP address 사이를 변환한다.
+- NAPT(Network Address Port Translation):
+  - IP address뿐 아니라 TCP/UDP port도 함께 변환한다.
+  - 여러 내부 호스트가 하나의 public IP address를 공유하면서 동시에 외부와 통신할 수 있게 한다.
+
+```
+192.168.0.10:51000 ─┐
+                    │
+192.168.0.20:52000 ─┼→ 203.0.113.10:40001 / 40002
+                    │
+192.168.0.30:53000 ─┘
+```
+
+- Internet Assigned Numbers Authority(IANA)에서 IPv4 private network에서 사용할 수 있도록 다음 주소 공간을 지정하고 있다:
+  - `10.0.0.0/8`
+  - `172.16.0.0/12`
+  - `192.168.0.0/16`
 
 ## Transport Endpoint
 
@@ -316,8 +353,17 @@ TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을
 
 <!-- TCP에서 socket address가 IP address와 port로 구성되는 것을 설명하고, 하나의 TCP 연결이 local socket과 remote socket의 쌍으로 식별되는 방식을 설명한다. -->
 
-- socket = Internet address + port
-- connection = pair of sockets
+- Port는 TCP/UDP가 하나의 호스트에서 통신 endpoint를 구분하기 위해 사용하는 16-bit identifier이다.
+- 동일한 IP address를 사용하는 호스트에서도 서로 다른 port를 통해 여러 애플리케이션 서비스를 구분할 수 있다.
+
+- TCP에서 socket은 Internet address와 port의 조합으로 정의된다.
+
+- TCP connection은 두 socket의 pair로 식별된다.
+```
+  connection =
+    local IP + local port +
+    remote IP + remote port
+```
 
 ## 추가 학습
 
@@ -336,12 +382,27 @@ TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을
 ## 참고 자료
 
 <!-- RFC, 공식 문서, 신뢰할 수 있는 기술 문서를 우선 기록한다. -->
-- [OSI 모델이란?](https://www.cloudflare.com/ko-kr/learning/ddos/glossary/open-systems-interconnection-model-osi/)
-- [IBM AIX - Networking](https://www.ibm.com/docs/en/aix/7.3.0?topic=networking)
-- [MDN Web Glossary](https://developer.mozilla.org/en-US/docs/Glossary)
+
+- [RFC 791: Internet Protocol](https://www.rfc-editor.org/info/rfc791)
+- [RFC 8200: Internet Protocol, Version 6 (IPv6) Specification](https://www.rfc-editor.org/info/rfc8200)
+- [RFC 4632: Classless Inter-domain Routing (CIDR)](https://www.rfc-editor.org/info/rfc4632)
+- [RFC 2131: Dynamic Host Configuration Protocol](https://www.rfc-editor.org/info/rfc2131)
+
+- [RFC 1122: Requirements for Internet Hosts - Communication Layers](https://www.rfc-editor.org/info/rfc1122)
+- [RFC 826: An Ethernet Address Resolution Protocol](https://www.rfc-editor.org/info/rfc826)
+
+- [RFC 3022: Traditional IP Network Address Translator](https://www.rfc-editor.org/info/rfc3022)
+- [RFC 1918: Address Allocation for Private Internets](https://www.rfc-editor.org/info/rfc1918)
+
 - [RFC 1180: TCP/IP tutorial](https://www.rfc-editor.org/info/rfc1180)
 - [RFC 5681: TCP Congestion Control](https://www.rfc-editor.org/info/rfc5681)
 - [RFC 8095: Services Provided by IETF Transport Protocols and Congestion Control Mechanisms](https://www.rfc-editor.org/info/rfc8095)
 - [RFC 9868: Transport Options for UDP](https://www.rfc-editor.org/info/rfc9868)
 - [RFC 9293: Transmission Control Protocol (TCP)](https://www.rfc-editor.org/info/rfc9293/)
-- [RFC 9868: Transport Options for UDP](https://www.rfc-editor.org/info/rfc9868)
+
+- [OSI 모델이란?](https://www.cloudflare.com/ko-kr/learning/ddos/glossary/open-systems-interconnection-model-osi/)
+- [IBM AIX - Networking](https://www.ibm.com/docs/en/aix/7.3.0?topic=networking)
+- [MDN Web Glossary](https://developer.mozilla.org/en-US/docs/Glossary)
+
+- [Wikipedia - IP address](https://en.wikipedia.org/wiki/IP_address)
+- [Wikipedia - Subnetwork](https://en.wikipedia.org/wiki/Subnet)
