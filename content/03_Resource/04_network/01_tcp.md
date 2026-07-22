@@ -238,32 +238,46 @@ TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을
 
 ## IP 주소와 네트워크 구분
 
-### IP Address
+### IP Address & Subnet & CIDR
 
-<!-- TODO: IP 주소가 네트워크에서 인터페이스를 식별하고, IP 패킷의 source/destination address로 사용되는 방식을 설명한다. -->
+<!--  IP 주소가 네트워크에서 인터페이스를 식별하고, IP 패킷의 source/destination address로 사용되는 방식을 설명한다. -->
 
-- Internet Protocol Addr: 네트워크에서 디바이스를 식별하기 위해 할당되는 값, 인터넷 서비스 제공업체에 의해 동적으로 할당된다.
+- Internet Protocol은 패킷 교환 방식의 컴퓨터 네트워크 내에서 호스트 간 데이터그램을 전송하기 위해 고안된 프로토콜
+- IP Address: 네트워크에서 디바이스를 식별하기 위해 할당되는 값, 인터넷 서비스 제공업체에 의해 동적으로 할당된다.
+- IP는 각 인터넷 데이터그램을 독립적인 객체로 다루며 놀니 회로 혹은 연결이 존재하지 않음
+- Type of Service, Time to Live(TTL), Options, and Header Checksum을 주 메커니즘으로 사용.
 
-- IPv4: 원래표준  
-- IPv6: ipv4 고유 주소 수 고갈나려고 해서 만든거
+- IPv4: 현재까지 사용되는 표준. 32비트 포맷으로 4개의 세트로 .에 의해 구분되는 주소 체계를 가짐
+- IPv6: ipv4 고유 주소 수 고갈나려고 해서 만든거 128비트 포맷, `:`에 의해 구분됨
 
+- 고정 IP(static): 유저에게 고정된 주소 할당
+- 동적 IP(dynamic IPs): ISP에서 유저가 인터넷에 접속하면 자동으로 IP주소 등 필요 리소스 할당시키는 방식(dhcp)
 
-### Subnet / CIDR
+<!-- network prefix와 subnet mask의 의미를 설명하고, 출발지와 목적지 IP가 같은 네트워크에 속하는지 판단하는 과정을 설명한다. -->
 
-<!-- TODO: network prefix와 subnet mask의 의미를 설명하고, 출발지와 목적지 IP가 같은 네트워크에 속하는지 판단하는 과정을 설명한다. -->
+- 서브넷: IP 네트워크를 논리적으로 나눈거 (이거 하는걸 서브네팅이라고 함)
+  - 서브넷을 사용하면 대규모 네트워크를 더 작고 관리하기 쉬운 세그먼트로 나눌 수 있다.
+  - 동일 서브넷에 잇는 컴퓨터들은 IP 주소 내 most-significant bit(MSB)가 동일함
+  - subnet mask: IP 주소처럼 표현. 이 값으로 bitwise `AND` 연산 걸어서 routing prefix를 만듬. 
+  - routing prefix는 네트워크의 첫번째 주소로 표현되고, `/` 이하는 prefix의 비트 길이를 명시함
 
-- 서브넷을 사용하면 대규모 네트워크를 더 작고 관리하기 쉬운 세그먼트로 나눌 수 있다.
+<!-- 이 예시 info callout으로 만들어서 한국어로 설명 -->
+For example, 198.51.100.0/24 is the prefix of the Internet Protocol version 4 network starting at the given address, having 24 bits allocated for the network prefix, and the remaining 8 bits reserved for host addressing. Addresses in the range 198.51.100.0 to 198.51.100.255 belong to this network, with 198.51.100.255 as the subnet broadcast address. The IPv6 address specification 2001:db8::/32 is a large address block with 296 addresses, having a 32-bit routing prefix. The prefix 198.51.100.0/24 would have the subnet mask 255.255.255.0.
+
+서브네팅 한 뒤 호스트 식별자 결과
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Subnetting_Concept-en.svg/960px-Subnetting_Concept-en.svg.png)
+
 
 
 ## IP 패킷 전달
 
-### Routing / Default Gateway
+- Routing / Default Gateway
 
-<!-- TODO: 목적지 IP를 기준으로 Routing Table을 조회하여 next hop과 출력 인터페이스를 결정하는 과정을 설명한다. 직접 연결된 네트워크에 목적지가 없을 때 Default Gateway가 사용되는 조건을 설명한다. -->
+<!-- 목적지 IP를 기준으로 Routing Table을 조회하여 next hop과 출력 인터페이스를 결정하는 과정을 설명한다. 직접 연결된 네트워크에 목적지가 없을 때 Default Gateway가 사용되는 조건을 설명한다. -->
 
-### ARP
-
-<!-- TODO: IPv4 패킷을 로컬 링크에서 전달하기 위해 next-hop IP 주소에 대응하는 MAC 주소를 ARP로 찾는 과정을 설명한다. -->
+- ARP : Address Resolution Protocol
+  - IPv4 패킷을 로컬 링크에서 전달하기 위해 IP 주소에 해당하는 이더넷으로 패킷을 보내야 할 때 IP address에 대응하는 MAC 주소를 찾는 프로토콜
 
 
 ## 주소 변환
@@ -272,17 +286,18 @@ TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을
 
 <!-- TODO: NAT가 네트워크 경계에서 사설 IP와 공인 IP를 변환하는 방식을 설명하고, NAPT가 IP 주소와 TCP/UDP Port를 함께 변환하여 여러 내부 호스트가 하나의 공인 IP를 공유하는 방식을 설명한다. -->
 
-- NAT: IP 주소를 절약할 때 사용하는 방법. 로컬 내 여러 장치가 하나의 IP 주소를 공유하게 할 수 있다.
+- Network Address Translator(NAT): IP 주소를 절약할 때 사용하는 방법. 로컬 내 여러 장치가 하나의 IP 주소를 공유하게 할 수 있다.
 
 ## Transport Endpoint
 
-### Port
+### Port / Socket / TCP Connection
 
-<!-- TODO: TCP/UDP Port가 하나의 호스트에서 애플리케이션 서비스와 통신 endpoint를 구분하는 방식을 설명한다. -->
+<!-- TCP/UDP Port가 하나의 호스트에서 애플리케이션 서비스와 통신 endpoint를 구분하는 방식을 설명한다. -->
 
-### Socket / TCP Connection
+<!-- TCP에서 socket address가 IP address와 port로 구성되는 것을 설명하고, 하나의 TCP 연결이 local socket과 remote socket의 쌍으로 식별되는 방식을 설명한다. -->
 
-<!-- TODO: TCP에서 socket address가 IP address와 port로 구성되는 것을 설명하고, 하나의 TCP 연결이 local socket과 remote socket의 쌍으로 식별되는 방식을 설명한다. -->
+- socket = Internet address + port
+- connection = pair of sockets
 
 ## 추가 학습
 
