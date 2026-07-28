@@ -31,7 +31,7 @@ tags:
 | 주차 | 주제 | 학습 내용 | 트러블슈팅 |
 | --- | --- | --- | --- |
 | 1주차  | TCP/IP와 연결                      | [TCP IP와 연결](03_Resource/04_network/01_tcp) | [[03_Resource/04_network/02_tcpip_ts|TCP 연결 장애 사례]] |
-| 2주차  | HTTP와 요청/응답                   | 작성 예정 | 작성 예정   |
+| 2주차  | HTTP와 요청/응답                   | [[03_Resource/04_network/03_http|HTTP와 요청/응답]] | [[03_Resource/04_network/04_http_429_ts|HTTP 429 트러블슈팅 사례]] |
 | 3주차  | DNS, HTTPS, Proxy, Load Balancer   | 작성 예정 | 작성 예정   |
 | 4주차  | Network 종합                       | 작성 예정 | 작성 예정   |
 | 5주차  | Process, Thread, CPU               | 작성 예정 | 작성 예정   |
