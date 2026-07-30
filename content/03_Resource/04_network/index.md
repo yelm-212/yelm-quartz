@@ -26,7 +26,7 @@ tags:
 
 ### 2주차
 
-- 학습내용: [[03_Resource/04_network/03_http|HTTP와 요청/응답]]
+- 학습내용: [[03_Resource/04_network/03_http|HTTP와 요청&응답]]
 - 트러블슈팅: [[03_Resource/04_network/04_http_429_ts|HTTP 429 트러블슈팅 사례]]
 
 ### 3주차

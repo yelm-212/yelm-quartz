@@ -1,12 +1,12 @@
 ---
-title: HTTP와 요청/응답
-draft: true
+title: HTTP와 요청&응답
+draft: false
 tags:
   - network
   - http
 ---
 
-# HTTP와 요청/응답
+# HTTP와 요청&응답
 
 ## 학습 목표
 
@@ -19,7 +19,8 @@ tags:
 
 ## HTTP Request / Response 구조
 
-<!-- HTTP 메시지의 start line, header, 빈 줄, body를 구분하고 각 부분의 역할을 설명한다. -->
+<!-- HTTP/1.1 기준 status line의 HTTP version, status code, reason phrase를 설명하고,
+HTTP/2 이상에서는 표현 방식이 달라짐을 설명한다. -->
 
 ### Request
 
@@ -136,14 +137,6 @@ sequenceDiagram
 ## Rate Limiting
 
 <!-- rate limiting의 목적과 HTTP 429 응답, 응답 Header를 활용한 대기 전략을 설명한다. -->
-
-## 백지 복습
-
-1. HTTP 요청과 응답 메시지를 직접 작성하고 각 구성 요소를 설명한다.
-2. POST 요청이 timeout 됐을 때 즉시 재시도하면 위험할 수 있는 이유를 설명한다.
-3. HTTP/1.1, HTTP/2, HTTP/3에서 여러 요청을 처리하는 방식의 차이를 설명한다.
-4. HTTP가 stateless함에도 로그인 상태를 유지하는 과정을 설명한다.
-5. HTTP 429 응답을 받았을 때 클라이언트가 취할 전략을 설명한다.
 
 ## 참고 자료
 
