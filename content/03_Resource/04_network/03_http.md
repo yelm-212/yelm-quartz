@@ -56,6 +56,8 @@ Content-Length: 49
 name=FirstName+LastName&email=bsmth%40example.com
 ```
 
+#### start line
+
 - start line은 위와 같이 `<method> <request-target> <protocol>`의 세 파트 형태로 구성된다.
   - `<method>`: request의 의미와 요청으로 원하는 결과를 명시함
   - `<request-target>`: 절대/상대 URL 명시. 포맷은 사용하는 HTTP 메서드와 request context에 따라 다를 수 있음.
@@ -63,13 +65,44 @@ name=FirstName+LastName&email=bsmth%40example.com
     - HTTP method가 `CONNECT`인 경우 `<authority>:<port>` 형태로 명시한다.
   - `<protocol>`: HTTP 버전을 명시한다. HTTP/2 이상에서는 연결하면서 버전을 알수 있어서 헤더에서 명시하지 않는다.
 
+#### request header
+
+![](https://mdn.github.io/shared-assets/images/diagrams/http/messages/request-headers.svg)
+
+- 요청 헤더는 요청에 필요한 추가 정보 혹은 이 요청이 서버에서 다뤄져야하는 방식을 명시한다.
+- Representation headers는 body가 있는 경우 메시지 데이터의 형식과 인코딩을 명시한다.
+
+#### request body
+
+- 서버에 정보를 전달하기 위해 사용한다.
+- `PATCH`, `POST`, `PUT`에만 존재
+
 ### Response
 
 <!-- status line의 HTTP version, status code, reason phrase와 주요 response header를 실제 예시로 설명한다. -->
 
+서버로부터 응답받은 메시지를 의미한다.
+
 ```http
-<!-- 위 요청에 대응하는 HTTP 응답 예시를 작성한다. -->
+HTTP/1.1 201 Created
+Content-Type: application/json
+Location: http://example.com/users/123
+
+{
+  "message": "New user created",
+  "user": {
+    "id": 123,
+    "firstName": "Example",
+    "lastName": "Person",
+    "email": "bsmth@example.com"
+  }
+}
 ```
+
+- start line은 위와 같이 `<protocol> <status-code> <reason-phrase>`의 세 파트 형태로 구성된다.
+  - `<protocol>`: HTTP 버전을 명시한다.
+  - `<status-code>`: 클라이언트 요청의 성공/실패 여부를 표시한다.
+  - `<reason-phrase>`: Optional. 상태 코드가 간단히 상태만을 명시한다면 이 부분은 요청에 의한 결과를 상세히 알려주는 역할이다.
 
 ## HTTP Method
 
