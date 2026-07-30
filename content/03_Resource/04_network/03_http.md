@@ -17,18 +17,51 @@ tags:
 - Stateless한 HTTP에서 로그인 상태를 유지할 수 있는 이유를 설명할 수 있다.
 - 실패한 HTTP 요청을 재시도할 때 고려해야 할 점을 설명할 수 있다.
 
+## HTTP: Hypertext Transfer Protocol
+
+- 기본적으로 stateless한 프로토콜이어서 세션 유지하지 않음
+  - cookie 등으로 클라이언트-서버 동작에 state
+- HTML 문서 등 웹에서 사용하는 리소스들을 가져올때 사용하는 프로토콜
+
 ## HTTP Request / Response 구조
 
 <!-- HTTP/1.1 기준 status line의 HTTP version, status code, reason phrase를 설명하고,
 HTTP/2 이상에서는 표현 방식이 달라짐을 설명한다. -->
+
+![](https://mdn.github.io/shared-assets/images/diagrams/http/messages/http-message-anatomy.svg)
+
+<!-- 1. A start-line is a single line that describes the HTTP version along with the request method or the outcome of the request.
+2. An optional set of HTTP headers containing metadata that describes the message. For example, a request for a resource might include the allowed formats of that resource, while the response might include headers to indicate the actual format returned.
+3. An empty line indicating the metadata of the message is complete.
+4. An optional body containing data associated with the message. This might be POST data to send to the server in a request, or some resource returned to the client in a response. Whether a message contains a body or not is determined by the start-line and HTTP headers. -->
+
+1. start-line은 http 버전과 요청 메서드 혹은 응답 코드를 명시
+2. HTTP header들에는 http 메시지의 메타데이타가 포함됨, 헤더가 필수는 아님
+3. 헤더 이후 빈 line은 헤더 종료를 의미
+4. message body(필수 X)는 메시지의 데이터를 포함한다. 
+    이는 서버에 post하려는 데이터일수도 있고, client에게 전달될 리소스일수도 있다. 
+    body를 포함할지 아닌지는 start line과 http header에서 결정된다.
+
 
 ### Request
 
 <!-- request line의 method, request target, HTTP version과 주요 request header를 실제 예시로 설명한다. -->
 
 ```http
-<!-- 학습에 사용할 HTTP 요청 예시를 작성한다. -->
+POST /users HTTP/1.1
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 49
+
+name=FirstName+LastName&email=bsmth%40example.com
 ```
+
+- start line은 위와 같이 `<method> <request-target> <protocol>`의 세 파트 형태로 구성된다.
+  - `<method>`: request의 의미와 요청으로 원하는 결과를 명시함
+  - `<request-target>`: 절대/상대 URL 명시. 포맷은 사용하는 HTTP 메서드와 request context에 따라 다를 수 있음.
+    - `*`로 명시되는 경우는 options preflight 요청인 경우에만 사용
+    - HTTP method가 `CONNECT`인 경우 `<authority>:<port>` 형태로 명시한다.
+  - `<protocol>`: HTTP 버전을 명시한다. HTTP/2 이상에서는 연결하면서 버전을 알수 있어서 헤더에서 명시하지 않는다.
 
 ### Response
 
@@ -81,13 +114,28 @@ HTTP/2 이상에서는 표현 방식이 달라짐을 설명한다. -->
 
 <!-- 지속 연결, 요청 순서, 파이프라이닝과 head-of-line blocking을 설명한다. -->
 
+- 연결이 재사용 될 수 있다.
+- 파이프라이닝이 추가되어, 첫번째 요청이 완료되지 않아도 두번째 요청을 보낼 수 있게 해 레이턴시를 줄였다.
+- Chunked response 지원
+- 캐시 컨트롤 지원
+- client와 server가 어떤 content를 주고받을지 명시해야 한다.
+- 동일 IP 주소 내에서 다른 호스트 도메인을 사용할 수 있다. (`Host` 헤더)
+
 ### HTTP/2
 
 <!-- binary framing, stream multiplexing, header compression과 TCP 수준 head-of-line blocking을 설명한다. -->
 
+- binary 프로토콜. 임의로 생성 및 읽기 안됨. 향상된 최적화 테크닉 구현을 가능하게 함.
+- multiplexed protocol이라 동일 connection 내에서 parallel request 가능
+- 헤더 압축. 데이터 전송 중복과 overhead를 줄임.
+
 ### HTTP/3
 
 <!-- QUIC과 UDP의 관계, stream 단위 전송, 연결 수립 지연 관점에서 HTTP/2와 비교한다. -->
+
+- Transport 레이어에서 tcp대신 quic 사용.
+- http/2가 multiplex 지원하긴하는데 tcp라 스트림 블로킹할수 있어서 QUIC씀
+- quic: multiple stream 지원, 패킷 로스 감지, 각 stream단위 재전송. 오류가 있으면 해당 패킷 스트림만 블럭됨
 
 | 구분                  | HTTP/1.1 | HTTP/2 | HTTP/3 |
 | --------------------- | -------- | ------ | ------ |
