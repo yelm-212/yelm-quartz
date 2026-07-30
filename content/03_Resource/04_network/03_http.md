@@ -99,23 +99,42 @@ Location: http://example.com/users/123
 }
 ```
 
+#### start line
+
 - start line은 위와 같이 `<protocol> <status-code> <reason-phrase>`의 세 파트 형태로 구성된다.
   - `<protocol>`: HTTP 버전을 명시한다.
   - `<status-code>`: 클라이언트 요청의 성공/실패 여부를 표시한다.
   - `<reason-phrase>`: Optional. 상태 코드가 간단히 상태만을 명시한다면 이 부분은 요청에 의한 결과를 상세히 알려주는 역할이다.
 
+#### response header
+
+![](https://mdn.github.io/shared-assets/images/diagrams/http/messages/response-headers.svg)
+
+- Response header : 클라이언트가 추가 요청을 위해 필요한 정보들을 제공한다.
+- Representation header : message부분의 데이터 형태 및 인코딩 형태 등 형태 정보를 제공한다.
+
+#### request body
+
+성공시 클라이언트가 요청한 데이터, 실패 혹은 이상이 있는 경우 요청에 왜 문제가 생겼는지 / 이 현상이 일시적인지 혹은 영구적인지 등을 표시한다. 필수는 아니며 `201 Created`, `204 No Content`인 경우 body가 없을 수 있다.
+
 ## HTTP Method
 
 <!-- 각 Method의 의미와 안전성(safe), 멱등성(idempotent), 캐시 가능 여부를 비교한다. -->
 
-| Method | 주요 용도 | 안전성 | 멱등성 | 요청 Body | 예시 |
+| Method | 주요 용도 | 안전성 | 멱등성 | 요청 Body | 캐시 가능 여부 |
 | ------ | --------- | ------ | ------ | --------- | ---- |
-| GET    |           |        |        |           |      |
-| HEAD   |           |        |        |           |      |
-| POST   |           |        |        |           |      |
-| PUT    |           |        |        |           |      |
-| PATCH  |           |        |        |           |      |
-| DELETE |           |        |        |           |      |
+| GET     | 리소스 요청  | O      | O      | X         | O     |
+| HEAD    |           | O      | O      |           | O     |
+| OPTIONS |           | O      | O      |           | O     |
+| TRACE   |           | O      | O      |           | O     |
+| PUT     |           | X      | O      |           | X     |
+| DELETE  |           | X      | O      |           | X     |
+| POST    |           | X      | X      |           | 조건부*  |
+| PATCH   |           | X      | X      |           | 조건부*  |
+| CONNECT |           | X      | X      |           | O     |
+
+
+- POST, PATCH 는 응답에 명시적으로 캐시 갱신 정보랑 `Content-Location` 헤더가 있을때 캐싱가능
 
 ## HTTP Status Code
 
@@ -172,11 +191,12 @@ Location: http://example.com/users/123
 
 | 구분                  | HTTP/1.1 | HTTP/2 | HTTP/3 |
 | --------------------- | -------- | ------ | ------ |
-| 기반 전송             |          |        |        |
-| 메시지 표현           |          |        |        |
-| 동시 요청 처리        |          |        |        |
-| Head-of-line blocking |          |        |        |
-| 연결 수립             |          |        |        |
+| 기반 전송             | O         | O       | O       |
+| 메시지 표현           | O         | O       | O       |
+| 동시 요청 처리        | O         | O       | O       |
+| Head-of-line blocking | O         | X       | X       |
+| 연결 수립             | O         | O       | X       |
+
 
 ## Keep-Alive
 
@@ -225,5 +245,5 @@ sequenceDiagram
 
 ## 함께 읽기
 
-- [[03_Resource/04_network/01_tcp|1주차 - TCP/IP와 연결]]
+- [[03_Resource/04_network/01_tcp|1주차 - TCP IP와 연결]]
 - [[03_Resource/04_network/04_http_429_ts|HTTP 429 트러블슈팅 사례]]
