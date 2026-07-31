@@ -19,9 +19,10 @@ tags:
 
 ## HTTP: Hypertext Transfer Protocol
 
-- 기본적으로 stateless한 프로토콜이어서 세션 유지하지 않음
-  - cookie 등으로 클라이언트-서버 동작에 state
-- HTML 문서 등 웹에서 사용하는 리소스들을 가져올때 사용하는 프로토콜
+- HTTP는 네트워크상의 리소스 표현을 요청하고 응답받기 위한 application-level request/response 프로토콜이다.
+- stateless
+  - 각 요청은 원칙적으로 다른 요청이나 연결의 상태에 의존하지 않고 독립적으로 해석할 수 있으나, 이것이 서버가 애플리케이션 상태를 저장할 수 없다는 의미는 아니다.
+  - Cookie, Session, Token 등을 사용해 여러 요청에 걸친 사용자 상태를 유지할 수 있다.
 
 ## HTTP Request / Response 구조
 
@@ -36,12 +37,16 @@ HTTP/2 이상에서는 표현 방식이 달라짐을 설명한다. -->
 4. An optional body containing data associated with the message. This might be POST data to send to the server in a request, or some resource returned to the client in a response. Whether a message contains a body or not is determined by the start-line and HTTP headers. -->
 
 1. start-line은 http 버전과 요청 메서드 혹은 응답 코드를 명시
-2. HTTP header들에는 http 메시지의 메타데이타가 포함됨, 헤더가 필수는 아님
+2. HTTP header field에는 메시지 처리 조건, 대상 리소스, 표현 형식 등의 메타데이터가 포함된다.
+   메시지 구조상 header field가 없을 수도 있지만, HTTP 버전과 메시지 종류에 따라
+   `Host`처럼 반드시 포함해야 하는 field가 존재한다.
 3. 헤더 이후 빈 line은 헤더 종료를 의미
 4. message body(필수 X)는 메시지의 데이터를 포함한다. 
     이는 서버에 post하려는 데이터일수도 있고, client에게 전달될 리소스일수도 있다. 
     body를 포함할지 아닌지는 start line과 http header에서 결정된다.
 
+위 구조는 HTTP/1.1 메시지의 textual wire format을 기준으로 한다.
+HTTP/2와 HTTP/3는 같은 HTTP semantics를 binary frame과 pseudo-header로 표현한다.
 
 ### Request
 
@@ -58,11 +63,15 @@ name=FirstName+LastName&email=bsmth%40example.com
 
 #### start line
 
-- start line은 위와 같이 `<method> <request-target> <protocol>`의 세 파트 형태로 구성된다.
+- start line은 위와 같이 `<method> <request-target> <HTTP-version>`의 세 파트 형태로 구성된다.
   - `<method>`: request의 의미와 요청으로 원하는 결과를 명시함
-  - `<request-target>`: 절대/상대 URL 명시. 포맷은 사용하는 HTTP 메서드와 request context에 따라 다를 수 있음.
-    - `*`로 명시되는 경우는 options preflight 요청인 경우에만 사용
-    - HTTP method가 `CONNECT`인 경우 `<authority>:<port>` 형태로 명시한다.
+  - `request-target`은 상황에 따라 다음 형태를 사용한다.
+    - origin-form: `/users/123`
+    - absolute-form: `https://example.com/users/123`
+    - authority-form: `example.com:443`
+      - `CONNECT`에서 사용한다.
+    - asterisk-form: `*`
+      - `OPTIONS *`처럼 특정 리소스가 아닌 서버 전체의 통신 옵션을 조회할 때 사용한다.
   - `<protocol>`: HTTP 버전을 명시한다. HTTP/2 이상에서는 연결하면서 버전을 알수 있어서 헤더에서 명시하지 않는다.
 
 #### request header
@@ -121,17 +130,18 @@ Location: http://example.com/users/123
 
 <!-- 각 Method의 의미와 안전성(safe), 멱등성(idempotent), 캐시 가능 여부를 비교한다. -->
 
-| Method | 주요 용도 | 안전성 | 멱등성 | 요청 Body | 캐시 가능 여부 |
-| ------ | --------- | ------ | ------ | --------- | ---- |
-| GET     | 리소스 요청          | O      | O      | X         | O     |
-| HEAD    | 리소스 요청(body X)  | O      | O      | X         | O     |
-| OPTIONS | target resource 통신 옵션 | O      | O      | △         | O     |
-| TRACE   | target resource에 message loop-back test | O      | O      | X         | O     |
-| PUT     | target resource를 요청 content로 대체 | X      | O      | O         | X     |
-| DELETE  | 특정 리소스를 삭제 | X      | O      | X         | X     |
-| POST    | 리소스에 entity 추가 | X      | X      | O        | 조건부*  |
-| PATCH   | 리소스의 일부 수정    | X      | X      | O        | 조건부*  |
-| CONNECT | 서버에 터널링 연결 만듬 | X      | X      | X       | O     |
+| Method  | 주요 의미                                        | 안전성 | 멱등성 | 요청 Content | 응답 캐시 |
+| ------- | -------------------------------------------- | --: | --: | ---------: | ----: |
+| GET     | target resource의 representation 조회           |   O |   O |          △ |     O |
+| HEAD    | GET과 동일한 header 조회, response content 제외      |   O |   O |          △ |     O |
+| OPTIONS | resource 또는 server의 통신 옵션 조회                 |   O |   O |          △ |     X |
+| TRACE   | request message의 application-level loop-back |   O |   O |          X |     X |
+| PUT     | target resource를 request content로 생성 또는 대체   |   X |   O |          O |     X |
+| DELETE  | target URI와 현재 기능 간 연결 제거 요청                 |   X |   O |          △ |     X |
+| POST    | target resource 고유 semantics에 따라 content 처리  |   X |   X |          O |   조건부 |
+| PATCH   | patch document를 적용해 resource 일부 수정           |   X |   X |          O |   조건부 |
+| CONNECT | 대상 서버로 tunnel 생성                             |   X |   X |          X |     X |
+
 
 
 - POST, PATCH 는 응답에 명시적으로 캐시 갱신 정보랑 `Content-Location` 헤더가 있을때 캐싱가능
@@ -174,7 +184,7 @@ DELETE /idX/delete HTTP/1.1   -> Returns 404
 
 ### 멱등성과 재시도
 
-<!-- timeout으로 응답을 받지 못했지만 서버에서는 요청을 처리했을 가능성을 포함하여, Method별 재시도 위험을 설명한다. -->
+<!-- TODO: timeout으로 응답을 받지 못했지만 서버에서는 요청을 처리했을 가능성을 포함하여, Method별 재시도 위험을 설명한다. -->
 
 ### Idempotency Key
 
@@ -225,19 +235,19 @@ DELETE /idX/delete HTTP/1.1   -> Returns 404
 
 ## Keep-Alive
 
-<!-- 요청마다 새 TCP 연결을 생성하는 방식과 연결을 재사용하는 방식을 비교하고, latency와 서버 자원에 미치는 영향을 설명한다. -->
+<!-- TODO: 요청마다 새 TCP 연결을 생성하는 방식과 연결을 재사용하는 방식을 비교하고, latency와 서버 자원에 미치는 영향을 설명한다. -->
 
 ### Timeout과 연결 관리
 
-<!-- keep-alive timeout이 너무 짧거나 길 때의 장단점과 서버, proxy, client 간 timeout 불일치가 만드는 문제를 정리한다. -->
+<!-- TODO: keep-alive timeout이 너무 짧거나 길 때의 장단점과 서버, proxy, client 간 timeout 불일치가 만드는 문제를 정리한다. -->
 
 ## Stateless
 
-<!-- HTTP가 stateless하다는 의미와 개별 요청이 독립적으로 처리되는 이유를 설명한다. -->
+<!-- TODO: HTTP가 stateless하다는 의미와 개별 요청이 독립적으로 처리되는 이유를 설명한다. -->
 
 ## Cookie와 Session
 
-<!-- Cookie가 클라이언트에 저장되고 요청에 포함되는 과정과 Session이 서버 측 상태를 유지하는 과정을 설명한다. -->
+<!-- TODO: Cookie가 클라이언트에 저장되고 요청에 포함되는 과정과 Session이 서버 측 상태를 유지하는 과정을 설명한다. -->
 
 ```mermaid
 sequenceDiagram
@@ -250,23 +260,25 @@ sequenceDiagram
     S-->>C: 세션 확인 후 응답
 ```
 
-<!-- 위 흐름에 Cookie의 보안 속성, 세션 만료, 분산 환경에서의 세션 저장 방식을 보충한다. -->
+<!-- TODO: 위 흐름에 Cookie의 보안 속성, 세션 만료, 분산 환경에서의 세션 저장 방식을 보충한다. -->
 
 ## Timeout
 
-<!-- connection timeout, read timeout 등 timeout의 종류를 나누고 무한 대기를 방지하는 목적을 설명한다. -->
+<!-- TODO: connection timeout, read timeout 등 timeout의 종류를 나누고 무한 대기를 방지하는 목적을 설명한다. -->
 
 ## Retry
 
-<!-- 재시도 가능한 실패와 재시도하면 안 되는 실패를 구분하고 최대 횟수, exponential backoff, jitter를 설명한다. -->
+<!-- TODO: 재시도 가능한 실패와 재시도하면 안 되는 실패를 구분하고 최대 횟수, exponential backoff, jitter를 설명한다. -->
 
 ## Rate Limiting
 
-<!-- rate limiting의 목적과 HTTP 429 응답, 응답 Header를 활용한 대기 전략을 설명한다. -->
+<!-- TODO: rate limiting의 목적과 HTTP 429 응답, 응답 Header를 활용한 대기 전략을 설명한다. -->
 
 ## 참고 자료
 
 <!-- RFC와 브라우저 또는 서버의 공식 문서를 우선 기록한다. -->
+
+-[MDN HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)
 
 ## 함께 읽기
 
