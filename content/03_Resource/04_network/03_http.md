@@ -311,6 +311,32 @@ POST와 PATCH는 Method 자체의 semantics만으로 멱등성이 보장되지 �
 
 <!-- TODO: 요청마다 새 TCP 연결을 생성하는 방식과 연결을 재사용하는 방식을 비교하고, latency와 서버 자원에 미치는 영향을 설명한다. -->
 
+연결을 재사용하기 위한 http 헤더이다. 아래와 같이 사용한다.
+
+```http
+Keep-Alive: <parameters>
+```
+
+각 parameter는 `,`로 구분되며 `timeout`, `max` 값을 설정할 수 있다.
+아래와 같이 사용 가능하다.
+
+```http
+HTTP/1.1 200 OK
+Connection: Keep-Alive
+Content-Encoding: gzip
+Content-Type: text/html; charset=utf-8
+Date: Thu, 11 Aug 2016 15:23:13 GMT
+Keep-Alive: timeout=5, max=200
+Last-Modified: Mon, 25 Jul 2016 04:32:39 GMT
+Server: Apache
+
+(body)
+```
+
+- timeout: 연결이 계속 열려 있어야 하는 최소한의 시간(초 단위)
+- max: 연결이 닫히기 이전에 전송될 수 있는 최대 요청 수를 가리킵니다. 
+- HTTP/2, HTTP/3 에선 사용 금지인데 safari에서는 그냥 용인해줌 (왜이런짓을?)
+
 ### Timeout과 연결 관리
 
 <!-- TODO: keep-alive timeout이 너무 짧거나 길 때의 장단점과 서버, proxy, client 간 timeout 불일치가 만드는 문제를 정리한다. -->
