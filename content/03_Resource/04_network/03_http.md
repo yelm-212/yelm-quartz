@@ -162,7 +162,7 @@ Location: http://example.com/users/123
 
 | 범위 | 의미 | 대표 상태 코드 | 처리 시 고려할 점 |
 | ---- | ---- | -------------- | ----------------- |
-| 1xx  | Informational responses | `100 Continue`, `101 Switching Protocols` | 최종 응답이 아니라 중간 응답이므로 이후 final response를 기다린다.                                     |
+| 1xx  | Informational responses | `100 Continue`, `101 Switching Protocols` | * 요청 처리 진행 상황 등을 전달하는 중간 응답 <br> * 일반적으로 이후 final response가 이어지며, `101`은 응답 이후 합의된 protocol로 전환 |
 | 2xx  | Successful responses | `200 OK`, `201 Created` | 성공 의미와 response content 유무는 개별 status code와 method에 따라 다르다.                      |
 | 3xx  | Redirection messages | `301 Moved Permanently` | `Location`, 캐시 정책, method 변경 여부를 확인한다.       |
 | 4xx  | Client error responses | `400 Bad Request`, `401 Unauthorized`, `403 Forbidden` ... | 일반적으로 request를 수정하지 않은 단순 재시도는 의미가 없다. 단, 408·409·429처럼 상황에 따라 재시도할 수 있는 코드도 있다. |
@@ -208,7 +208,7 @@ DELETE /idX/delete HTTP/1.1   -> Returns 404
 
 <!-- 결제나 주문처럼 중복 처리가 위험한 요청에서 idempotency key를 사용하는 목적과 서버의 처리 방식을 설명한다. -->
 
-멱등하지 않은 POST, PATCH 요청은 원래 멱등하지 않기 때문에 서버의 상태가 요청할 때마다 바뀔 수 있다. 결제/주문처럼 중복 처리가 위험한 요청인 경우 `Idempotency-Key` 헤더를 사용해서 중복 처리를 방지할 수 있다. 표준은 아니다.
+POST와 PATCH는 Method 자체의 semantics만으로 멱등성이 보장되지 않는다. 결제/주문처럼 중복 처리가 위험한 요청인 경우 `Idempotency-Key` 헤더를 사용해서 중복 처리를 방지할 수 있다. 표준은 아니다.
 
 - Client 에서는 요청시 헤더에 이 키값을 붙여서 보낸다.
   - 새로운 논리적 작업마다 고유한 key를 생성한다.
@@ -219,13 +219,16 @@ DELETE /idX/delete HTTP/1.1   -> Returns 404
   - 동시에 같은 key의 요청이 들어오는 경우 중복 실행되지 않도록 원자적으로 처리해야 한다.
   - 저장 기간과 만료 정책은 API가 정의해야 한다.
 
+`Idempotency-Key`를 사용한다고 해서 POST나 PATCH Method 자체가 멱등해지는 것은 아니며,
+해당 API가 정의한 범위에서 같은 논리적 작업의 중복 실행을 방지하는 것이다.
+
 ## HTTP 버전별 특징
 
 ### HTTP/1.1
 
 <!-- 지속 연결, 요청 순서, 파이프라이닝과 head-of-line blocking을 설명한다. -->
 
-- 연결이 재사용 될 수 있다.
+- HTTP/1.1은 persistent connection을 기본으로 사용하며 하나의 TCP connection을 여러 request와 response에 재사용할 수 있다.
 - HTTP/1.1은 request pipelining을 허용한다.
   - client는 앞선 response를 받기 전에 다음 request를 전송할 수 있다.
   - server는 request를 받은 순서대로 response를 전송해야 한다.
