@@ -31,11 +31,6 @@ HTTP/2 이상에서는 표현 방식이 달라짐을 설명한다. -->
 
 ![](https://mdn.github.io/shared-assets/images/diagrams/http/messages/http-message-anatomy.svg)
 
-<!-- 1. A start-line is a single line that describes the HTTP version along with the request method or the outcome of the request.
-2. An optional set of HTTP headers containing metadata that describes the message. For example, a request for a resource might include the allowed formats of that resource, while the response might include headers to indicate the actual format returned.
-3. An empty line indicating the metadata of the message is complete.
-4. An optional body containing data associated with the message. This might be POST data to send to the server in a request, or some resource returned to the client in a response. Whether a message contains a body or not is determined by the start-line and HTTP headers. -->
-
 1. start-line은 http 버전과 요청 메서드 혹은 응답 코드를 명시
 2. HTTP header field에는 메시지 처리 조건, 대상 리소스, 표현 형식 등의 메타데이터가 포함된다.
    메시지 구조상 header field가 없을 수도 있지만, HTTP 버전과 메시지 종류에 따라
@@ -72,7 +67,10 @@ name=FirstName+LastName&email=bsmth%40example.com
       - `CONNECT`에서 사용한다.
     - asterisk-form: `*`
       - `OPTIONS *`처럼 특정 리소스가 아닌 서버 전체의 통신 옵션을 조회할 때 사용한다.
-  - `<protocol>`: HTTP 버전을 명시한다. HTTP/2 이상에서는 연결하면서 버전을 알수 있어서 헤더에서 명시하지 않는다.
+  - HTTP/2와 HTTP/3에는 HTTP/1.1의 textual request line이 없다.
+  - method, scheme, authority, path는 `:method`, `:scheme`, `:authority`, `:path`
+    pseudo-header로 표현한다.
+  - 사용하는 HTTP 버전은 연결을 수립하거나 프로토콜을 협상하는 과정에서 결정된다.
 
 #### request header
 
@@ -81,10 +79,14 @@ name=FirstName+LastName&email=bsmth%40example.com
 - 요청 헤더는 요청에 필요한 추가 정보 혹은 이 요청이 서버에서 다뤄져야하는 방식을 명시한다.
 - Representation headers는 body가 있는 경우 메시지 데이터의 형식과 인코딩을 명시한다.
 
-#### request body
+#### request content
 
-- 서버에 정보를 전달하기 위해 사용한다.
-- `PATCH`, `POST`, `PUT`에만 존재
+- 서버가 처리할 데이터를 전달한다.
+- POST, PUT, PATCH는 일반적으로 request content를 사용한다.
+- GET, HEAD, DELETE의 request content에는 일반적으로 정의된 의미가 없으므로
+  특별한 사전 합의가 없다면 전송하지 않는 것이 권장된다.
+- OPTIONS는 content를 포함할 수 있지만 표준에서 그 용도를 정의하지 않는다.
+- TRACE와 CONNECT request에는 content를 포함할 수 없다.
 
 ### Response
 
@@ -113,7 +115,7 @@ Location: http://example.com/users/123
 - start line은 위와 같이 `<protocol> <status-code> <reason-phrase>`의 세 파트 형태로 구성된다.
   - `<protocol>`: HTTP 버전을 명시한다.
   - `<status-code>`: 클라이언트 요청의 성공/실패 여부를 표시한다.
-  - `<reason-phrase>`: Optional. 상태 코드가 간단히 상태만을 명시한다면 이 부분은 요청에 의한 결과를 상세히 알려주는 역할이다.
+  - `<reason-phrase>`: 상태 코드에 대한 선택적 텍스트 설명이다.
 
 #### response header
 
@@ -122,9 +124,14 @@ Location: http://example.com/users/123
 - Response header : 클라이언트가 추가 요청을 위해 필요한 정보들을 제공한다.
 - Representation header : message부분의 데이터 형태 및 인코딩 형태 등 형태 정보를 제공한다.
 
-#### request body
+#### response body
 
-성공시 클라이언트가 요청한 데이터, 실패 혹은 이상이 있는 경우 요청에 왜 문제가 생겼는지 / 이 현상이 일시적인지 혹은 영구적인지 등을 표시한다. 필수는 아니며 `201 Created`, `204 No Content`인 경우 body가 없을 수 있다.
+응답 content의 의미는 request method와 status code에 따라 달라진다.
+성공 응답은 resource representation이나 처리 결과를 포함할 수 있고,
+오류 응답은 오류를 설명하는 representation을 포함할 수 있다.
+
+- `201 Created`는 응답 content를 포함할 수도 있고 포함하지 않을 수도 있다.
+- `204 No Content` 응답은 content를 포함할 수 없다.
 
 ## HTTP Method
 
@@ -142,9 +149,12 @@ Location: http://example.com/users/123
 | PATCH   | patch document를 적용해 resource 일부 수정           |   X |   X |          O |   조건부 |
 | CONNECT | 대상 서버로 tunnel 생성                             |   X |   X |          X |     X |
 
-
-
-- POST, PATCH 는 응답에 명시적으로 캐시 갱신 정보랑 `Content-Location` 헤더가 있을때 캐싱가능
+- △: 프로토콜상 message framing은 가능하지만 일반적으로 정의된 의미가 없거나,
+  특별한 지원이 없으면 전송하지 않는 것이 권장
+- POST와 PATCH 응답은 명시적인 freshness 정보와 target URI를 가리키는
+  `Content-Location`이 있는 경우에 한해 캐시할 수 있다.
+- 캐시된 POST/PATCH 응답은 이후 동일한 POST/PATCH를 대신하기 위한 것이 아니라,
+  조건을 만족하는 GET 또는 HEAD 요청에 재사용된다.
 
 ## HTTP Status Code
 
@@ -152,17 +162,25 @@ Location: http://example.com/users/123
 
 | 범위 | 의미 | 대표 상태 코드 | 처리 시 고려할 점 |
 | ---- | ---- | -------------- | ----------------- |
-| 1xx  | Informational responses | `100 Continue`, `101 Switching Protocols` |                   |
-| 2xx  | Successful responses | `200 OK`, `201 Created` |                   |
-| 3xx  | Redirection messages | `301 Moved Permanently` |                   |
-| 4xx  | Client error responses | `400 Bad Request`, `401 Unauthorized`, `403 Forbidden` ... |                   |
-| 5xx  | Server error responses | `500 Internal Server Error`              |                   |
+| 1xx  | Informational responses | `100 Continue`, `101 Switching Protocols` | 최종 응답이 아니라 중간 응답이므로 이후 final response를 기다린다.                                     |
+| 2xx  | Successful responses | `200 OK`, `201 Created` | 성공 의미와 response content 유무는 개별 status code와 method에 따라 다르다.                      |
+| 3xx  | Redirection messages | `301 Moved Permanently` | `Location`, 캐시 정책, method 변경 여부를 확인한다.       |
+| 4xx  | Client error responses | `400 Bad Request`, `401 Unauthorized`, `403 Forbidden` ... | 일반적으로 request를 수정하지 않은 단순 재시도는 의미가 없다. 단, 408·409·429처럼 상황에 따라 재시도할 수 있는 코드도 있다. |
+| 5xx  | Server error responses | `500 Internal Server Error`              | 일시적 장애인지 판단하고, 멱등성·재시도 횟수·backoff를 고려한다. 모든 5xx를 무조건 재시도하면 안 된다.                 |
+
 
 ## HTTP 멱등성
 
 <!-- 같은 요청을 여러 번 수행해도 서버의 의도된 상태가 한 번 수행했을 때와 같은 성질을 설명한다. -->
 
-동일한 요청을 계속 재시도해도 *동일한 행동을 수행*해야 한다. 이것이 동일한 status code를 반환한다는 의미는 아님에 주의하자.
+동일한 요청을 한 번 수행했을 때와 여러 번 수행했을 때,
+서버에 대한 의도된 효과가 같다면 해당 요청은 멱등하다.
+
+멱등성은 다음을 보장하지 않는다.
+
+- 매번 동일한 status code를 반환하는 것
+- 매번 동일한 response content를 반환하는 것
+- 로그 기록 등 부수적인 내부 동작이 한 번만 발생하는 것
 
 
 ```http
@@ -178,8 +196,8 @@ DELETE /idX/delete HTTP/1.1   -> Returns 200 if idX exists
 DELETE /idX/delete HTTP/1.1   -> Returns 404 as it just got deleted
 DELETE /idX/delete HTTP/1.1   -> Returns 404
 
-// DELETE 는 멱등하기 때문에 여러번 호출해도 idx값의 리소스를 지우려는 동작을 시도한다.
-// 동일한 리소스에 대해 삭제를 시도한다고 해서 상태 코드도 동일하게 호출되지 않음에 유의한다.
+// 첫 번째 요청과 이후 요청의 status code는 다를 수 있지만
+// 여러 번 수행한 뒤에도 `/users/idX`가 존재하지 않는다는 의도된 서버 상태는 동일하다.
 ```
 
 ### 멱등성과 재시도
@@ -192,8 +210,14 @@ DELETE /idX/delete HTTP/1.1   -> Returns 404
 
 멱등하지 않은 POST, PATCH 요청은 원래 멱등하지 않기 때문에 서버의 상태가 요청할 때마다 바뀔 수 있다. 결제/주문처럼 중복 처리가 위험한 요청인 경우 `Idempotency-Key` 헤더를 사용해서 중복 처리를 방지할 수 있다. 표준은 아니다.
 
-- Client 에서는 요청시 헤더에 이 키값을 붙여서 보낸다. 매 요청마다 키 값이 unique하며, 동일 요청 재전송시에는 키 값이 동일해야 한다.
-- Server는 `Idempotency-Key` 를 지원해야 한다. 
+- Client 에서는 요청시 헤더에 이 키값을 붙여서 보낸다.
+  - 새로운 논리적 작업마다 고유한 key를 생성한다.
+  - 같은 작업을 재시도할 때는 최초 요청과 동일한 key를 사용한다.
+- server는 key와 함께 요청의 fingerprint, 처리 상태, 처리 결과를 저장한다.
+  - 같은 key와 같은 요청이 다시 오면 기존 처리 결과를 반환한다.
+  - 같은 key를 다른 요청 content에 재사용하면 오류로 처리해야 한다.
+  - 동시에 같은 key의 요청이 들어오는 경우 중복 실행되지 않도록 원자적으로 처리해야 한다.
+  - 저장 기간과 만료 정책은 API가 정의해야 한다.
 
 ## HTTP 버전별 특징
 
@@ -202,19 +226,25 @@ DELETE /idX/delete HTTP/1.1   -> Returns 404
 <!-- 지속 연결, 요청 순서, 파이프라이닝과 head-of-line blocking을 설명한다. -->
 
 - 연결이 재사용 될 수 있다.
-- 파이프라이닝이 추가되어, 첫번째 요청이 완료되지 않아도 두번째 요청을 보낼 수 있게 해 레이턴시를 줄였다.
-- Chunked response 지원
-- 캐시 컨트롤 지원
-- client와 server가 어떤 content를 주고받을지 명시해야 한다.
+- HTTP/1.1은 request pipelining을 허용한다.
+  - client는 앞선 response를 받기 전에 다음 request를 전송할 수 있다.
+  - server는 request를 받은 순서대로 response를 전송해야 한다.
+  - 앞선 response가 지연되면 뒤의 response도 전송되지 못하는
+    application-level head-of-line blocking이 발생한다.
+- `chunked` transfer coding을 사용해 content 길이를 미리 알지 못해도 분할 전송할 수 있다.
 - 동일 IP 주소 내에서 다른 호스트 도메인을 사용할 수 있다. (`Host` 헤더)
 
 ### HTTP/2
 
 <!-- binary framing, stream multiplexing, header compression과 TCP 수준 head-of-line blocking을 설명한다. -->
 
-- binary 프로토콜. 임의로 생성 및 읽기 안됨. 향상된 최적화 테크닉 구현을 가능하게 함.
-- multiplexed protocol이라 동일 connection 내에서 parallel request 가능
-- 헤더 압축. 데이터 전송 중복과 overhead를 줄임.
+- HTTP semantics를 binary frame으로 표현한다.
+- 각 request/response exchange를 독립된 stream에 할당한다.
+- 하나의 TCP connection에서 여러 stream의 frame을 교차 전송하는 multiplexing을 지원한다.
+- HPACK을 사용해 반복되는 HTTP field를 압축한다.
+- HTTP 수준의 response ordering 문제는 완화하지만,
+  TCP packet loss가 발생하면 해당 TCP connection의 모든 stream이 영향을 받는
+  transport-level head-of-line blocking은 남아 있다.
 
 ### HTTP/3
 
@@ -222,15 +252,21 @@ DELETE /idX/delete HTTP/1.1   -> Returns 404
 
 - Transport 레이어에서 tcp대신 quic 사용.
 - http/2가 multiplex 지원하긴하는데 tcp라 스트림 블로킹할수 있어서 QUIC씀
-- quic: multiple stream 지원, 패킷 로스 감지, 각 stream단위 재전송. 오류가 있으면 해당 패킷 스트림만 블럭됨
+- QUIC은 UDP datagram 위에서 동작하며 신뢰성, stream, flow control,
+  congestion control, loss recovery, TLS 기반 보안을 제공한다.
+- 하나의 QUIC connection에서 여러 독립적인 stream을 사용한다.
+- 특정 stream의 data가 유실되더라도 다른 stream의 전송은 계속 진행할 수 있다.
 
-| 구분                  | HTTP/1.1 | HTTP/2 | HTTP/3 |
-| --------------------- | -------- | ------ | ------ |
-| 기반 전송             | O         | O       | O       |
-| 메시지 표현           | O         | O       | O       |
-| 동시 요청 처리        | O         | O       | O       |
-| Head-of-line blocking | O         | X       | X       |
-| 연결 수립             | O         | O       | X       |
+
+| 구분           | HTTP/1.1                              | HTTP/2                               | HTTP/3                                    |
+| ------------ | ------------------------------------- | ------------------------------------ | ----------------------------------------- |
+| 기반 전송        | TCP                                   | TCP                                  | QUIC over UDP                             |
+| 메시지 표현       | Textual message                       | Binary frame                         | Binary frame                              |
+| 동시 요청 처리     | 여러 connection 또는 pipelining           | 하나의 connection에서 stream multiplexing | 하나의 connection에서 QUIC stream multiplexing |
+| Field 압축     | 기본 제공 없음                              | HPACK                                | QPACK                                     |
+| HOL blocking | response 순서에 따른 application-level HOL | HTTP stream 수준은 완화되지만 TCP HOL 존재     | 다른 stream 사이의 transport HOL 완화            |
+| 연결 수립        | TCP, HTTPS는 별도 TLS handshake          | TCP, HTTPS는 TLS/ALPN 사용              | QUIC transport와 TLS handshake 결합          |
+| 연결 재개        | TCP/TLS 정책에 따름                        | TCP/TLS 정책에 따름                       | 조건에 따라 0-RTT 가능                           |
 
 
 ## Keep-Alive
