@@ -123,15 +123,15 @@ Location: http://example.com/users/123
 
 | Method | 주요 용도 | 안전성 | 멱등성 | 요청 Body | 캐시 가능 여부 |
 | ------ | --------- | ------ | ------ | --------- | ---- |
-| GET     | 리소스 요청  | O      | O      | X         | O     |
-| HEAD    |           | O      | O      |           | O     |
-| OPTIONS |           | O      | O      |           | O     |
-| TRACE   |           | O      | O      |           | O     |
-| PUT     |           | X      | O      |           | X     |
-| DELETE  |           | X      | O      |           | X     |
-| POST    |           | X      | X      |           | 조건부*  |
-| PATCH   |           | X      | X      |           | 조건부*  |
-| CONNECT |           | X      | X      |           | O     |
+| GET     | 리소스 요청          | O      | O      | X         | O     |
+| HEAD    | 리소스 요청(body X)  | O      | O      | X         | O     |
+| OPTIONS | target resource 통신 옵션 | O      | O      | △         | O     |
+| TRACE   | target resource에 message loop-back test | O      | O      | X         | O     |
+| PUT     | target resource를 요청 content로 대체 | X      | O      | O         | X     |
+| DELETE  | 특정 리소스를 삭제 | X      | O      | X         | X     |
+| POST    | 리소스에 entity 추가 | X      | X      | O        | 조건부*  |
+| PATCH   | 리소스의 일부 수정    | X      | X      | O        | 조건부*  |
+| CONNECT | 서버에 터널링 연결 만듬 | X      | X      | X       | O     |
 
 
 - POST, PATCH 는 응답에 명시적으로 캐시 갱신 정보랑 `Content-Location` 헤더가 있을때 캐싱가능
@@ -142,15 +142,35 @@ Location: http://example.com/users/123
 
 | 범위 | 의미 | 대표 상태 코드 | 처리 시 고려할 점 |
 | ---- | ---- | -------------- | ----------------- |
-| 1xx  |      |                |                   |
-| 2xx  |      |                |                   |
-| 3xx  |      |                |                   |
-| 4xx  |      |                |                   |
-| 5xx  |      |                |                   |
+| 1xx  | Informational responses | `100 Continue`, `101 Switching Protocols` |                   |
+| 2xx  | Successful responses | `200 OK`, `201 Created` |                   |
+| 3xx  | Redirection messages | `301 Moved Permanently` |                   |
+| 4xx  | Client error responses | `400 Bad Request`, `401 Unauthorized`, `403 Forbidden` ... |                   |
+| 5xx  | Server error responses | `500 Internal Server Error`              |                   |
 
 ## HTTP 멱등성
 
 <!-- 같은 요청을 여러 번 수행해도 서버의 의도된 상태가 한 번 수행했을 때와 같은 성질을 설명한다. -->
+
+동일한 요청을 계속 재시도해도 *동일한 행동을 수행*해야 한다. 이것이 동일한 status code를 반환한다는 의미는 아님에 주의하자.
+
+
+```http
+POST /add_row HTTP/1.1
+POST /add_row HTTP/1.1   -> Adds a 2nd row
+POST /add_row HTTP/1.1   -> Adds a 3rd row
+
+// POST는 멱등하지 않기 때문에 여러번 호출하면 여러개의 row를 추가한다.
+```
+
+```http
+DELETE /idX/delete HTTP/1.1   -> Returns 200 if idX exists
+DELETE /idX/delete HTTP/1.1   -> Returns 404 as it just got deleted
+DELETE /idX/delete HTTP/1.1   -> Returns 404
+
+// DELETE 는 멱등하기 때문에 여러번 호출해도 idx값의 리소스를 지우려는 동작을 시도한다.
+// 동일한 리소스에 대해 삭제를 시도한다고 해서 상태 코드도 동일하게 호출되지 않음에 유의한다.
+```
 
 ### 멱등성과 재시도
 
@@ -159,6 +179,11 @@ Location: http://example.com/users/123
 ### Idempotency Key
 
 <!-- 결제나 주문처럼 중복 처리가 위험한 요청에서 idempotency key를 사용하는 목적과 서버의 처리 방식을 설명한다. -->
+
+멱등하지 않은 POST, PATCH 요청은 원래 멱등하지 않기 때문에 서버의 상태가 요청할 때마다 바뀔 수 있다. 결제/주문처럼 중복 처리가 위험한 요청인 경우 `Idempotency-Key` 헤더를 사용해서 중복 처리를 방지할 수 있다. 표준은 아니다.
+
+- Client 에서는 요청시 헤더에 이 키값을 붙여서 보낸다. 매 요청마다 키 값이 unique하며, 동일 요청 재전송시에는 키 값이 동일해야 한다.
+- Server는 `Idempotency-Key` 를 지원해야 한다. 
 
 ## HTTP 버전별 특징
 
