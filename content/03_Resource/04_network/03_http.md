@@ -188,21 +188,58 @@ POST /add_row HTTP/1.1
 POST /add_row HTTP/1.1   -> Adds a 2nd row
 POST /add_row HTTP/1.1   -> Adds a 3rd row
 
-// POST는 멱등하지 않기 때문에 여러번 호출하면 여러개의 row를 추가한다.
 ```
+
+POST는 멱등하지 않기 때문에 여러번 호출하면 여러개의 row를 추가한다.
 
 ```http
 DELETE /idX/delete HTTP/1.1   -> Returns 200 if idX exists
 DELETE /idX/delete HTTP/1.1   -> Returns 404 as it just got deleted
 DELETE /idX/delete HTTP/1.1   -> Returns 404
 
-// 첫 번째 요청과 이후 요청의 status code는 다를 수 있지만
-// 여러 번 수행한 뒤에도 `/users/idX`가 존재하지 않는다는 의도된 서버 상태는 동일하다.
 ```
+
+첫 번째 요청과 이후 요청의 status code는 다를 수 있지만
+여러 번 수행한 뒤에도 `/users/idX`가 존재하지 않는다는 의도된 서버 상태는 동일하다.
 
 ### 멱등성과 재시도
 
-<!-- TODO: timeout으로 응답을 받지 못했지만 서버에서는 요청을 처리했을 가능성을 포함하여, Method별 재시도 위험을 설명한다. -->
+<!-- timeout으로 응답을 받지 못했지만 서버에서는 요청을 처리했을 가능성을 포함하여, Method별 재시도 위험을 설명한다. -->
+
+클라이언트에서 timeout이나 connection failure가 발생했다는 사실만으로 서버가 요청을 처리하지 않았다고 판단할 수는 없다.
+
+다음과 같은 상황이 발생할 수 있다.
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+
+    C->>S: POST /orders
+    S->>S: 주문 생성 완료
+    S--xC: 응답 유실
+    Note over C: response timeout
+    C->>S: 동일 요청 재시도
+    S->>S: 중복 주문이 생성될 수 있음
+```
+
+1. 클라이언트가 서버에 요청을 전송한다.
+2. 서버가 요청을 정상적으로 처리해 상태를 변경한다.
+3. 서버의 응답이 유실되거나 지연되거나, 응답을 전달하던 연결이 종료된다.
+4. 클라이언트는 응답을 받지 못해 timeout으로 판단한다.
+
+이 경우 클라이언트는 요청의 실패를 관측했지만, 실제로 서버에 요청이 적용되었는지는 알 수 없다.
+
+멱등한 Method는 동일한 요청을 다시 보내더라도 서버에 대한 의도된 효과가 한 번 요청했을 때와 같으므로 이러한 통신 실패 이후 재시도를 고려할 수 있다. 예를 들어 PUT 요청이 이미 성공한 상태에서 같은 PUT 요청을 다시 보내더라도 target resource에 적용하려는 최종 상태는 동일하다.
+
+반면 POST나 PATCH처럼 멱등성이 보장되지 않는 요청을 그대로 재시도하면 주문 생성, 결제 승인, 메시지 발송 등이 중복 실행될 수 있다. 따라서 non-idempotent request는 **다음 중 하나가 보장될 때만 재시도**해야 한다.
+
+* 서버가 최초 요청을 처리하지 않았음을 확인할 수 있는 경우
+* 해당 API의 operation 자체가 멱등하게 설계된 경우
+* `Idempotency-Key`나 고유한 business key를 사용해 중복 실행을 방지하는 경우
+
+멱등한 요청이라고 해서 무제한으로 재시도해도 된다는 의미는 아니다. 서버 과부하와 retry storm을 방지하기 위해 최대 재시도 횟수, timeout, exponential backoff, jitter 등의 별도 retry 정책이 필요하다.
+
 
 ### Idempotency Key
 
@@ -253,8 +290,7 @@ POST와 PATCH는 Method 자체의 semantics만으로 멱등성이 보장되지 �
 
 <!-- QUIC과 UDP의 관계, stream 단위 전송, 연결 수립 지연 관점에서 HTTP/2와 비교한다. -->
 
-- Transport 레이어에서 tcp대신 quic 사용.
-- http/2가 multiplex 지원하긴하는데 tcp라 스트림 블로킹할수 있어서 QUIC씀
+- HTTP semantics를 QUIC 위에 매핑한다.
 - QUIC은 UDP datagram 위에서 동작하며 신뢰성, stream, flow control,
   congestion control, loss recovery, TLS 기반 보안을 제공한다.
 - 하나의 QUIC connection에서 여러 독립적인 stream을 사용한다.
