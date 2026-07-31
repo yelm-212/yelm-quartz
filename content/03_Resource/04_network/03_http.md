@@ -112,8 +112,8 @@ Location: http://example.com/users/123
 
 #### start line
 
-- start line은 위와 같이 `<protocol> <status-code> <reason-phrase>`의 세 파트 형태로 구성된다.
-  - `<protocol>`: HTTP 버전을 명시한다.
+- start line은 위와 같이 `<HTTP-version> <status-code> <reason-phrase>`의 세 파트 형태로 구성된다.
+  - `<HTTP-version>`: HTTP 버전을 명시한다.
   - `<status-code>`: 클라이언트 요청의 성공/실패 여부를 표시한다.
   - `<reason-phrase>`: 상태 코드에 대한 선택적 텍스트 설명이다.
 
@@ -267,7 +267,6 @@ DELETE /idX/delete HTTP/1.1   -> Returns 404
 | HOL blocking | response 순서에 따른 application-level HOL | HTTP stream 수준은 완화되지만 TCP HOL 존재     | 다른 stream 사이의 transport HOL 완화            |
 | 연결 수립        | TCP, HTTPS는 별도 TLS handshake          | TCP, HTTPS는 TLS/ALPN 사용              | QUIC transport와 TLS handshake 결합          |
 | 연결 재개        | TCP/TLS 정책에 따름                        | TCP/TLS 정책에 따름                       | 조건에 따라 0-RTT 가능                           |
-
 
 ## Keep-Alive
 
