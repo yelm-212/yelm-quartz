@@ -114,14 +114,16 @@ Location: http://example.com/users/123
 
 - start line은 위와 같이 `<HTTP-version> <status-code> <reason-phrase>`의 세 파트 형태로 구성된다.
   - `<HTTP-version>`: HTTP 버전을 명시한다.
-  - `<status-code>`: 클라이언트 요청의 성공/실패 여부를 표시한다.
+  - `<status-code>`: request의 처리 결과와 response의 의미를 나타내는 세 자리 코드이다.
   - `<reason-phrase>`: 상태 코드에 대한 선택적 텍스트 설명이다.
+    - client는 처리 결과를 판단할 때 reason phrase가 아니라 status code를 사용해야 한다.
 
 #### response header
 
 ![](https://mdn.github.io/shared-assets/images/diagrams/http/messages/response-headers.svg)
 
-- Response header : 클라이언트가 추가 요청을 위해 필요한 정보들을 제공한다.
+- Response header : 클라이언트에 추가 context을 위해 필요한 정보들을 제공한다.
+  - server, target resource, redirect 위치, 재시도 시점 등에 관한 정보를 전달한다.
 - Representation header : message부분의 데이터 형태 및 인코딩 형태 등 형태 정보를 제공한다.
 
 #### response body
@@ -190,17 +192,15 @@ POST /add_row HTTP/1.1   -> Adds a 3rd row
 
 ```
 
-POST는 멱등하지 않기 때문에 여러번 호출하면 여러개의 row를 추가한다.
+이 예시의 POST endpoint가 멱등하게 설계되지 않았으므로 여러 row가 추가된다.
 
 ```http
-DELETE /idX/delete HTTP/1.1   -> Returns 200 if idX exists
-DELETE /idX/delete HTTP/1.1   -> Returns 404 as it just got deleted
-DELETE /idX/delete HTTP/1.1   -> Returns 404
-
+DELETE /users/idX HTTP/1.1   -> 204 No Content
+DELETE /users/idX HTTP/1.1   -> 404 Not Found
+DELETE /users/idX HTTP/1.1   -> 404 Not Found
 ```
 
-첫 번째 요청과 이후 요청의 status code는 다를 수 있지만
-여러 번 수행한 뒤에도 `/users/idX`가 존재하지 않는다는 의도된 서버 상태는 동일하다.
+첫 번째 요청과 이후 요청의 status code는 다를 수 있지만 여러 번 수행한 뒤에도 `/users/idX`가 존재하지 않는다는 의도된 서버 상태는 동일하다.
 
 ### 멱등성과 재시도
 
@@ -311,7 +311,9 @@ POST와 PATCH는 Method 자체의 semantics만으로 멱등성이 보장되지 �
 
 <!-- 요청마다 새 TCP 연결을 생성하는 방식과 연결을 재사용하는 방식을 비교하고, latency와 서버 자원에 미치는 영향을 설명한다. -->
 
-연결을 재사용하기 위한 http 헤더이다. 아래와 같이 사용한다.
+Keep-Alive는 하나의 transport connection을 여러 HTTP request와 response에 재사용하는 persistent connection과 관련된 개념이다. 요청마다 새 TCP connection을 생성하면 TCP handshake와 HTTPS의 TLS handshake 비용이 반복된다. 연결을 재사용하면 이 비용과 latency를 줄일 수 있지만, 사용하지 않는 connection을 너무 오래 유지하면 server와 proxy의 connection, memory, file descriptor 같은 자원을 계속 점유한다.
+
+HTTP/1.1은 persistent connection이 기본이며, 종료하려는 endpoint가 `Connection: close`를 보낼 수 있다.
 
 ```http
 Keep-Alive: <parameters>
@@ -335,19 +337,46 @@ Server: Apache
 
 - timeout: 연결이 계속 열려 있어야 하는 최소한의 시간(초 단위)
 - max: 연결이 닫히기 이전에 전송될 수 있는 최대 요청 수를 가리킵니다. 
-- HTTP/2, HTTP/3 에선 사용 금지인데 safari에서는 그냥 용인해줌 (왜이런짓을?)
+- `Connection`, `Keep-Alive` 같은 connection-specific header field는 HTTP/2와 HTTP/3에서 사용할 수 없다.
+- Chrome과 Firefox는 HTTP/2 response에 포함된 해당 field를 무시하지만, Safari는 규격에 따라 해당 response를 처리하지 않을 수 있다.
 
 ### Timeout과 연결 관리
 
-<!-- TODO: keep-alive timeout이 너무 짧거나 길 때의 장단점과 서버, proxy, client 간 timeout 불일치가 만드는 문제를 정리한다. -->
+<!-- keep-alive timeout이 너무 짧거나 길 때의 장단점과 서버, proxy, client 간 timeout 불일치가 만드는 문제를 정리한다. -->
+
+keep-alive timeout이 너무 짧으면 다음 요청 전에 connection이 자주 종료되어 TCP 및 TLS connection을 반복해서 수립하게 되므로 connection 재사용 효과가 줄어든다.
+
+반대로 timeout이 너무 길면 사용하지 않는 idle connection이 server와 proxy의 connection slot, memory, file descriptor 등의 자원을 오래 점유한다.
+
+client, proxy, server는 각각 별도의 idle timeout을 가질 수 있다.
+
+예를 들어 proxy가 connection을 이미 종료했지만 client가 해당 connection을 재사용할 수 있다고 판단하면, client의 다음 요청은 이미 닫힌 connection으로 전송되어 실패할 수 있다. 이 경우 client는 새로운 connection을 수립한 후 요청의 멱등성을 고려해 재시도해야 한다.
+
+`Keep-Alive` header의 `timeout` 값은 정확한 connection 종료 시각을 보장하지 않으며, connection 유지 정책에 대한 hint로 취급해야 한다.
 
 ## Stateless
 
-<!-- TODO: HTTP가 stateless하다는 의미와 개별 요청이 독립적으로 처리되는 이유를 설명한다. -->
+<!-- HTTP가 stateless하다는 의미와 개별 요청이 독립적으로 처리되는 이유를 설명한다. -->
+
+HTTP가 stateless하다는 것은 각 request를 해석하고 처리하는 데 이전 request의 context가 필수로 요구되지 않는다는 의미다. **HTTP protocol 자체**가 사용자별 application state를 자동으로 유지해 주지는 않지만, server가 database나 session store에 상태를 저장할 수 없다는 뜻은 아니다.
+
+웹 애플리케이션은 Cookie, Session, Token 등을 사용해 여러 request를 같은 사용자나 로그인 상태와 연결한다. 이러한 상태 관리는 HTTP 위에서 애플리케이션이 추가한 mechanism이며, HTTP 자체의 stateless semantics와 모순되지 않는다.
 
 ## Cookie와 Session
 
-<!-- TODO: Cookie가 클라이언트에 저장되고 요청에 포함되는 과정과 Session이 서버 측 상태를 유지하는 과정을 설명한다. -->
+<!-- Cookie가 클라이언트에 저장되고 요청에 포함되는 과정과 Session이 서버 측 상태를 유지하는 과정을 설명한다. -->
+
+HTTP cookie는 서버가 사용자의 웹 브라우저에 전송하는 작은 데이터 조각으로, 두 요청이 동일 브라우저에서 들어왔는지 아닌지를 판단할 때 주로 사용한다. 주로 아래 세가지 목적을 위해 사용한다.
+
+- 세션 관리(Session management) : 서버에 저장해야 할 로그인, 장바구니, 게임 스코어 등의 정보 관리
+- 개인화(Personalization) : 사용자 선호, 테마 등의 세팅
+- 트래킹(Tracking) : 사용자 행동을 기록하고 분석하는 용도
+
+session 방식에서는 일반적으로 Cookie에 로그인 정보 전체를 저장하지 않고 예측하기 어려운 session identifier를 저장한다.server는 identifier에 대응하는 session state를 memory, database, Redis 등의 저장소에서 조회한다.
+
+`HttpOnly` 값이 설정되지 않으면 js에서 접근 가능, XSS 위험 있이 존재한다. 그러나 `HttpOnly` 설정이 되어 있어도 XSS 자체를 막지는 않으며, 공격자가 사용자의 browser에서 인증된 request를 보내는 것까지 방지하지는 못한다.
+
+그러므로 session Cookie에는 Secure, HttpOnly, 적절한 SameSite, 제한적인 Domain과 Path를 함께 설정해야 한다.
 
 ```mermaid
 sequenceDiagram
@@ -360,25 +389,69 @@ sequenceDiagram
     S-->>C: 세션 확인 후 응답
 ```
 
-<!-- TODO: 위 흐름에 Cookie의 보안 속성, 세션 만료, 분산 환경에서의 세션 저장 방식을 보충한다. -->
+브라우저에 데이터를 저장하는 수단으로는 Cookie 외에도 Web Storage와 IndexedDB 등이 있다. 다만 서버에 자동으로 전송되어야 하는 session identifier에는 Cookie가 사용되며, 단순한 client-side 데이터 저장과 목적이 다르다.
 
 ## Timeout
 
-<!-- TODO: connection timeout, read timeout 등 timeout의 종류를 나누고 무한 대기를 방지하는 목적을 설명한다. -->
+<!-- connection timeout, read timeout 등 timeout의 종류를 나누고 무한 대기를 방지하는 목적을 설명한다. -->
+timeout은 외부 시스템의 응답을 무한정 기다리면서 thread, connection 등의 자원을 점유하는 것을 방지하기 위해 설정한다.
+
+- connection timeout
+  - server와 transport connection을 수립할 때까지 기다리는 최대 시간
+  - DNS 조회 시간이나 TLS handshake 시간의 포함 여부는 client 구현에 따라 다를 수 있다.
+- read timeout
+  - connection이 수립된 후 response data를 기다리는 최대 시간
+  - 일부 구현에서는 전체 response 시간이 아니라 연속된 read 사이의 대기 시간을 의미한다.
+- request timeout 또는 deadline
+  - connection 수립, request 전송, response 수신을 포함한 전체 작업에 허용된 시간
+- idle timeout
+  - connection에서 일정 시간 동안 송수신이 없을 때 connection을 종료하기까지의 시간
+
+각 timeout의 정확한 의미와 적용 범위는 HTTP protocol이 아니라 사용하는 client, server, proxy 구현에서 정의하므로 설정을 확인해야 한다.
 
 ## Retry
 
-<!-- TODO: 재시도 가능한 실패와 재시도하면 안 되는 실패를 구분하고 최대 횟수, exponential backoff, jitter를 설명한다. -->
+<!-- 재시도 가능한 실패와 재시도하면 안 되는 실패를 구분하고 최대 횟수, exponential backoff, jitter를 설명한다. -->
+재시도는 동일한 요청을 다시 수행했을 때 성공할 가능성이 있는 일시적 실패에 적용한다. network failure, timeout, 일부 5xx response, 429 response 등이 후보가 될 수 있다.
+
+반면 validation 실패, 잘못된 인증 정보, 존재하지 않는 resource 등 요청을 수정하지 않으면 결과가 달라지지 않는 실패는 일반적으로 재시도하지 않는다.
+
+재시도 정책을 구성할 때는 다음을 고려한다.
+
+- request가 멱등하거나 중복 실행이 방지되는지 확인한다.
+- 최대 재시도 횟수나 전체 deadline을 설정한다.
+- exponential backoff로 재시도 간격을 점차 증가시킨다.
+- jitter를 추가해 여러 client가 동시에 재시도하는 retry storm을 완화한다.
+- response에 `Retry-After`가 있으면 해당 값을 우선 고려한다.
+- client, proxy, application 등 여러 계층에서 중첩 재시도하지 않도록 한다.
+
+재시도 횟수가 늘어나면 성공 가능성만 증가하는 것이 아니라 server 부하와 전체 response latency도 증가하므로 무제한으로 수행해서는 안 된다.
 
 ## Rate Limiting
 
-<!-- TODO: rate limiting의 목적과 HTTP 429 응답, 응답 Header를 활용한 대기 전략을 설명한다. -->
+<!-- rate limiting의 목적과 HTTP 429 응답, 응답 Header를 활용한 대기 전략을 설명한다. -->
+
+Rate limiting은 특정 시간 동안 처리할 request 수를 제한해 server 자원을 보호하고, 특정 client가 지나치게 많은 자원을 점유하는 것을 방지하는 방식이다.
+
+제한 기준은 사용자, API key, IP address, resource, server 전체 등으로 설정할 수 있다. 제한을 초과한 경우 server는 `429 Too Many Requests`를 반환할 수 있으며, `Retry-After`를 사용해 client가 다시 요청할 수 있는 시점을 안내할 수 있다.
+
+client는 429를 받았을 때 즉시 반복 요청하지 않고 `Retry-After`를 우선 적용하거나, header가 없다면 exponential backoff와 jitter를 사용해야 한다.
 
 ## 참고 자료
 
 <!-- RFC와 브라우저 또는 서버의 공식 문서를 우선 기록한다. -->
 
--[MDN HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)
+- [RFC 9110 - HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html)
+- [RFC 9112 - HTTP/1.1](https://www.rfc-editor.org/rfc/rfc9112.html)
+- [RFC 9113 - HTTP/2](https://www.rfc-editor.org/rfc/rfc9113.html)
+- [RFC 9114 - HTTP/3](https://www.rfc-editor.org/rfc/rfc9114.html)
+- [RFC 9000 - QUIC](https://www.rfc-editor.org/rfc/rfc9000.html)
+- [RFC 10025 - Cookies: HTTP State Management Mechanism](https://auth48-transition.rfc-editor.org/authors/rfc10025.html)
+- [MDN - HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)
+- [RFC 6585 - Additional HTTP Status Codes](https://www.rfc-editor.org/rfc/rfc6585.html)
+- [AWS Well-Architected - Control and limit retry calls](https://docs.aws.amazon.com/wellarchitected/latest/framework/rel_mitigate_interaction_failure_limit_retries.html)
+- [Spring Session - HttpSession with Redis](https://docs.spring.io/spring-session/reference/guides/boot-redis.html)
+- [IETF Internet-Draft - RateLimit header fields for HTTP](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/)
 
 ## 함께 읽기
 
