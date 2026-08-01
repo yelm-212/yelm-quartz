@@ -311,7 +311,11 @@ POST와 PATCH는 Method 자체의 semantics만으로 멱등성이 보장되지 �
 
 <!-- 요청마다 새 TCP 연결을 생성하는 방식과 연결을 재사용하는 방식을 비교하고, latency와 서버 자원에 미치는 영향을 설명한다. -->
 
-Keep-Alive는 하나의 transport connection을 여러 HTTP request와 response에 재사용하는 persistent connection과 관련된 개념이다. 요청마다 새 TCP connection을 생성하면 TCP handshake와 HTTPS의 TLS handshake 비용이 반복된다. 연결을 재사용하면 이 비용과 latency를 줄일 수 있지만, 사용하지 않는 connection을 너무 오래 유지하면 server와 proxy의 connection, memory, file descriptor 같은 자원을 계속 점유한다.
+Keep-Alive는 하나의 transport connection을 여러 HTTP request와 response에 재사용하는 persistent connection과 관련된 개념이다. 
+
+요청마다 새 TCP connection을 생성하면 TCP handshake와 HTTPS의 TLS handshake 비용이 반복된다. 
+
+연결을 재사용하면 이 비용과 latency를 줄일 수 있지만, 사용하지 않는 connection을 너무 오래 유지하면 server와 proxy의 connection, memory, file descriptor 같은 자원을 계속 점유한다.
 
 HTTP/1.1은 persistent connection이 기본이며, 종료하려는 endpoint가 `Connection: close`를 보낼 수 있다.
 
