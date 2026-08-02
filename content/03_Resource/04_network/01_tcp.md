@@ -318,6 +318,8 @@ TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을
   - 해당 IP를 가진 호스트는 자신의 MAC 주소를 ARP Reply로 응답한다.
   - 획득한 매핑은 일정 시간 ARP cache에 저장할 수 있다.
 
+* ARP spoofing: 공격자가 위조된 IP-MAC mapping을 피해자의 ARP cache에 저장하게 만들어서 트래픽을 자신에게 유도하고, 이를 이용해 MITM이나 DoS 같은 다른 공격으로 이어지게 할 수 있다.
+
 
 ## 주소 변환
 
