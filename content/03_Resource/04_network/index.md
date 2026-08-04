@@ -31,7 +31,8 @@ tags:
 
 ### 3주차
 
-> 학습 주제를 추가할 예정입니다.
+- 학습내용: [[03_Resource/04_network/05_dns_https_proxy_lb|DNS, HTTPS, Proxy, Load Balancer]]
+- 트러블슈팅: [[03_Resource/04_network/06_dns_tls_proxy_lb_ts|DNS, TLS, Proxy, Load Balancer 트러블슈팅 사례]]
 
 ### 4주차
 
