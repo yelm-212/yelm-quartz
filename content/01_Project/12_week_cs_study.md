@@ -33,15 +33,15 @@ tags:
 | 1주차  | TCP/IP와 연결                      | [TCP IP와 연결](03_Resource/04_network/01_tcp) | [[03_Resource/04_network/02_tcpip_ts|TCP 연결 장애 사례]] |
 | 2주차  | HTTP와 요청/응답                   | [[03_Resource/04_network/03_http|HTTP와 요청/응답]] | [[03_Resource/04_network/04_http_429_ts|HTTP 429 트러블슈팅 사례]] |
 | 3주차  | DNS, HTTPS, Proxy, Load Balancer   | [[03_Resource/04_network/05_dns_https_proxy_lb|DNS, HTTPS, Proxy, Load Balancer]] | [[03_Resource/04_network/06_dns_tls_proxy_lb_ts|DNS, TLS, Proxy, Load Balancer 트러블슈팅 사례]] |
-| 4주차  | Network 종합                       | 작성 예정 | 작성 예정   |
-| 5주차  | Process, Thread, CPU               | 작성 예정 | 작성 예정   |
-| 6주차  | Virtual Memory와 Paging            | 작성 예정 | 작성 예정   |
-| 7주차  | 동시성과 I/O                       | 작성 예정 | 작성 예정   |
-| 8주차  | OS 종합과 Linux 진단               | 작성 예정 | 작성 예정   |
-| 9주차  | Transaction, Isolation Level, MVCC | 작성 예정 | 작성 예정   |
-| 10주차 | Index와 Execution Plan             | 작성 예정 | 작성 예정   |
-| 11주차 | Lock, Connection Pool, N+1         | 작성 예정 | 작성 예정   |
-| 12주차 | Database 종합                      | 작성 예정 | 작성 예정   |
+| 4주차  | Network 종합                       | [[03_Resource/04_network/07_network_summary\|Network 종합]] | [[03_Resource/04_network/08_network_summary_ts\|Network 종합 트러블슈팅 사례]] |
+| 5주차  | Process, Thread, CPU               | [[03_Resource/05_os/01_process_thread_cpu\|Process, Thread와 CPU Scheduling]] | [[03_Resource/05_os/02_process_thread_cpu_ts\|CPU와 Thread 트러블슈팅 사례]] |
+| 6주차  | Virtual Memory와 Paging            | [[03_Resource/05_os/03_virtual_memory\|Virtual Memory와 Memory 문제]] | [[03_Resource/05_os/04_virtual_memory_ts\|Memory 트러블슈팅 사례]] |
+| 7주차  | 동시성과 I/O                       | [[03_Resource/05_os/05_concurrency_io\|동시성과 I/O]] | [[03_Resource/05_os/06_concurrency_io_ts\|동시성과 I/O 트러블슈팅 사례]] |
+| 8주차  | OS 종합과 Linux 진단               | [[03_Resource/05_os/07_os_linux_summary\|OS와 Linux 진단 종합]] | [[03_Resource/05_os/08_os_linux_summary_ts\|File Descriptor 고갈 트러블슈팅 사례]] |
+| 9주차  | Transaction, Isolation Level, MVCC | [[03_Resource/06_database/01_transaction_isolation_mvcc\|Transaction, Isolation Level, MVCC]] | [[03_Resource/06_database/02_transaction_isolation_mvcc_ts\|Transaction 트러블슈팅 사례]] |
+| 10주차 | Index와 Execution Plan             | [[03_Resource/06_database/03_index_execution_plan\|Index와 Execution Plan]] | [[03_Resource/06_database/04_index_execution_plan_ts\|Slow Query 트러블슈팅 사례]] |
+| 11주차 | Lock, Connection Pool, N+1         | [[03_Resource/06_database/05_lock_pool_nplus1\|Lock, Connection Pool, N+1]] | [[03_Resource/06_database/06_lock_pool_nplus1_ts\|Lock과 Connection Pool 트러블슈팅 사례]] |
+| 12주차 | Database 종합                      | [[03_Resource/06_database/07_database_summary\|Database 종합]] | [[03_Resource/06_database/08_database_summary_ts\|Database 종합 장애 사례]] |
 
 ---
 

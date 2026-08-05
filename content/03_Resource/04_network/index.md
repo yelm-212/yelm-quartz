@@ -36,4 +36,5 @@ tags:
 
 ### 4주차
 
-> 학습 주제를 추가할 예정입니다.
+- 학습내용: [[03_Resource/04_network/07_network_summary|Network 종합]]
+- 트러블슈팅: [[03_Resource/04_network/08_network_summary_ts|Network 종합 트러블슈팅 사례]]

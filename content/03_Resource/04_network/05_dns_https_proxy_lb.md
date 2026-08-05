@@ -59,14 +59,9 @@ URL 해석
 → Backend
 ```
 
-> 읽기 자료
->
-> - [HTTP-SEMANTICS] RFC 9110: HTTP architecture, URI scheme, intermediary
-> - [TLS13] RFC 9846: TLS 1.3
-> - [QUIC-TLS] RFC 9001: QUIC에서 TLS를 사용하는 방식
-> - [HTTP3] RFC 9114: HTTP/3
-
 ## DNS
+
+- DNS(Domain Name System) 는 인터넷 리소스를 위한 계층적/탈중앙화된 naming system이다.
 
 ### DNS의 역할
 
@@ -80,6 +75,8 @@ DNS를 단순히 "Domain Name을 IP 주소로 변환하는 시스템"이라고�
 - namespace, zone, delegation의 관계
 - authoritative data와 cached data의 차이
 -->
+
+DNS는 인간에게 친숙하게 작성된 domain name(`example.com`)을 IP address뿐만 아니라 domain name과 연관된 기타 리소스들을 조회한다. 이 과정을 dns lookup이라 한다.
 
 > 읽기 자료
 >
@@ -101,6 +98,10 @@ DNS를 단순히 "Domain Name을 IP 주소로 변환하는 시스템"이라고�
 - Delegation
 - Referral
 -->
+
+![](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_domain_name/structure.png)
+
+TLD(제일 뒤, .com, .org, .net )부터 우측에서부터 해석
 
 | 구성 요소 | 역할 | 보유하거나 반환하는 정보 |
 | --------- | ---- | ------------------------- |
