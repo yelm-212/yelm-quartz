@@ -101,15 +101,19 @@ DNS는 인간에게 친숙하게 작성된 domain name(`example.com`)을 IP addr
 
 ![](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_domain_name/structure.png)
 
-TLD(제일 뒤, .com, .org, .net )부터 우측에서부터 해석
+top level domain server(=TLD, 제일 뒤, .com, .org, .net )부터 우측에서부터 해석
 
-| 구성 요소 | 역할 | 보유하거나 반환하는 정보 |
-| --------- | ---- | ------------------------- |
-| Stub Resolver |  |  |
-| Recursive Resolver |  |  |
-| Root Name Server |  |  |
-| TLD Name Server |  |  |
-| Authoritative Name Server |  |  |
+유저가 브라우저에 주소를 입력하면, 브라우저 캐시에 없는 경우 recursive server로 질의를 시도한다.
+recursive server에 캐시가 없는 경우 DNS 계층에 따라 하위 dns 계층으로 쿼리해 A/AAAA 레코드에서 IP 주소 등 리소스를 찾는다.
+
+- Stub Resolver 
+
+- Recursive Resolver : 질의용 서버. (= DNS resolvers)
+   - 보통 ISP사, 서드파티 DNS 프로바이더에 의해 관리됨.
+   - 질의 결과를 캐시하고 이를 위한 time-to-live 설정 가능
+- Authoritative Name Server : 요청 레코드에 권한이 있는경우 질의해 응답받음
+   - Root Name Server : 최상위에 위치, 루트 존 제공. 적절한 TLD 서버로 요청 전달
+   - TLD Name Server : 해당 TLD 내 
 
 > 읽기 자료
 >
