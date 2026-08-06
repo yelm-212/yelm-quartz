@@ -61,7 +61,8 @@ URL 해석
 
 ## DNS
 
-- DNS(Domain Name System) 는 인터넷 리소스를 위한 계층적/탈중앙화된 naming system이다.
+- DNS(Domain Name System)는 Domain Name과 Resource Record를 관리하고 조회하기 위한 계층적·분산형 naming system이자 query-response protocol이다.
+- DNS에 저장된 정보는 여러 authoritative server에 분산되어 있으며, domain namespace의 관리 권한은 zone 단위로 위임된다.
 
 ### DNS의 역할
 
@@ -76,13 +77,12 @@ DNS를 단순히 "Domain Name을 IP 주소로 변환하는 시스템"이라고�
 - authoritative data와 cached data의 차이
 -->
 
-DNS는 인간에게 친숙하게 작성된 domain name(`example.com`)을 IP address뿐만 아니라 domain name과 연관된 기타 리소스들을 조회한다. 이 과정을 dns lookup이라 한다.
+DNS는 인간에게 친숙하게 작성된 domain name(`example.com`)을 연결된 Resource Record를 조회한다.
 
-> 읽기 자료
->
-> - [DNS-TERM] RFC 9499 Sections 2~7: DNS 용어
-> - [DNS-CONCEPT] RFC 1034 Sections 2~4: namespace, zone, delegation, name server
-> - [DNS-IMPL] RFC 1035 Sections 3~4: Resource Record와 DNS message
+A·AAAA Record를 이용해 Domain Name에 대응하는 IPv4·IPv6 주소를 조회할 수 있으며, 그 밖에도 mail server를 나타내는 MX, authoritative name server를 나타내는 NS, 문자열 정보를 저장하는 TXT 등 다양한 정보를 조회할 수 있다.
+
+Domain Name에 연결된 정보를 찾는 전체 과정을 DNS resolution이라고 한다. DNS resolution 과정에서 resolver는 질의한 Domain Name과 Record Type에 해당하는 RRset을 찾는다.
+
 
 ### DNS 구성 요소
 
@@ -113,7 +113,7 @@ recursive server에 캐시가 없는 경우 DNS 계층에 따라 하위 dns 계�
    - 질의 결과를 캐시하고 이를 위한 time-to-live 설정 가능
 - Authoritative Name Server : 요청 레코드에 권한이 있는경우 질의해 응답받음
    - Root Name Server : 최상위에 위치, 루트 존 제공. 적절한 TLD 서버로 요청 전달
-   - TLD Name Server : 해당 TLD 내 
+   - TLD Name Server : 해당 TLD 내 다음 계층 서버에 질의할거 찾음 
 
 > 읽기 자료
 >
