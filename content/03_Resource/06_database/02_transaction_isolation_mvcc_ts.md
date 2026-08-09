@@ -73,4 +73,4 @@ Transaction 시작 시점
 
 ## 함께 읽기
 
-- [[03_Resource/06_database/01_transaction_isolation_mvcc|9주차 - Transaction, Isolation Level, MVCC]]
+- [9주차 - Transaction, Isolation Level, MVCC](03_Resource/06_database/01_transaction_isolation_mvcc)

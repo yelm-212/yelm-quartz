@@ -18,9 +18,9 @@ tags:
 - Subnet, Gateway, ARP, Routing, NAT가 IP 패킷 전달에 관여하는 과정을 설명할 수 있다.
 - 하나의 TCP 연결이 생성되고 종료되는 전체 흐름을 설명할 수 있다.
 
-## OSI / TCP-IP 계층 개념
+## OSI와 TCP-IP 계층 개념
 
-<!-- OSI 7계층과 TCP/IP 모델의 계층별 역할을 비교하고, IP와 TCP/UDP가 어느 계층에서 동작하는지 설명한다. -->
+<!-- OSI 7계층과 TCP/IP 모델의 계층별 역할을 비교하고, IP와 TCP 및 UDP가 어느 계층에서 동작하는지 설명한다. -->
 
 ![](https://d2908q01vomqb2.cloudfront.net/f6e1126cedebf23e1463aee73f9df08783640400/2022/06/24/Picture2-3.png)
 
@@ -36,7 +36,7 @@ Open Systems Interconnection(OSI) 모델의 계층은 소프트웨어 및 하드
 
 6. 프레젠테이션 계층: 암호화, 압축, 번역
 - 주로 데이터를 준비하는 역할을 하여 애플리케이션 계층이 이를 사용할 수 있게 한다.
-- 송수신 장치가 서로 다른 인코딩 방법, 암호화 연결을 사용하는 경우 수신(Application Layer) 장치가 이해할수 있도록 번역/디코딩해주는 역할
+- 송수신 장치가 서로 다른 인코딩 방법, 암호화 연결을 사용하는 경우 수신(Application Layer) 장치가 이해할수 있도록 번역과 디코딩을 해주는 역할
 - Application Layer에서 수신한 데이터를 Session Layer로 전송하기 전에 압축
 
 5. 세션 계층: 통신 세션
@@ -67,13 +67,13 @@ Open Systems Interconnection(OSI) 모델의 계층은 소프트웨어 및 하드
 
 ## TCP와 UDP
 
-TCP와 UDP는 모두 네트워크 기본 계층 구조(OSI7 or TCP/IP 모델)의 Transport Layer에서 사용되는 통신 프로토콜이며, 프로그램이 다른 호스트의 어플리케이션 및 메시지를 송신/수신할 수 있게 한다. 
+TCP와 UDP는 모두 네트워크 기본 계층 구조(OSI7 or TCP/IP 모델)의 Transport Layer에서 사용되는 통신 프로토콜이며, 프로그램이 다른 호스트의 어플리케이션 및 메시지를 송신하고 수신할 수 있게 한다.
 
 ![](https://www.ibm.com/docs/ko/ssw_aix_71/network/figures/comma32.jpg)
 
 ### TCP : Transmission Control Protocol
 
-<!-- TCP가 checksum, sequence/acknowledgement number, timeout, 재전송으로 오류를 감지하고 순서를 보장하는 과정을 설명한다. -->
+<!-- TCP가 checksum, sequence와 acknowledgement number, timeout, 재전송으로 오류를 감지하고 순서를 보장하는 과정을 설명한다. -->
 
 - **신뢰성**을 가지는 **연결 stream을 기반**으로, **순서를 보장**하는 프로토콜이다. 
   - 재전송 O
@@ -81,7 +81,7 @@ TCP와 UDP는 모두 네트워크 기본 계층 구조(OSI7 or TCP/IP 모델)의
 - 기본적으로 신뢰성을 보장하려 하는 특징이 있고, 이를 위해 Congestion Control & Flow Control 이 사용된다. (모두 *Control* 을 위해 사용한다)
 - port 번호를 사용해 호스트 내 통신 endpoint(Application)를 식별한다.
 - 기본적으로는 Unicast만 지원한다.
-- Example: FTP(20/21), Telnet(23), rcp(remote copy)...
+- Example: FTP(20, 21), Telnet(23), rcp(remote copy)...
 
 - TCP checksum을 통해 전송 중 데이터 손상을 검출한다.
 - 각 데이터 바이트에 sequence number를 부여하여 데이터의 순서를 식별하고 중복 데이터를 판별한다.
@@ -159,7 +159,7 @@ sequenceDiagram
     - A가 B의 FIN을 받고 마지막 ACK를 보냈을 때, ACK가 유실되는 경우 B가 FIN을 재전송한다.
     - A가 바로 CLOSED로 사라지지 않고 TIME-WAIT에 남아 있어야 그 FIN을 받고 ACK를 다시 보낼 수 있음.
   2. 이전 연결에서 늦게 도착한 중복 세그먼트가 새 연결에 섞이는 것을 막기 위해
-    - 동일 IP/Port 조합으로 새 TCP 연결을 바로 만드는 경우, 이전 연결의 오래된 세그먼트가 새 연결의 패킷으로 오인될 위험이 있다.
+    - 동일 IP와 Port 조합으로 새 TCP 연결을 바로 만드는 경우, 이전 연결의 오래된 세그먼트가 새 연결의 패킷으로 오인될 위험이 있다.
     - 2 × MSL 동안 기다려 이전 연결의 세그먼트가 네트워크에서 사라질 시간을 확보한다.
 
 | 구분      | 흐름 제어      | 혼잡 제어          |
@@ -240,10 +240,10 @@ TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을
 
 ### IP Address & Subnet & CIDR
 
-<!--  IP 주소가 네트워크에서 인터페이스를 식별하고, IP 패킷의 source/destination address로 사용되는 방식을 설명한다. -->
+<!--  IP 주소가 네트워크에서 인터페이스를 식별하고, IP 패킷의 source와 destination address로 사용되는 방식을 설명한다. -->
 
 - Internet Protocol: 패킷 교환 방식의 컴퓨터 네트워크 내에서 호스트 간 데이터그램을 전송하기 위해 고안된 프로토콜
-- IP Address: IP 네트워크에서 인터페이스를 식별하고 IP 데이터그램의 source/destination을 나타내는 주소.
+- IP Address: IP 네트워크에서 인터페이스를 식별하고 IP 데이터그램의 source와 destination을 나타내는 주소.
   - 주소는 네트워크 관리자에 의해 정적으로 설정되거나 DHCP 등을 통해 동적으로 할당될 수 있다.
 - IP는 각 인터넷 데이터그램을 독립적인 객체로 다루며 논리 회로 혹은 연결을 설정하지 않음
 - TTL(Time To Live): 라우터를 거칠 때마다 감소하며, 0이 되면 데이터그램을 폐기하여 패킷이 무한히 순환하는 것을 방지한다.
@@ -266,7 +266,7 @@ TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을
   - routing prefix는 네트워크의 첫번째 주소로 표현되고, `/` 이하는 prefix의 비트 길이를 명시함
   - Network prefix는 `[prefix-address]/[prefix-length]` 형식으로 표현한다.
     - `/` 뒤의 값은 주소에서 network prefix로 사용되는 상위 비트 수를 의미한다.
-- CIDR(Classless Inter-Domain Routing): 기존 Class A/B/C와 같은 고정된 주소 클래스 대신 가변 길이의 network prefix를 사용하는 주소 표현 및 할당 방식이다.
+- CIDR(Classless Inter-Domain Routing): 기존 Class A, B, C와 같은 고정된 주소 클래스 대신 가변 길이의 network prefix를 사용하는 주소 표현 및 할당 방식이다.
   - `address/prefix-length` 형식으로 표현한다.
 
 > [!note]  bitwise AND 연산 예시
@@ -292,14 +292,14 @@ TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을
 ![](https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Subnetting_Concept-en.svg/960px-Subnetting_Concept-en.svg.png)
 
 - IPv4 주소는 prefix 관점에서 network portion과 host portion으로 나눠 볼 수 있다.
-  - network portion: 어떤 network/subnet에 속하는지를 나타낸다.
+  - network portion: 어떤 network 또는 subnet에 속하는지를 나타낸다.
   - host portion: 해당 network 내부의 주소를 구분한다.
 
 ## IP 패킷 전달
 
 <!-- 목적지 IP를 기준으로 Routing Table을 조회하여 next hop과 출력 인터페이스를 결정하는 과정을 설명한다. 직접 연결된 네트워크에 목적지가 없을 때 Default Gateway가 사용되는 조건을 설명한다. -->
 
-- Routing / Default Gateway
+- Routing과 Default Gateway
   - Routing은 목적지 IP 주소에 따라 패킷을 어느 next hop 또는 interface로 전달할지 결정하는 과정이다.
   - 여러 routing entry가 목적지 IP와 일치하는 경우, 일반적으로 가장 긴 prefix가 일치하는 route를 선택한다(Longest Prefix Match).
   - `0.0.0.0/0`은 모든 IPv4 주소와 일치하므로 더 구체적인 route가 없는 경우 default route로 사용된다.
@@ -323,21 +323,21 @@ TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을
 
 ## 주소 변환
 
-### NAT / NAPT
+### NAT와 NAPT
 
-<!-- NAT가 네트워크 경계에서 사설 IP와 공인 IP를 변환하는 방식을 설명하고, NAPT가 IP 주소와 TCP/UDP Port를 함께 변환하여 여러 내부 호스트가 하나의 공인 IP를 공유하는 방식을 설명한다. -->
+<!-- NAT가 네트워크 경계에서 사설 IP와 공인 IP를 변환하는 방식을 설명하고, NAPT가 IP 주소와 TCP 및 UDP Port를 함께 변환하여 여러 내부 호스트가 하나의 공인 IP를 공유하는 방식을 설명한다. -->
 
 - NAT(Network Address Translation): 패킷이 네트워크 경계를 통과할 때 IP address를 다른 address로 변환하는 방식이다.
 - Basic NAT:
   - 내부 IP address와 외부의 globally routable IP address 사이를 변환한다.
 - NAPT(Network Address Port Translation):
-  - IP address뿐 아니라 TCP/UDP port도 함께 변환한다.
+  - IP address뿐 아니라 TCP와 UDP port도 함께 변환한다.
   - 여러 내부 호스트가 하나의 public IP address를 공유하면서 동시에 외부와 통신할 수 있게 한다.
 
 ```
 192.168.0.10:51000 ─┐
                     │
-192.168.0.20:52000 ─┼→ 203.0.113.10:40001 / 40002
+192.168.0.20:52000 ─┼→ 203.0.113.10:40001, 40002
                     │
 192.168.0.30:53000 ─┘
 ```
@@ -349,13 +349,13 @@ TCP 송신자는 slow start와 congestion avoidance를 사용하여 전송량을
 
 ## Transport Endpoint
 
-### Port / Socket / TCP Connection
+### Port, Socket, TCP Connection
 
-<!-- TCP/UDP Port가 하나의 호스트에서 애플리케이션 서비스와 통신 endpoint를 구분하는 방식을 설명한다. -->
+<!-- TCP와 UDP Port가 하나의 호스트에서 애플리케이션 서비스와 통신 endpoint를 구분하는 방식을 설명한다. -->
 
 <!-- TCP에서 socket address가 IP address와 port로 구성되는 것을 설명하고, 하나의 TCP 연결이 local socket과 remote socket의 쌍으로 식별되는 방식을 설명한다. -->
 
-- Port는 TCP/UDP가 하나의 호스트에서 통신 endpoint를 구분하기 위해 사용하는 16-bit identifier이다.
+- Port는 TCP와 UDP가 하나의 호스트에서 통신 endpoint를 구분하기 위해 사용하는 16-bit identifier이다.
 - 동일한 IP address를 사용하는 호스트에서도 서로 다른 port를 통해 여러 애플리케이션 서비스를 구분할 수 있다.
 
 - TCP에서 socket은 Internet address와 port의 조합으로 정의된다.

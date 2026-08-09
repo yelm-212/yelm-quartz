@@ -46,7 +46,7 @@ tags:
 ```text
 URL 해석
 → Local Name Resolution
-  ├─ Browser/Application Cache
+  ├─ Browser와 Application Cache
   ├─ OS Cache
   └─ hosts file
 → Recursive DNS Resolution
@@ -55,7 +55,7 @@ URL 해석
   ├─ HTTP/1.1·HTTP/2: TCP → TLS
   └─ HTTP/3: QUIC + TLS 1.3
 → HTTP 요청
-→ CDN / WAF / Load Balancer / Reverse Proxy (0개 이상)
+→ CDN, WAF, Load Balancer, Reverse Proxy (0개 이상)
 → Backend
 ```
 
@@ -72,14 +72,14 @@ DNS를 단순히 "Domain Name을 IP 주소로 변환하는 시스템"이라고�
 작성할 내용:
 - 계층적으로 관리되는 distributed database이자 query-response protocol이라는 점
 - Domain Name에 연결된 Resource Record를 조회한다는 점
-- A/AAAA는 가능한 결과 중 일부이며, MX·NS·TXT 등 IP가 아닌 정보도 반환한다는 점
+- A와 AAAA는 가능한 결과 중 일부이며, MX·NS·TXT 등 IP가 아닌 정보도 반환한다는 점
 - namespace, zone, delegation의 관계
 - authoritative data와 cached data의 차이
 -->
 
 DNS는 domain name(`example.com`)을 연결된 Resource Record를 조회한다.
 
-A/AAAA Record를 이용해 Domain Name에 대응하는 IPv4/IPv6 주소를 조회할 수 있으며, 그 밖에도 mail server를 나타내는 MX, authoritative name server를 나타내는 NS, 문자열 정보를 저장하는 TXT 등 다양한 정보를 조회할 수 있다.
+A와 AAAA Record를 이용해 Domain Name에 대응하는 IPv4와 IPv6 주소를 조회할 수 있으며, 그 밖에도 mail server를 나타내는 MX, authoritative name server를 나타내는 NS, 문자열 정보를 저장하는 TXT 등 다양한 정보를 조회할 수 있다.
 
 Domain Name에 연결된 정보를 찾는 전체 과정을 DNS resolution이라고 한다. DNS resolution 과정에서 resolver는 질의한 Domain Name과 Record Type에 해당하는 RRset을 찾는다.
 
@@ -104,7 +104,7 @@ Domain Name에 연결된 정보를 찾는 전체 과정을 DNS resolution이라�
 Domain Name은 오른쪽에서 왼쪽으로 Root(.) → TLD(com) → 하위 Domain(google) 순으로 계층을 구분할 수 있다.
 
 유저가 브라우저에 주소를 입력하면, 브라우저 캐시에 없는 경우 recursive server로 질의를 시도한다.
-recursive server에 캐시가 없는 경우 DNS 계층에 따라 하위 dns 계층으로 쿼리해 A/AAAA 레코드에서 IP 주소 등 리소스를 찾는다.
+recursive server에 캐시가 없는 경우 DNS 계층에 따라 하위 dns 계층으로 쿼리해 A와 AAAA 레코드에서 IP 주소 등 리소스를 찾는다.
 
 - Stub Resolver : Client 측에서 DNS 질의를 시작하는 간단한 resolver
    - 사용자로부터 요청 받아서 recursive resolver로 전달
@@ -139,7 +139,7 @@ recursive server에 캐시가 없는 경우 DNS 계층에 따라 하위 dns 계�
 
 ```mermaid
 sequenceDiagram
-    participant C as Client / Stub Resolver
+    participant C as Client와 Stub Resolver
     participant R as Recursive Resolver
     participant Root as Root Name Server
     participant TLD as TLD Name Server
@@ -152,7 +152,7 @@ sequenceDiagram
     R->>TLD: Iterative Query
     TLD-->>R: Authoritative Name Server Referral
     R->>A: Query
-    A-->>R: Authoritative Answer / RRset
+    A-->>R: Authoritative Answer와 RRset
     Note over R: TTL에 따라 cache
     R-->>C: Response
 ```
@@ -222,7 +222,7 @@ DNS cache는 Recursive Resolver뿐 아니라 Browser나 OS 등에서도 구현�
    - SERVFAIL, timeout, unreachable server 등으로 유용한 응답을 얻지 못함
 
 작성할 내용:
-- NXDOMAIN/NODATA negative response의 TTL이 SOA와 어떤 관계가 있는지
+- NXDOMAIN과 NODATA negative response의 TTL이 SOA와 어떤 관계가 있는지
 - 실패 결과를 cache하지 않으면 반복 질의가 장애를 증폭할 수 있는 이유
 - RFC 9520에서 resolution failure caching을 요구하는 이유
 -->
@@ -325,11 +325,11 @@ DNS 조회 결과는 Recursive Resolver의 cache 상태나 질의 시점, Author
 | --- | ----- | --------------- |
 | `status`     | DNS 응답의 결과 코드(RCODE) `NOERROR`, `NXDOMAIN`, `SERVFAIL`, `REFUSED` 등 | 이름이 없는지(`NXDOMAIN`), resolution 과정에서 실패했는지(`SERVFAIL`), server가 질의를 거부했는지(`REFUSED`) 확인 |
 | `aa`         | Authoritative Answer. 응답한 Name Server가 질의한 이름에 대해 authoritative한 응답을 했음을 의미 | Authoritative Server에 직접 질의했는데 `aa`가 없는지, 현재 응답이 authoritative data인지 cache를 통한 응답인지 확인 |
-| `rd` / `ra`  | `rd`: client가 recursion을 요청 / `ra`: 응답 server가 recursion 기능을 제공 | Recursive Resolver에 질의했는데 `ra`가 없는지, Authoritative Server에 직접 질의한 상황인지 확인 |
-| `ANSWER`     | 질의에 직접 답하는 Resource Record가 포함되는 section| 원하는 A/AAAA/CNAME 등이 존재하는지, 예상한 값인지, TTL이 남아 있는지, CNAME chain이 정상인지 확인|
+| `rd`와 `ra` | `rd`: client가 recursion을 요청, `ra`: 응답 server가 recursion 기능을 제공 | Recursive Resolver에 질의했는데 `ra`가 없는지, Authoritative Server에 직접 질의한 상황인지 확인 |
+| `ANSWER`     | 질의에 직접 답하는 Resource Record가 포함되는 section| 원하는 A, AAAA, CNAME 등이 존재하는지, 예상한 값인지, TTL이 남아 있는지, CNAME chain이 정상인지 확인|
 | `AUTHORITY`  | 질의와 관련된 authoritative 정보를 담는 section| Delegation에서는 다음 Authoritative Name Server의 NS Record를, negative response에서는 SOA Record 등을 확인|
-| `ADDITIONAL` | Answer나 Authority 처리를 돕는 추가 Resource Record를 담는 section | NS의 주소를 제공하는 glue A/AAAA Record 등이 필요한 상황에서 존재하는지 확인. `dig`에서는 EDNS의 OPT pseudo-record도 별도로 표시될 수 있음 |
-| `SERVER`     | 실제로 `dig` 질의에 응답한 DNS  | 의도한 Recursive/Authoritative Server에 질의했는지 확인 |
+| `ADDITIONAL` | Answer나 Authority 처리를 돕는 추가 Resource Record를 담는 section | NS의 주소를 제공하는 glue A와 AAAA Record 등이 필요한 상황에서 존재하는지 확인. `dig`에서는 EDNS의 OPT pseudo-record도 별도로 표시될 수 있음 |
+| `SERVER`     | 실제로 `dig` 질의에 응답한 DNS  | 의도한 Recursive 또는 Authoritative Server에 질의했는지 확인 |
 | `Query time` | `dig`가 측정한 DNS query의 요청-응답 소요 시간 | 평소보다 응답 시간이 긴지, 특정 Resolver에서만 지연되는지 비교 |
 
 
@@ -345,7 +345,7 @@ HTTP와 HTTPS를 완전히 다른 application protocol로 설명하지 않는다
 - HTTPS가 application 자체의 취약점이나 endpoint 침해까지 해결하지는 않음
 -->
 
-HTTP는 application-level request/response의 의미를 정의하는 protocol이며, HTTPS는 HTTP 통신을 TLS로 보호하는 방식이다.
+HTTP는 application-level request와 response의 의미를 정의하는 protocol이며, HTTPS는 HTTP 통신을 TLS로 보호하는 방식이다.
 
 TLS는 HTTP Method나 Status Code의 의미를 바꾸는 것이 아니라, Client와 Server 사이의 통신에 **기밀성(confidentiality), 무결성(integrity), peer authentication**을 제공한다.
 
@@ -384,7 +384,7 @@ sequenceDiagram
     S-->>C: Certificate
     S-->>C: CertificateVerify
     S-->>C: Finished
-    Note over C: Certificate / Identity 검증
+    Note over C: Certificate와 Identity 검증
     C->>S: Finished
     Note over C,S: Encrypted Application Data
 ```
@@ -418,7 +418,7 @@ Client는 인증서를 통해 다음을 확인한다.
 ```text
 Trust Anchor (Root CA)
 └── Intermediate CA
-    └── End-Entity / Server Certificate
+    └── End-Entity 또는 Server Certificate
 ```
 
 Server는 일반적으로 자신의 Server Certificate와 필요한 Intermediate CA Certificate를 전달한다. Root CA는 보통 Client의 Trust Store에 저장된 Trust Anchor를 사용한다.
@@ -451,14 +451,14 @@ Origin Server 입장에서는 Client 대신 Forward Proxy가 직접 통신하는
 Reverse Proxy는 **Server 측을 대신해 Client의 요청을 받아 내부 Backend로 전달하는 Proxy**이다.
 
 ```text
-Client → Reverse Proxy / Gateway → Backend
+Client → Reverse Proxy 또는 Gateway → Backend
 ```
 
 Client에게는 Reverse Proxy가 Origin Server처럼 보일 수 있다.
 
 주요 사용 사례:
 
-- Host/Path 기반 routing
+- Host와 Path 기반 routing
 - TLS termination
 - caching
 - authentication
@@ -468,7 +468,7 @@ Reverse Proxy와 Load Balancer는 항상 별도의 장비를 의미하지 않는
 
 | 구분 | Forward Proxy | Reverse Proxy |
 | ---- | ------------- | ------------- |
-| 대리하는 측 | Client | Server / Backend |
+| 대리하는 측 | Client | Server 또는 Backend |
 | 누가 주로 설정하는가 | Client 또는 Client 측 Network | Server 운영 측 |
 | 외부에서 숨겨지는 측 | Client | Backend Server |
 | 주요 목적 | 접근 제어, egress, filtering | routing, TLS termination, backend 보호 |
@@ -490,7 +490,7 @@ X-Forwarded-Host: example.com
 | `Host` | 요청 대상 Host | Proxy가 Backend용 Host로 변경할 수 있음 |
 | `Forwarded` | Client IP, Proxy, Host, Protocol | Client가 임의로 보낼 수 있으므로 신뢰하는 Proxy가 만든 값만 사용 |
 | `X-Forwarded-For` | 원래 Client IP와 거친 Proxy 목록 | 외부 입력을 무조건 신뢰하면 IP spoofing 가능 |
-| `X-Forwarded-Proto` | 원래 요청의 `http` / `https` scheme | Redirect URL이나 secure-cookie 판단 등에 사용되므로 신뢰 경계 필요 |
+| `X-Forwarded-Proto` | 원래 요청의 `http` 또는 `https` scheme | Redirect URL이나 secure-cookie 판단 등에 사용되므로 신뢰 경계 필요 |
 | `X-Forwarded-Host` | 원래 요청 Host | Host 기반 URL 생성 시 신뢰 경계 필요 |
 
 Application은 Client가 직접 보낸 `Forwarded` 또는 `X-Forwarded-*` 값을 무조건 신뢰해서는 안 된다. 신뢰하는 Proxy가 값을 제거하거나 정규화한 뒤 전달하도록 구성하고, Application도 신뢰할 Proxy 범위를 지정해야 한다.
@@ -512,14 +512,14 @@ Load Balancer는 Health Check를 통해 Target의 상태를 확인하고, unheal
 
 ### L4 vs L7 Load Balancer
 
-L4 Load Balancer는 Transport Layer의 connection/flow 정보를 중심으로 Target을 선택하고, L7 Load Balancer는 HTTP와 같은 Application Protocol의 내용을 이해하여 request 단위 routing을 수행할 수 있다.
+L4 Load Balancer는 Transport Layer의 connection 또는 flow 정보를 중심으로 Target을 선택하고, L7 Load Balancer는 HTTP와 같은 Application Protocol의 내용을 이해하여 request 단위 routing을 수행할 수 있다.
 
 | 구분 | L4 Load Balancer | L7 Load Balancer |
 | ---- | ---------------- | ---------------- |
 | 주요 판단 기준 | IP, Port, Transport Protocol, Flow | Host, Path, Header, Method 등 Application Data |
 | 이해하는 Protocol | TCP, UDP 등 | HTTP, HTTPS 등 |
-| Routing 단위 | Connection / Flow | Request |
-| HTTP Host/Path Routing | 불가 | 가능 |
+| Routing 단위 | Connection 또는 Flow | Request |
+| HTTP Host와 Path Routing | 불가 | 가능 |
 | TLS 처리 | 제품에 따라 passthrough 또는 termination | 일반적으로 HTTP 내용을 확인하려면 TLS termination 필요 |
 | 장점 | Protocol 의존성이 낮고 높은 처리량에 적합 | 세밀한 HTTP Routing과 Application 기능 제공 |
 | 고려 사항 | HTTP 내용에 따른 Routing 불가 | Application parsing과 TLS termination 등에 따른 추가 처리 |
@@ -554,7 +554,7 @@ Load Balancer의 Health Check와 Kubernetes의 Probe는 목적이 비슷해 보�
 
 - `readinessProbe`: Pod가 Service traffic을 받을 준비가 되었는지 판단
 - `livenessProbe`: Container를 재시작해야 하는지 판단
-- `startupProbe`: 느린 시작 과정에서 liveness/readiness가 너무 빨리 실행되는 것을 방지
+- `startupProbe`: 느린 시작 과정에서 liveness와 readiness가 너무 빨리 실행되는 것을 방지
 
 
 ## 참고 자료
@@ -602,4 +602,4 @@ Load Balancer의 Health Check와 Kubernetes의 Probe는 목적이 비슷해 보�
 ## 함께 읽기
 
 - [3주차 - DNS, TLS, Proxy, Load Balancer 트러블슈팅 사례](03_Resource/04_network/06_dns_tls_proxy_lb_ts)
-- [2주차 - HTTP와 요청 응답](03_Resource/04_network/03_http)
+- [2주차 - HTTP와 요청 및 응답](03_Resource/04_network/03_http)

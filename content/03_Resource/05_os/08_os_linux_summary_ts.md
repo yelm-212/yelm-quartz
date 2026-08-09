@@ -23,7 +23,7 @@ tags:
 ```text
 Jenkins Process
 → File Descriptor Table
-→ File / Socket / Pipe
+→ File, Socket, Pipe
 → Process Limit (nofile)
 → 시스템 전체 File Handle Limit
 ```
@@ -45,7 +45,7 @@ Jenkins Process
 
 - 대상 Process가 연 FD 수 확인 (`ls /proc/<pid>/fd | wc -l`)
 - FD 종류별 분포 확인 (`lsof -p <pid>`)
-- Process에 적용된 Soft/Hard Limit 확인 (`prlimit`, `/proc/<pid>/limits`)
+- Process에 적용된 Soft와 Hard Limit 확인 (`prlimit`, `/proc/<pid>/limits`)
 - 시스템 전체 file handle 사용량 확인 (`/proc/sys/fs/file-nr`)
 - 사용량이 계속 증가하는지, 특정 시점에만 급증하는지 확인
 
@@ -94,4 +94,4 @@ Too many open files
 
 ## 함께 읽기
 
-- [[03_Resource/05_os/07_os_linux_summary|8주차 - OS와 Linux 진단 종합]]
+- [8주차 - OS와 Linux 진단 종합](03_Resource/05_os/07_os_linux_summary)

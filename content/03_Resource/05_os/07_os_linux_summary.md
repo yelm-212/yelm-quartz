@@ -108,7 +108,7 @@ ls /proc/<pid>/fd | wc -l
 → Process 확인
 → CPU와 Thread 상태 확인
 → Memory와 Swap 확인
-→ Disk / Network I/O 확인
+→ Disk와 Network I/O 확인
 → File Descriptor 확인
 → 필요 시 System Call 추적
 ```
@@ -121,10 +121,10 @@ ls /proc/<pid>/fd | wc -l
 
 ```text
 요청 지연 또는 서버 이상
-→ Process / Thread
-→ CPU / Scheduling
-→ Virtual Memory / Memory
-→ Lock / I/O
+→ Process와 Thread
+→ CPU와 Scheduling
+→ Virtual Memory와 Memory
+→ Lock과 I/O
 → File Descriptor
 → System Call
 ```
@@ -148,7 +148,7 @@ ls /proc/<pid>/fd | wc -l
 
 ## 함께 읽기
 
-- [[03_Resource/05_os/01_process_thread_cpu|5주차 - Process, Thread와 CPU Scheduling]]
-- [[03_Resource/05_os/03_virtual_memory|6주차 - Virtual Memory와 Memory 문제]]
-- [[03_Resource/05_os/05_concurrency_io|7주차 - 동시성과 I/O]]
-- [[03_Resource/05_os/08_os_linux_summary_ts|File Descriptor 고갈 트러블슈팅 사례]]
+- [5주차 - Process, Thread와 CPU Scheduling](03_Resource/05_os/01_process_thread_cpu)
+- [6주차 - Virtual Memory와 Memory 문제](03_Resource/05_os/03_virtual_memory)
+- [7주차 - 동시성과 I/O](03_Resource/05_os/05_concurrency_io)
+- [File Descriptor 고갈 트러블슈팅 사례](03_Resource/05_os/08_os_linux_summary_ts)

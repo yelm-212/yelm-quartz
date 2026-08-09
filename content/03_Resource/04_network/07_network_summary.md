@@ -40,10 +40,10 @@ DNS 조회
 | 단계 | 하는 일 | 관여하는 구성 요소 | 실패했을 때의 증상 |
 | ---- | ------- | ------------------ | ------------------ |
 | DNS 조회 |  |  |  |
-| TCP / QUIC 연결 |  |  |  |
+| TCP 또는 QUIC 연결 |  |  |  |
 | TLS |  |  |  |
 | HTTP 요청 |  |  |  |
-| Proxy / Load Balancer |  |  |  |
+| Proxy와 Load Balancer |  |  |  |
 | 서버 처리 |  |  |  |
 | HTTP 응답 |  |  |  |
 
@@ -124,7 +124,7 @@ DNS 조회
 
 ## WebSocket
 
-<!-- HTTP Upgrade로 연결이 전환되는 과정과 요청/응답 모델과의 차이를 기록한다. -->
+<!-- HTTP Upgrade로 연결이 전환되는 과정과 요청 및 응답 모델과의 차이를 기록한다. -->
 
 ## CDN
 
@@ -152,7 +152,7 @@ DNS 조회
 
 ## 함께 읽기
 
-- [[03_Resource/04_network/01_tcp|1주차 - TCP/IP와 연결]]
-- [[03_Resource/04_network/03_http|2주차 - HTTP와 요청&응답]]
-- [[03_Resource/04_network/05_dns_https_proxy_lb|3주차 - DNS, HTTPS, Proxy, Load Balancer]]
-- [[03_Resource/04_network/08_network_summary_ts|Network 종합 트러블슈팅 사례]]
+- [1주차 - TCP/IP와 연결](03_Resource/04_network/01_tcp)
+- [2주차 - HTTP와 요청 및 응답](03_Resource/04_network/03_http)
+- [3주차 - DNS, HTTPS, Proxy, Load Balancer](03_Resource/04_network/05_dns_https_proxy_lb)
+- [Network 종합 트러블슈팅 사례](03_Resource/04_network/08_network_summary_ts)

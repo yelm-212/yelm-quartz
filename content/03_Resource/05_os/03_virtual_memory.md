@@ -66,7 +66,7 @@ Virtual Address 접근
 
 ### TLB
 
-<!-- Page Table 접근 비용과 TLB Hit/Miss가 성능에 미치는 영향을 기록한다. -->
+<!-- Page Table 접근 비용과 TLB Hit과 Miss가 성능에 미치는 영향을 기록한다. -->
 
 ### 변환 흐름
 
@@ -82,7 +82,7 @@ CPU의 Virtual Address 참조
 
 ### Swap
 
-<!-- Swap이 동작하는 조건과 Swap In/Out이 지연에 미치는 영향을 기록한다. -->
+<!-- Swap이 동작하는 조건과 Swap In과 Out이 지연에 미치는 영향을 기록한다. -->
 
 ### Thrashing
 
@@ -96,7 +96,7 @@ CPU의 Virtual Address 참조
 # 예: 메모리와 swap 사용량 확인
 free -m
 
-# 예: swap in/out과 page fault 확인
+# 예: swap in과 out, page fault 확인
 vmstat 1
 
 # 예: process별 RSS 확인
@@ -146,5 +146,5 @@ dmesg -T | grep -i -E 'oom|killed process'
 
 ## 함께 읽기
 
-- [[03_Resource/05_os/01_process_thread_cpu|5주차 - Process, Thread와 CPU Scheduling]]
-- [[03_Resource/05_os/04_virtual_memory_ts|Memory 트러블슈팅 사례]]
+- [5주차 - Process, Thread와 CPU Scheduling](03_Resource/05_os/01_process_thread_cpu)
+- [Memory 트러블슈팅 사례](03_Resource/05_os/04_virtual_memory_ts)

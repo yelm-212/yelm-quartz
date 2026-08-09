@@ -32,7 +32,7 @@ Application Thread
 ## 관측한 증상
 
 - 응답 지연 또는 오류 메시지:
-- Active/Idle Connection 수:
+- Active와 Idle Connection 수:
 - Lock 대기와 Deadlock 발생 여부:
 - 영향 범위:
 
@@ -44,7 +44,7 @@ Application Thread
 
 ## 진단 과정
 
-- 어느 구간에서 대기하는지부터 확정 (Thread / Pool / Transaction / Query / Lock)
+- 어느 구간에서 대기하는지부터 확정 (Thread, Pool, Transaction, Query, Lock)
 - Connection 획득 대기 시간과 실패 로그 확인
 - Lock 대기 중인 Query와 대기를 유발한 Transaction 확인
 - Deadlock 발생 이력 확인
@@ -77,4 +77,4 @@ Application Thread
 
 ## 함께 읽기
 
-- [[03_Resource/06_database/05_lock_pool_nplus1|11주차 - Lock, Connection Pool, N+1]]
+- [11주차 - Lock, Connection Pool, N+1](03_Resource/06_database/05_lock_pool_nplus1)

@@ -19,9 +19,9 @@ tags:
 ```text
 Client
 → DNS
-→ TCP / QUIC
+→ TCP 또는 QUIC
 → TLS
-→ CDN / WAF / Load Balancer / Reverse Proxy
+→ CDN, WAF, Load Balancer, Reverse Proxy
 → Application
 ```
 
@@ -31,7 +31,7 @@ Client
 
 - 사용자에게 보인 오류:
 - 오류율과 응답 시간:
-- 영향 범위 (특정 지역 / 특정 client / 전체):
+- 영향 범위 (특정 지역, 특정 client, 전체):
 
 ## 당시 가설
 
@@ -42,7 +42,7 @@ Client
 ## 진단 과정
 
 - DNS 조회 결과와 응답한 resolver
-- 단계별 소요 시간 분해 (`curl -w`로 dns / connect / tls / ttfb)
+- 단계별 소요 시간 분해 (`curl -w`로 dns, connect, tls, ttfb)
 - TLS 인증서와 ALPN
 - Load Balancer target health와 오류 응답이 어디서 생성됐는지
 - Application 로그와 의존 서비스 상태
@@ -59,10 +59,10 @@ Client
 
 ```text
 DNS
-→ TCP / QUIC
+→ TCP 또는 QUIC
 → TLS
 → HTTP
-→ Proxy / Load Balancer
+→ Proxy와 Load Balancer
 → Application
 ```
 
@@ -76,4 +76,4 @@ DNS
 
 ## 함께 읽기
 
-- [[03_Resource/04_network/07_network_summary|4주차 - Network 종합]]
+- [4주차 - Network 종합](03_Resource/04_network/07_network_summary)

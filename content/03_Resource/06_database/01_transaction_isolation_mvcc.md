@@ -147,4 +147,4 @@ WHERE xact_start IS NOT NULL ORDER BY xact_start;
 
 ## 함께 읽기
 
-- [[03_Resource/06_database/02_transaction_isolation_mvcc_ts|Transaction 트러블슈팅 사례]]
+- [Transaction 트러블슈팅 사례](03_Resource/06_database/02_transaction_isolation_mvcc_ts)

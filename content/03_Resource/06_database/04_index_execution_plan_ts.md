@@ -22,7 +22,7 @@ tags:
 요청
 → Application
 → Query
-→ Optimizer / Execution Plan
+→ Optimizer와 Execution Plan
 → Index 또는 Full Scan
 → 데이터
 ```
@@ -77,4 +77,4 @@ Query 자체가 느린가?
 
 ## 함께 읽기
 
-- [[03_Resource/06_database/03_index_execution_plan|10주차 - Index와 Execution Plan]]
+- [10주차 - Index와 Execution Plan](03_Resource/06_database/03_index_execution_plan)

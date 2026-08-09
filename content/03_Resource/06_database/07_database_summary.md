@@ -36,7 +36,7 @@ tags:
 
 ### 동작 방식
 
-<!-- 로그 기반 복제 흐름과 동기/비동기 복제의 차이를 기록한다. -->
+<!-- 로그 기반 복제 흐름과 동기 및 비동기 복제의 차이를 기록한다. -->
 
 ### Replication Lag
 
@@ -121,7 +121,7 @@ Connection Pool
 
 ## 함께 읽기
 
-- [[03_Resource/06_database/01_transaction_isolation_mvcc|9주차 - Transaction, Isolation Level, MVCC]]
-- [[03_Resource/06_database/03_index_execution_plan|10주차 - Index와 Execution Plan]]
-- [[03_Resource/06_database/05_lock_pool_nplus1|11주차 - Lock, Connection Pool, N+1]]
-- [[03_Resource/06_database/08_database_summary_ts|Database 종합 장애 사례]]
+- [9주차 - Transaction, Isolation Level, MVCC](03_Resource/06_database/01_transaction_isolation_mvcc)
+- [10주차 - Index와 Execution Plan](03_Resource/06_database/03_index_execution_plan)
+- [11주차 - Lock, Connection Pool, N+1](03_Resource/06_database/05_lock_pool_nplus1)
+- [Database 종합 장애 사례](03_Resource/06_database/08_database_summary_ts)

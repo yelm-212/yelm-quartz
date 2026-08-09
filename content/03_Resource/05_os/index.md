@@ -9,7 +9,7 @@ tags:
 
 운영체제의 동작 원리를 학습하고, 공개된 장애 사례를 바탕으로 문제를 역추론한 기록입니다.
 
-> 전체 일정과 진행 방식은 [[01_Project/12_week_cs_study|12주 CS 학습 계획]]에서 관리합니다.
+> 전체 일정과 진행 방식은 [12주 CS 학습 계획](01_Project/12_week_cs_study)에서 관리합니다.
 
 ## 학습 원칙
 
@@ -22,32 +22,32 @@ tags:
 
 ### 5주차
 
-- 학습내용: [[03_Resource/05_os/01_process_thread_cpu|Process, Thread와 CPU Scheduling]]
-- 트러블슈팅: [[03_Resource/05_os/02_process_thread_cpu_ts|CPU와 Thread 트러블슈팅 사례]]
+- 학습내용: [Process, Thread와 CPU Scheduling](03_Resource/05_os/01_process_thread_cpu)
+- 트러블슈팅: [CPU와 Thread 트러블슈팅 사례](03_Resource/05_os/02_process_thread_cpu_ts)
 
 ### 6주차
 
-- 학습내용: [[03_Resource/05_os/03_virtual_memory|Virtual Memory와 Memory 문제]]
-- 트러블슈팅: [[03_Resource/05_os/04_virtual_memory_ts|Memory 트러블슈팅 사례]]
+- 학습내용: [Virtual Memory와 Memory 문제](03_Resource/05_os/03_virtual_memory)
+- 트러블슈팅: [Memory 트러블슈팅 사례](03_Resource/05_os/04_virtual_memory_ts)
 
 ### 7주차
 
-- 학습내용: [[03_Resource/05_os/05_concurrency_io|동시성과 I/O]]
-- 트러블슈팅: [[03_Resource/05_os/06_concurrency_io_ts|동시성과 I/O 트러블슈팅 사례]]
+- 학습내용: [동시성과 I/O](03_Resource/05_os/05_concurrency_io)
+- 트러블슈팅: [동시성과 I/O 트러블슈팅 사례](03_Resource/05_os/06_concurrency_io_ts)
 
 ### 8주차
 
-- 학습내용: [[03_Resource/05_os/07_os_linux_summary|OS와 Linux 진단 종합]]
-- 트러블슈팅: [[03_Resource/05_os/08_os_linux_summary_ts|File Descriptor 고갈 트러블슈팅 사례]]
+- 학습내용: [OS와 Linux 진단 종합](03_Resource/05_os/07_os_linux_summary)
+- 트러블슈팅: [File Descriptor 고갈 트러블슈팅 사례](03_Resource/05_os/08_os_linux_summary_ts)
 
 ## 4주 완료 목표
 
 ```text
 요청 지연 또는 서버 이상
-→ Process / Thread
-→ CPU / Scheduling
-→ Virtual Memory / Memory
-→ Lock / I/O
+→ Process와 Thread
+→ CPU와 Scheduling
+→ Virtual Memory와 Memory
+→ Lock과 I/O
 → File Descriptor
 → System Call
 ```

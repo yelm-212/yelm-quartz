@@ -64,7 +64,7 @@ tags:
 
 ## 당시 몰랐던 개념
 
-- Rate Limit의 적용 단위 (사용자 / API key / IP / 서버 전체)
+- Rate Limit의 적용 단위 (사용자, API key, IP, 서버 전체)
 - `Retry-After`의 형식과 우선순위
 - 재시도가 실패 요청 수를 다시 늘린다는 점
 
@@ -92,4 +92,4 @@ HTTP Status
 
 ## 함께 읽기
 
-- [[03_Resource/04_network/03_http|2주차 - HTTP와 요청/응답]]
+- [2주차 - HTTP와 요청 및 응답](03_Resource/04_network/03_http)

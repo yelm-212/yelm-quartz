@@ -75,4 +75,4 @@ tags:
 
 ## 함께 읽기
 
-- [[03_Resource/05_os/05_concurrency_io|7주차 - 동시성과 I/O]]
+- [7주차 - 동시성과 I/O](03_Resource/05_os/05_concurrency_io)

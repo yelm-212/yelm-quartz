@@ -143,4 +143,4 @@ CREATE TABLE orders (
 
 ## 함께 읽기
 
-- [[03_Resource/06_database/04_index_execution_plan_ts|Slow Query 트러블슈팅 사례]]
+- [Slow Query 트러블슈팅 사례](03_Resource/06_database/04_index_execution_plan_ts)

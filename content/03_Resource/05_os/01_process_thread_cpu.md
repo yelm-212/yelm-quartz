@@ -143,4 +143,4 @@ cat /proc/<pid>/status | grep ctxt_switches
 
 ## 함께 읽기
 
-- [[03_Resource/05_os/02_process_thread_cpu_ts|CPU와 Thread 트러블슈팅 사례]]
+- [CPU와 Thread 트러블슈팅 사례](03_Resource/05_os/02_process_thread_cpu_ts)

@@ -1,12 +1,12 @@
 ---
-title: HTTP와 요청&응답
+title: HTTP와 요청 및 응답
 draft: false
 tags:
   - network
   - http
 ---
 
-# HTTP와 요청&응답
+# HTTP와 요청 및 응답
 
 ## 학습 목표
 
@@ -19,12 +19,12 @@ tags:
 
 ## HTTP: Hypertext Transfer Protocol
 
-- HTTP는 네트워크상의 리소스 표현을 요청하고 응답받기 위한 application-level request/response 프로토콜이다.
+- HTTP는 네트워크상의 리소스 표현을 요청하고 응답받기 위한 application-level request와 response 프로토콜이다.
 - stateless
   - 각 요청은 원칙적으로 다른 요청이나 연결의 상태에 의존하지 않고 독립적으로 해석할 수 있으나, 이것이 서버가 애플리케이션 상태를 저장할 수 없다는 의미는 아니다.
   - Cookie, Session, Token 등을 사용해 여러 요청에 걸친 사용자 상태를 유지할 수 있다.
 
-## HTTP Request / Response 구조
+## HTTP 요청과 응답 구조
 
 <!-- HTTP/1.1 기준 status line의 HTTP version, status code, reason phrase를 설명하고,
 HTTP/2 이상에서는 표현 방식이 달라짐을 설명한다. -->
@@ -155,7 +155,7 @@ Location: http://example.com/users/123
   특별한 지원이 없으면 전송하지 않는 것이 권장
 - POST와 PATCH 응답은 명시적인 freshness 정보와 target URI를 가리키는
   `Content-Location`이 있는 경우에 한해 캐시할 수 있다.
-- 캐시된 POST/PATCH 응답은 이후 동일한 POST/PATCH를 대신하기 위한 것이 아니라,
+- 캐시된 POST와 PATCH 응답은 이후 동일한 POST와 PATCH를 대신하기 위한 것이 아니라,
   조건을 만족하는 GET 또는 HEAD 요청에 재사용된다.
 
 ## HTTP Status Code
@@ -245,7 +245,7 @@ sequenceDiagram
 
 <!-- 결제나 주문처럼 중복 처리가 위험한 요청에서 idempotency key를 사용하는 목적과 서버의 처리 방식을 설명한다. -->
 
-POST와 PATCH는 Method 자체의 semantics만으로 멱등성이 보장되지 않는다. 결제/주문처럼 중복 처리가 위험한 요청인 경우 `Idempotency-Key` 헤더를 사용해서 중복 처리를 방지할 수 있다. 표준은 아니다.
+POST와 PATCH는 Method 자체의 semantics만으로 멱등성이 보장되지 않는다. 결제나 주문처럼 중복 처리가 위험한 요청인 경우 `Idempotency-Key` 헤더를 사용해서 중복 처리를 방지할 수 있다. 표준은 아니다.
 
 - Client 에서는 요청시 헤더에 이 키값을 붙여서 보낸다.
   - 새로운 논리적 작업마다 고유한 key를 생성한다.
@@ -279,7 +279,7 @@ POST와 PATCH는 Method 자체의 semantics만으로 멱등성이 보장되지 �
 <!-- binary framing, stream multiplexing, header compression과 TCP 수준 head-of-line blocking을 설명한다. -->
 
 - HTTP semantics를 binary frame으로 표현한다.
-- 각 request/response exchange를 독립된 stream에 할당한다.
+- 각 request와 response exchange를 독립된 stream에 할당한다.
 - 하나의 TCP connection에서 여러 stream의 frame을 교차 전송하는 multiplexing을 지원한다.
 - HPACK을 사용해 반복되는 HTTP field를 압축한다.
 - HTTP 수준의 response ordering 문제는 완화하지만,
@@ -304,8 +304,8 @@ POST와 PATCH는 Method 자체의 semantics만으로 멱등성이 보장되지 �
 | 동시 요청 처리     | 여러 connection 또는 pipelining           | 하나의 connection에서 stream multiplexing | 하나의 connection에서 QUIC stream multiplexing |
 | Field 압축     | 기본 제공 없음                              | HPACK                                | QPACK                                     |
 | HOL blocking | response 순서에 따른 application-level HOL | HTTP stream 수준은 완화되지만 TCP HOL 존재     | 다른 stream 사이의 transport HOL 완화            |
-| 연결 수립        | TCP, HTTPS는 별도 TLS handshake          | TCP, HTTPS는 TLS/ALPN 사용              | QUIC transport와 TLS handshake 결합          |
-| 연결 재개        | TCP/TLS 정책에 따름                        | TCP/TLS 정책에 따름                       | 조건에 따라 0-RTT 가능                           |
+| 연결 수립        | TCP, HTTPS는 별도 TLS handshake          | TCP, HTTPS는 TLS와 ALPN 사용              | QUIC transport와 TLS handshake 결합          |
+| 연결 재개        | TCP와 TLS 정책에 따름                        | TCP와 TLS 정책에 따름                       | 조건에 따라 0-RTT 가능                           |
 
 ## Keep-Alive
 
@@ -459,5 +459,5 @@ client는 429를 받았을 때 즉시 반복 요청하지 않고 `Retry-After`�
 
 ## 함께 읽기
 
-- [[03_Resource/04_network/01_tcp|1주차 - TCP IP와 연결]]
-- [[03_Resource/04_network/04_http_429_ts|HTTP 429 트러블슈팅 사례]]
+- [1주차 - TCP IP와 연결](03_Resource/04_network/01_tcp)
+- [HTTP 429 트러블슈팅 사례](03_Resource/04_network/04_http_429_ts)

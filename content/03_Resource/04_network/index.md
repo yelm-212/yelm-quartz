@@ -9,7 +9,7 @@ tags:
 
 네트워크의 동작 원리를 학습하고, 공개된 장애 사례를 바탕으로 문제를 역추론한 기록입니다.
 
-> 전체 일정과 진행 방식은 [[01_Project/12_week_cs_study|12주 CS 학습 계획]]에서 관리합니다.
+> 전체 일정과 진행 방식은 [12주 CS 학습 계획](01_Project/12_week_cs_study)에서 관리합니다.
 
 ## 학습 원칙
 
@@ -22,19 +22,19 @@ tags:
 ### 1주차
 
 - 학습내용 : [TCP IP와 연결](03_Resource/04_network/01_tcp)
-- 트러블슈팅: [[03_Resource/04_network/02_tcpip_ts|TCP 연결 장애 사례]]
+- 트러블슈팅: [TCP 연결 장애 사례](03_Resource/04_network/02_tcpip_ts)
 
 ### 2주차
 
-- 학습내용: [[03_Resource/04_network/03_http|HTTP와 요청&응답]]
-- 트러블슈팅: [[03_Resource/04_network/04_http_429_ts|HTTP 429 트러블슈팅 사례]]
+- 학습내용: [HTTP와 요청 및 응답](03_Resource/04_network/03_http)
+- 트러블슈팅: [HTTP 429 트러블슈팅 사례](03_Resource/04_network/04_http_429_ts)
 
 ### 3주차
 
-- 학습내용: [[03_Resource/04_network/05_dns_https_proxy_lb|DNS, HTTPS, Proxy, Load Balancer]]
-- 트러블슈팅: [[03_Resource/04_network/06_dns_tls_proxy_lb_ts|DNS, TLS, Proxy, Load Balancer 트러블슈팅 사례]]
+- 학습내용: [DNS, HTTPS, Proxy, Load Balancer](03_Resource/04_network/05_dns_https_proxy_lb)
+- 트러블슈팅: [DNS, TLS, Proxy, Load Balancer 트러블슈팅 사례](03_Resource/04_network/06_dns_tls_proxy_lb_ts)
 
 ### 4주차
 
-- 학습내용: [[03_Resource/04_network/07_network_summary|Network 종합]]
-- 트러블슈팅: [[03_Resource/04_network/08_network_summary_ts|Network 종합 트러블슈팅 사례]]
+- 학습내용: [Network 종합](03_Resource/04_network/07_network_summary)
+- 트러블슈팅: [Network 종합 트러블슈팅 사례](03_Resource/04_network/08_network_summary_ts)

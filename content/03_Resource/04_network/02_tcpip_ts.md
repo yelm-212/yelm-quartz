@@ -49,7 +49,7 @@ Client
 
 <!-- 확인한 순서대로 나열한다. 각 단계에서 무엇을 보고 다음으로 넘어갔는지 드러나게 적는다. -->
 
-- 연결 실패 지점 확인 (timeout / refused / reset 구분)
+- 연결 실패 지점 확인 (timeout, refused, reset 구분)
 - Socket state 집계 (`ss -tan`)
 - Local port 사용량과 ephemeral port 범위
 - TIME_WAIT 수
@@ -83,4 +83,4 @@ Client
 
 ## 함께 읽기
 
-- [[03_Resource/04_network/01_tcp|1주차 - TCP/IP와 연결]]
+- [1주차 - TCP/IP와 연결](03_Resource/04_network/01_tcp)

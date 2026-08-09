@@ -29,7 +29,7 @@ tags:
 
 ## 관측한 증상
 
-- CPU 사용률 (user / system / iowait):
+- CPU 사용률 (user, system, iowait):
 - Load Average:
 - 응답 시간과 처리량:
 - 영향 범위:
@@ -66,7 +66,7 @@ CPU 사용률
 → Process
 → Thread
 → Process State
-→ CPU Bound / I/O Bound
+→ CPU Bound와 I/O Bound
 → Context Switching
 ```
 
@@ -76,4 +76,4 @@ CPU 사용률
 
 ## 함께 읽기
 
-- [[03_Resource/05_os/01_process_thread_cpu|5주차 - Process, Thread와 CPU Scheduling]]
+- [5주차 - Process, Thread와 CPU Scheduling](03_Resource/05_os/01_process_thread_cpu)

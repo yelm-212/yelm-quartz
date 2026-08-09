@@ -19,7 +19,7 @@ tags:
 
 ```text
 Application Process
-→ Heap / Native Memory
+→ Heap과 Native Memory
 → Process Memory (RSS)
 → 시스템 Memory
 → Swap
@@ -45,7 +45,7 @@ Application Process
 - 시스템 Memory와 Swap 사용량 확인 (`free`, `vmstat`)
 - Process별 RSS 추이 확인
 - Application이 보고하는 Heap 사용량과 RSS 비교
-- Major page fault와 swap in/out 추이 확인
+- Major page fault와 swap in과 out 추이 확인
 - OOM Killer 동작 여부 확인 (`dmesg`)
 
 ## 실제 원인
@@ -63,7 +63,7 @@ Application Process
 ```text
 Memory 사용량 증가
 → Process Memory
-→ Heap / Native Memory
+→ Heap과 Native Memory
 → RSS
 → Page Cache
 → Swap
@@ -77,4 +77,4 @@ Memory 사용량 증가
 
 ## 함께 읽기
 
-- [[03_Resource/05_os/03_virtual_memory|6주차 - Virtual Memory와 Memory 문제]]
+- [6주차 - Virtual Memory와 Memory 문제](03_Resource/05_os/03_virtual_memory)

@@ -20,7 +20,7 @@ tags:
 - Thread Pool을 사용하는 이유를 설명할 수 있다.
 - CPU Bound와 I/O Bound 작업에 따라 Thread Pool 크기 기준이 달라지는 이유를 설명할 수 있다.
 - Thread Pool이 고갈되었을 때 나타나는 증상을 설명할 수 있다.
-- Blocking / Non-Blocking과 Synchronous / Asynchronous를 구분할 수 있다.
+- Blocking과 Non-Blocking, Synchronous와 Asynchronous를 구분할 수 있다.
 - I/O Multiplexing이 필요한 이유를 설명할 수 있다.
 - epoll이 다수의 연결을 처리하는 데 유리한 이유를 개략적으로 설명할 수 있다.
 
@@ -96,7 +96,7 @@ tags:
 
 <!-- 하나의 Thread가 다수의 FD를 감시해야 하는 이유를 기록한다. -->
 
-### select / poll / epoll
+### select, poll, epoll
 
 <!-- 내부 구현을 자세히 비교하기보다 기존 방식의 한계와 epoll이 필요한 이유를 중심으로 기록한다. -->
 
@@ -119,7 +119,7 @@ tags:
 ## 백지복습 질문
 
 - Race Condition과 Deadlock은 무엇인가?
-- Blocking / Non-Blocking과 Sync / Async는 어떻게 다른가?
+- Blocking과 Non-Blocking, Sync와 Async는 어떻게 다른가?
 - Thread Pool이 고갈되면 어떤 현상이 나타나는가?
 
 ## 참고 자료
@@ -133,5 +133,5 @@ tags:
 
 ## 함께 읽기
 
-- [[03_Resource/05_os/01_process_thread_cpu|5주차 - Process, Thread와 CPU Scheduling]]
-- [[03_Resource/05_os/06_concurrency_io_ts|동시성과 I/O 트러블슈팅 사례]]
+- [5주차 - Process, Thread와 CPU Scheduling](03_Resource/05_os/01_process_thread_cpu)
+- [동시성과 I/O 트러블슈팅 사례](03_Resource/05_os/06_concurrency_io_ts)
