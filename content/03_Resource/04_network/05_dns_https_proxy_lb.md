@@ -77,7 +77,7 @@ DNS를 단순히 "Domain Name을 IP 주소로 변환하는 시스템"이라고�
 - authoritative data와 cached data의 차이
 -->
 
-DNS는 인간에게 친숙하게 작성된 domain name(`example.com`)을 연결된 Resource Record를 조회한다.
+DNS는 domain name(`example.com`)을 연결된 Resource Record를 조회한다.
 
 A/AAAA Record를 이용해 Domain Name에 대응하는 IPv4/IPv6 주소를 조회할 수 있으며, 그 밖에도 mail server를 나타내는 MX, authoritative name server를 나타내는 NS, 문자열 정보를 저장하는 TXT 등 다양한 정보를 조회할 수 있다.
 
@@ -101,7 +101,7 @@ Domain Name에 연결된 정보를 찾는 전체 과정을 DNS resolution이라�
 
 ![](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_domain_name/structure.png)
 
-우측에서부터 root(.) top level domain server(=TLD, 제일 뒤, .com, .org, .net )부터 
+Domain Name은 오른쪽에서 왼쪽으로 Root(.) → TLD(com) → 하위 Domain(google) 순으로 계층을 구분할 수 있다.
 
 유저가 브라우저에 주소를 입력하면, 브라우저 캐시에 없는 경우 recursive server로 질의를 시도한다.
 recursive server에 캐시가 없는 경우 DNS 계층에 따라 하위 dns 계층으로 쿼리해 A/AAAA 레코드에서 IP 주소 등 리소스를 찾는다.
@@ -110,12 +110,12 @@ recursive server에 캐시가 없는 경우 DNS 계층에 따라 하위 dns 계�
    - 사용자로부터 요청 받아서 recursive resolver로 전달
 
 - Recursive Resolver : Client를 대신해 DNS resolution을 수행하는 server.
-   - 보통 ISP사, 서드파티 DNS 프로바이더에 의해 관리됨.
-   - 질의 결과를 캐시하고 이를 위한 time-to-live 설정 가능.
+   - 보통 ISP사, 서드파티 DNS 프로바이더에 의해 관리
+   - 질의 결과를 Resource Record의 TTL에 따라 cache
    - 요청 들어오면 캐시 확인 > 결과 없으면 하위 Name Server에 iterative query
 - Authoritative Name Server 
-   - 자기 자신의 zone에서 관리하는 레코드에 권한이 있는경우 질의해 응답받음
-   - 하위레코드인 경우 referral을 반환할 수 있음
+   - 자신이 관리하는 zone의 authoritative data에 대한 질의에 응답한다.
+   - 하위 zone으로 관리 권한이 delegation된 경우 해당 zone의 Name Server 정보를 referral로 반환할 수 있다.
    - Root Name Server : 최상위에 위치, 루트 존. TLD 서버로 referrral 반환
    - TLD Name Server : 해당 TLD 하위 계층 zone name server 정보의 referrral 반환
 
@@ -171,14 +171,12 @@ Record의 "owner name, TTL, class, type, RDATA" 구조를 먼저 설명한 뒤 �
 - AAAA 정의는 RFC 3596을 참고한다.
 -->
 
-| Record | 역할 |
-| ------ | ---- | 
-| A      | 도메인의 호스트 주소 |
-| AAAA   | 도메인의 ipv6 호스트 주소     |
-| CNAME  | 특정 도메인의 별칭 지정 |
-| NS     | authoritative name server |
-| MX     | 메일  |
-| TXT    | 텍스트 형식 |
+- A: Domain Name에 IPv4 주소 연결
+- AAAA: Domain Name에 IPv6 주소 연결
+- CNAME: 다른 Domain Name을 canonical name의 alias로 지정
+- NS: Zone의 Authoritative Name Server 지정
+- MX: Domain의 Mail Exchange Server 지정
+- TXT: Domain과 연관된 문자열 정보 저장
 
 ### DNS Cache와 TTL
 
@@ -305,18 +303,23 @@ Name:   google.com
 Address: 142.250.198.46
 ```
 
-<!--
+위 결과에서 기본 DNS Resolver(`203.248.252.2`)와 Cloudflare Resolver(`1.1.1.1`)가 서로 다른 A Record와 TTL을 반환했다.
 
-출력에서 확인할 항목:
-- status: NOERROR, NXDOMAIN, SERVFAIL, REFUSED
-- flags: aa, rd, ra, ad 등
-- QUESTION / ANSWER / AUTHORITY / ADDITIONAL
-- SERVER
-- Query time
-- 각 RR의 TTL
-- CNAME chain
-- authoritative answer 여부
--->
+```text
+기본 Resolver
+google.com.  220  IN A 142.250.198.142
+
+Cloudflare
+google.com.   35  IN A 172.217.211.100
+...
+```
+
+DNS 조회 결과는 Recursive Resolver의 cache 상태나 질의 시점, Authoritative DNS의 응답 정책 등에 따라 서로 다를 수 있으므로, Resolver마다 다른 IP가 반환된 것만으로 DNS 장애라고 판단할 수는 없다.
+
+두 `dig` 결과 모두 `status: NOERROR`이고 `rd ra` flag가 존재하므로, Recursive Resolver에 recursion을 요청했고 해당 Resolver가 정상적으로 recursive query를 처리해 Answer를 반환한 것을 확인할 수 있다.
+
+또한 `aa` flag가 없으므로 현재 결과는 Google의 Authoritative Name Server에 직접 질의하여 받은 authoritative answer가 아니라 Recursive Resolver를 통해 얻은 응답이다.
+
 
 | 항목 | 의미   | 장애 시 확인할 내용 |
 | --- | ----- | --------------- |
@@ -342,222 +345,75 @@ HTTP와 HTTPS를 완전히 다른 application protocol로 설명하지 않는다
 - HTTPS가 application 자체의 취약점이나 endpoint 침해까지 해결하지는 않음
 -->
 
+HTTP는 application-level request/response의 의미를 정의하는 protocol이며, HTTPS는 HTTP 통신을 TLS로 보호하는 방식이다.
+
+TLS는 HTTP Method나 Status Code의 의미를 바꾸는 것이 아니라, Client와 Server 사이의 통신에 **기밀성(confidentiality), 무결성(integrity), peer authentication**을 제공한다.
+
 | 구분 | HTTP | HTTPS |
 | ---- | ---- | ----- |
-| 전송 구간 보호 |  |  |
-| 서버 identity 검증 |  |  |
-| URL Scheme |  |  |
-| 기본 Port |  |  |
-| HTTP semantics |  |  |
+| 전송 구간 보호 | 기본적으로 없음 | TLS를 통해 암호화·무결성 보호 |
+| 서버 identity 검증 | 기본적으로 없음 | 인증서 검증을 통해 수행 |
+| URL Scheme | `http` | `https` |
+| 기본 Port | 80 | 443 |
+| HTTP semantics | 동일 | 동일 |
 
-> 읽기 자료
->
-> - [HTTP-SEMANTICS] RFC 9110: HTTP와 `http`·`https` URI
-> - [TLS13] RFC 9846 Section 1: TLS가 제공하는 보호
+### 대칭키, 비대칭키
 
-## 암호화 기초
+- **대칭키 암호화**
+  - 동일한 secret key를 이용해 데이터를 암호화·복호화한다.
+  - 연산 비용이 비교적 낮아 실제 Application Data 보호에 적합하다.
+  - 통신 전에 양쪽이 같은 key를 안전하게 공유해야 한다는 문제가 있다.
 
-### 대칭키 암호화
+- **비대칭키 암호화**
+  - 서로 다른 Public Key와 Private Key를 사용한다.
+  - Private Key로 만든 digital signature를 대응하는 Public Key로 검증하여 상대가 Private Key를 보유하고 있음을 확인할 수 있다.
+  - 대칭키 암호화보다 연산 비용이 크기 때문에 TLS에서는 Application Data 전체를 비대칭키로 암호화하지 않는다.
 
-<!--
-작성할 내용:
-- 같은 secret key를 기반으로 암호화와 복호화 수행
-- 대용량 Application Data 보호에 효율적
-- 통신 전 key를 안전하게 공유해야 하는 문제
-- TLS 1.3에서는 AEAD algorithm으로 confidentiality와 integrity를 함께 제공
--->
-
-### 비대칭키 암호화
-
-<!--
-작성할 내용:
-- public key와 private key의 역할
-- digital signature와 encryption을 구분
-- 인증서의 public key로 Application Data 전체를 직접 암호화한다고 설명하지 않기
-- TLS 1.3의 일반적인 ECDHE key agreement와 certificate signature의 역할을 구분
--->
-
-### Hash, MAC, Digital Signature
-
-<!--
-선택적으로 작성하되 다음을 혼동하지 않는다.
-
-- Hash: 입력으로부터 고정 길이 digest 계산
-- MAC: shared secret을 가진 상대끼리 integrity와 authenticity 확인
-- Digital Signature: private key로 서명하고 public key로 검증
-- TLS 1.3 Finished는 handshake secret 기반 검증 값
-- CertificateVerify는 인증서 private key possession을 증명하는 signature
--->
-
-### TLS에서의 조합
-
-<!--
-"비대칭키로 대칭키 자체를 암호화해 전달한다"는 오래된 RSA key transport 중심 설명으로
-TLS 1.3을 정리하지 않는다.
-
-TLS 1.3 기준 작성할 내용:
-1. (EC)DHE key share로 shared secret 합의
-2. 인증서와 CertificateVerify로 server authentication
-3. HKDF 기반 key schedule로 traffic key 파생
-4. Application Data는 파생된 symmetric AEAD key로 보호
-5. 비대칭 연산과 대칭 연산을 조합하는 이유
--->
-
-> 읽기 자료
->
-> - [TLS13] RFC 9846 Sections 2, 4, 7
-> - [TLS13-TRACE] RFC 8448: TLS 1.3 example handshake traces
-
-## TLS Handshake
+TLS 1.3에서는 일반적으로 (EC)DHE 기반 key agreement로 shared secret을 만들고, 인증서와 digital signature를 이용해 Server를 인증한다. 이후 이 secret에서 파생한 대칭키를 이용해 Application Data를 보호한다.
 
 ### TLS 1.3 Full Handshake
-
-<!--
-2026-08-04 기준 TLS 1.3의 현재 명세는 RFC 9846이며 RFC 8446을 obsoletes한다.
-
-아래는 server certificate authentication을 사용하는 대표적인 full handshake다.
-CertificateRequest와 client certificate 관련 message는 생략했다.
-
-주의:
-- TLS 1.3에서는 ServerHello 이후 handshake message가 handshake key로 보호된다.
-- 일반적인 full handshake에서 server Finished가 client Finished보다 먼저 전송된다.
-- 실제 packet 수와 TCP segment 수가 handshake message 수와 일치하는 것은 아니다.
--->
 
 ```mermaid
 sequenceDiagram
     participant C as Client
     participant S as Server
 
-    C->>S: ClientHello<br/>supported_versions, cipher_suites,<br/>key_share, SNI, ALPN
-    S-->>C: ServerHello<br/>selected_version, cipher_suite, key_share
+    C->>S: ClientHello
+    S-->>C: ServerHello
     S-->>C: EncryptedExtensions
     S-->>C: Certificate
     S-->>C: CertificateVerify
     S-->>C: Finished
-    Note over C: Certification Path Validation<br/>Service Identity Verification
+    Note over C: Certificate / Identity 검증
     C->>S: Finished
     Note over C,S: Encrypted Application Data
 ```
 
-<!--
-각 message의 역할:
-- ClientHello:
-- ServerHello:
-- EncryptedExtensions:
-- Certificate:
-- CertificateVerify:
-- Finished:
--->
+- **ClientHello**
+  - 지원하는 TLS Version, Cipher Suite, Key Share, SNI, ALPN 등의 정보를 전달한다.
+- **ServerHello**
+  - 사용할 TLS Version, Cipher Suite와 Server의 Key Share를 선택하여 전달한다.
+- **EncryptedExtensions**
+  - ServerHello에 포함되지 않은 나머지 handshake parameter를 전달한다.
+- **Certificate**
+  - Server의 인증서와 필요한 인증서 체인을 Client에 전달한다.
+- **CertificateVerify**
+  - Server가 인증서의 Public Key에 대응하는 Private Key를 실제로 보유하고 있음을 signature로 증명한다.
+- **Finished**
+  - 지금까지의 Handshake 내용과 계산된 key가 일치하는지 검증하여 Handshake가 변조되지 않았음을 확인한다.
 
-> 읽기 자료
->
-> - [TLS13] RFC 9846 Section 2, Section 4
-> - [TLS13-TRACE] RFC 8448 Section 3: example full handshake
-> - [PKIX] RFC 5280: certificate path validation
-> - [TLS-ID] RFC 9525: hostname 등 service identity 검증
+TLS 1.3의 일반적인 Full Handshake에서는 Server의 `Finished`가 먼저 전달되고 Client가 이를 검증한 뒤 자신의 `Finished`를 전달한다.
 
-### TLS 1.2와 TLS 1.3 비교
+### 인증서의 역할과 인증서 체인
 
-<!--
-전체 message를 외우기보다 아래 차이를 중심으로 작성한다.
+인증서는 Server의 identity와 Public Key 등의 정보를 CA의 digital signature로 묶은 문서이다.
 
-- TLS 1.3은 legacy algorithm과 RSA key transport를 제거
-- full handshake의 round trip 감소
-- cipher suite가 나타내는 범위 변화
-- ServerHello 이후 handshake message encryption
-- forward secrecy를 제공하는 (EC)DHE 중심 key agreement
-- session resumption과 0-RTT의 존재 및 replay 위험
--->
+Client는 인증서를 통해 다음을 확인한다.
 
-| 항목 | TLS 1.2 | TLS 1.3 |
-| ---- | ------- | ------- |
-| Full Handshake RTT |  |  |
-| Key Exchange |  |  |
-| Cipher Suite가 포함하는 범위 |  |  |
-| Handshake message 보호 시점 |  |  |
-| 0-RTT |  |  |
-
-> 읽기 자료
->
-> - [TLS13] RFC 9846 Appendix E 및 protocol overview
-> - [TLS-DEPLOY] RFC 9325: TLS deployment recommendations
-
-### HTTP/3와 TLS
-
-<!--
-HTTP/3에서는 "TCP 연결 → 별도 TLS record layer" 흐름으로 설명하지 않는다.
-
-작성할 내용:
-- HTTP/3는 QUIC transport 위에서 동작
-- QUIC은 TLS 1.3 Handshake를 사용해 key를 얻음
-- TLS record를 QUIC 위에 싣는 것이 아니라 QUIC이 packet protection과 신뢰성 제공
-- ALPN `h3`를 이용해 HTTP/3를 협상
--->
-
-```text
-HTTP/1.1 or HTTP/2
-HTTP → TLS Records → TCP → IP
-
-HTTP/3
-HTTP/3 → QUIC Streams / Frames → QUIC Packet Protection → UDP → IP
-                         ↑
-                  TLS 1.3 Handshake
-```
-
-> 읽기 자료
->
-> - [QUIC-TLS] RFC 9001 Sections 2~4
-> - [HTTP3] RFC 9114 Sections 1~3
-
-## TLS 협상 항목
-
-<!--
-TLS 1.3 기준으로 cipher suite와 key exchange를 분리해서 작성한다.
--->
-
-| 항목 | 역할 | ClientHello/ServerHello에서 확인할 내용 |
-| ---- | ---- | --------------------------------------- |
-| TLS Version | 사용할 TLS protocol version 협상 |  |
-| Cipher Suite | AEAD algorithm과 HKDF hash 선택 |  |
-| Supported Groups | key agreement에 사용할 group 제안 |  |
-| Key Share | (EC)DHE public key share 전달 |  |
-| Signature Algorithms | CertificateVerify 등에 사용할 signature algorithm 제안 |  |
-| SNI | 접속하려는 server name 전달 |  |
-| ALPN | TLS 위에서 사용할 application protocol 협상 |  |
-
-<!--
-주의:
-- TLS 1.3 cipher suite는 key exchange algorithm과 certificate signature algorithm을
-  포함하지 않는다.
-- SNI는 server가 virtual host와 certificate를 선택하는 데 사용할 수 있다.
-- ALPN 예: `h2`, `http/1.1`, `h3`
--->
-
-> 읽기 자료
->
-> - [TLS13] RFC 9846 Sections 4.1~4.2
-> - [TLS-SNI] RFC 6066 Section 3
-> - [TLS-ALPN] RFC 7301 Section 3
-
-## 인증서
-
-### 인증서의 역할
-
-<!--
-작성할 내용:
-- X.509 certificate가 subject identity와 public key 등 정보를 CA signature로 묶는 방식
-- certificate가 secret key를 전달하는 문서가 아니라는 점
-- server가 CertificateVerify를 통해 대응하는 private key possession을 증명한다는 점
-- "CA가 domain 소유권을 영구 보증한다"가 아니라 검증 시점의 trust model과 validity 범위
--->
-
-> 읽기 자료
->
-> - [PKIX] RFC 5280 Section 4: certificate fields
-> - [TLS13] RFC 9846 Sections 4.4.2~4.4.3
-
-### 인증서 체인
+1. 인증서가 신뢰할 수 있는 CA 체인으로 연결되는가
+2. 인증서가 현재 유효한 기간 내에 있는가
+3. 접속하려는 hostname이 인증서의 SAN과 일치하는가
+4. Server가 해당 인증서의 Public Key에 대응하는 Private Key를 실제로 보유하고 있는가
 
 ```text
 Trust Anchor (Root CA)
@@ -565,149 +421,62 @@ Trust Anchor (Root CA)
     └── End-Entity / Server Certificate
 ```
 
-<!--
-작성할 내용:
-- Server가 보통 leaf와 필요한 intermediate certificate를 전달
-- Root CA는 client trust store의 trust anchor로 사용
-- Server가 root certificate를 전송하더라도 그것만으로 신뢰되는 것은 아님
-- issuer/subject 연결만 보는 것이 아니라 signature와 constraints를 검증
-- cross-signing이나 alternate chain이 존재할 수 있음
--->
+Server는 일반적으로 자신의 Server Certificate와 필요한 Intermediate CA Certificate를 전달한다. Root CA는 보통 Client의 Trust Store에 저장된 Trust Anchor를 사용한다.
 
-> 읽기 자료
->
-> - [PKIX] RFC 5280 Sections 4, 6
+따라서 **인증서 체인을 신뢰할 수 있는지 확인하는 것**과 **현재 접속한 hostname이 인증서와 일치하는지 확인하는 것**은 서로 다른 검증 과정이다.
 
-### 인증 경로 검증
+## Proxy
 
-<!--
-Certification Path Validation에 포함할 내용:
-- trust anchor까지 path 구성
-- 각 certificate signature 검증
-- validity period
-- Basic Constraints
-- Key Usage / Extended Key Usage
-- Name Constraints
-- policy와 path length 등
-
-이번 학습 수준에서 모든 RFC 5280 algorithm state를 외울 필요는 없다.
-"신뢰 가능한 CA chain인가"를 판단하는 과정으로 정리한다.
--->
-
-### 서비스 Identity 검증
-
-<!--
-Certification Path Validation과 별도 절로 작성한다.
-
-작성할 내용:
-- client가 접속하려는 reference identifier
-- certificate SAN에 제시된 DNS-ID 또는 IP-ID
-- hostname과 SAN 비교
-- wildcard matching 제한
-- chain이 신뢰 가능해도 hostname mismatch이면 실패한다는 점
-- CN fallback을 현재 규칙처럼 설명하지 않기
--->
-
-> 읽기 자료
->
-> - [TLS-ID] RFC 9525 Sections 4~6
-> - [PKIX] RFC 5280 Section 4.2.1.6: Subject Alternative Name
-
-### 인증서 폐기 상태
-
-<!--
-깊게 다루지 않아도 된다.
-
-작성할 내용:
-- certificate expiry와 revocation은 다른 개념
-- CRL
-- OCSP
-- OCSP Stapling
-- 실제 client의 revocation checking과 failure policy는 구현 및 platform에 따라 다를 수 있음
--->
-
-> 읽기 자료
->
-> - [PKIX] RFC 5280: CRL
-> - [OCSP] RFC 6960: OCSP
-
-## Proxy와 Reverse Proxy
-
-### HTTP Intermediary
-
-<!--
-RFC 9110의 용어를 먼저 정리한다.
-
-- Proxy: client가 선택한 message-forwarding agent
-- Gateway: inbound connection에서는 origin server처럼 보이고 요청을 다른 server로 전달
-- Tunnel: HTTP message를 해석·변경하지 않고 connection 사이를 blind relay
-- "Reverse Proxy"는 일반적으로 gateway 역할을 하는 구현을 가리키는 용어로 사용
--->
-
-> 읽기 자료
->
-> - [HTTP-SEMANTICS] RFC 9110 Section 3.7
+Proxy는 Client와 Server 사이에서 요청이나 connection을 중계하는 intermediary이다.
 
 ### Forward Proxy
 
-<!--
-작성할 내용:
-- client 또는 client network를 대신해 외부 server에 요청
-- origin server는 직접 client 대신 proxy를 peer로 볼 수 있음
-- access control, filtering, egress control, caching, privacy 등 사용 사례
-- HTTPS의 CONNECT tunnel과 TLS interception을 구분
--->
+Forward Proxy는 **Client 측을 대신해 외부 Server에 요청하는 Proxy**이다.
 
 ```text
 Client → Forward Proxy → Origin Server
 ```
 
+Origin Server 입장에서는 Client 대신 Forward Proxy가 직접 통신하는 peer가 된다.
+
+주요 사용 사례:
+
+- 외부 접근 제어
+- 요청 filtering
+- egress 관리
+- caching
+
 ### Reverse Proxy
 
-<!--
-작성할 내용:
-- client에게 origin server처럼 보이면서 내부 upstream으로 요청 전달
-- routing, TLS termination, caching, compression, authentication, WAF 연계
-- load balancing과 reverse proxy 기능이 겹칠 수 있음
-- reverse proxy가 존재한다고 항상 별도 load balancer가 존재하는 것은 아님
--->
+Reverse Proxy는 **Server 측을 대신해 Client의 요청을 받아 내부 Backend로 전달하는 Proxy**이다.
 
 ```text
 Client → Reverse Proxy / Gateway → Backend
 ```
 
+Client에게는 Reverse Proxy가 Origin Server처럼 보일 수 있다.
+
+주요 사용 사례:
+
+- Host/Path 기반 routing
+- TLS termination
+- caching
+- authentication
+- Load Balancing
+
+Reverse Proxy와 Load Balancer는 항상 별도의 장비를 의미하지 않는다. 하나의 제품이 두 역할을 함께 수행할 수 있다.
+
 | 구분 | Forward Proxy | Reverse Proxy |
 | ---- | ------------- | ------------- |
-| 대리하는 측 |  |  |
-| 누가 설정·선택하는가 |  |  |
-| 외부에서 숨겨지는 측 |  |  |
-| 주요 목적 |  |  |
-| 대표 사례 |  |  |
-
-> 읽기 자료
->
-> - [HTTP-SEMANTICS] RFC 9110 Section 3.7
-> - [NGINX-PROXY] NGINX `ngx_http_proxy_module`
+| 대리하는 측 | Client | Server / Backend |
+| 누가 주로 설정하는가 | Client 또는 Client 측 Network | Server 운영 측 |
+| 외부에서 숨겨지는 측 | Client | Backend Server |
+| 주요 목적 | 접근 제어, egress, filtering | routing, TLS termination, backend 보호 |
+| 대표 사례 | 사내 Web Proxy | NGINX, HAProxy, Application Load Balancer |
 
 ### Proxy 사용 시 전달 정보
 
-<!--
-작성할 header:
-- Host
-- Forwarded: for, by, host, proto
-- X-Forwarded-For
-- X-Forwarded-Host
-- X-Forwarded-Proto
-- X-Real-IP
-
-반드시 신뢰 경계를 함께 작성한다.
-
-핵심:
-- Client는 임의의 Forwarded 또는 X-Forwarded-* 값을 직접 보낼 수 있다.
-- Application은 외부에서 들어온 값을 무조건 신뢰하면 안 된다.
-- 신뢰하는 proxy가 기존 값을 제거·정규화하거나 append한 결과만 신뢰하도록 설정해야 한다.
-- 여러 proxy를 거치면 address list의 어느 범위까지 신뢰할지 정의해야 한다.
--->
+Reverse Proxy가 Backend에 새로운 connection을 만들면 Backend에서는 원래 Client의 IP나 scheme을 직접 알 수 없을 수 있다. 이를 전달하기 위해 `Forwarded` 또는 `X-Forwarded-*` 계열 header를 사용할 수 있다.
 
 ```http
 Forwarded: for=192.0.2.60;proto=https;host=example.com
@@ -718,288 +487,75 @@ X-Forwarded-Host: example.com
 
 | Header | 전달하려는 원본 정보 | 보안상 주의점 |
 | ------ | --------------------- | ------------- |
-| `Host` |  |  |
-| `Forwarded` |  |  |
-| `X-Forwarded-For` |  |  |
-| `X-Forwarded-Proto` |  |  |
-| `X-Forwarded-Host` |  |  |
+| `Host` | 요청 대상 Host | Proxy가 Backend용 Host로 변경할 수 있음 |
+| `Forwarded` | Client IP, Proxy, Host, Protocol | Client가 임의로 보낼 수 있으므로 신뢰하는 Proxy가 만든 값만 사용 |
+| `X-Forwarded-For` | 원래 Client IP와 거친 Proxy 목록 | 외부 입력을 무조건 신뢰하면 IP spoofing 가능 |
+| `X-Forwarded-Proto` | 원래 요청의 `http` / `https` scheme | Redirect URL이나 secure-cookie 판단 등에 사용되므로 신뢰 경계 필요 |
+| `X-Forwarded-Host` | 원래 요청 Host | Host 기반 URL 생성 시 신뢰 경계 필요 |
 
-> 읽기 자료
->
-> - [FORWARDED] RFC 7239
-> - [NGINX-PROXY] NGINX `proxy_set_header`, `$proxy_add_x_forwarded_for`
+Application은 Client가 직접 보낸 `Forwarded` 또는 `X-Forwarded-*` 값을 무조건 신뢰해서는 안 된다. 신뢰하는 Proxy가 값을 제거하거나 정규화한 뒤 전달하도록 구성하고, Application도 신뢰할 Proxy 범위를 지정해야 한다.
 
 ## Load Balancer
 
 ### Load Balancer의 역할
 
-<!--
-작성할 내용:
-- 하나의 service endpoint 뒤에 여러 target을 두고 traffic 분산
-- availability, scale-out, maintenance를 지원
-- listener, routing rule, target group 개념
-- health check 결과에 따라 unhealthy target 제외
-- connection draining / deregistration delay
-- Load Balancer 자체의 다중 AZ·HA는 제품별 구조가 다름
+Load Balancer는 하나의 Service Endpoint로 들어온 traffic을 여러 Backend Target에 분산한다.
 
-주의:
-- "L4 Load Balancer", "L7 Load Balancer"는 유용한 운영상 분류지만
-  모든 제품 기능이 계층 하나에 엄격히 고정되는 것은 아니다.
--->
+이를 통해 다음을 지원할 수 있다.
 
-> 읽기 자료
->
-> - [AWS-NLB] AWS Network Load Balancer introduction
-> - [AWS-ALB] AWS Application Load Balancer introduction
+- 여러 Backend로 traffic 분산
+- Scale-out
+- Backend 장애 시 정상 Target으로 traffic 전달
+- 배포·점검 중 특정 Target 제외
 
-### L4 Load Balancer
+Load Balancer는 Health Check를 통해 Target의 상태를 확인하고, unhealthy하다고 판단된 Target에는 일반적으로 새로운 traffic을 전달하지 않는다.
 
-<!--
-작성할 내용:
-- transport protocol과 flow/connection metadata를 기준으로 target 선택
-- source/destination IP, port, protocol 등
-- TCP connection 또는 UDP flow 단위로 target affinity가 유지될 수 있음
-- payload의 HTTP path, method, header를 기준으로 routing하지 않음
-- 높은 처리량, protocol 투명성, client IP preservation 등 제품별 특성
-- TCP, UDP, TLS, QUIC 지원 여부는 제품별로 다름
+### L4 vs L7 Load Balancer
 
-TLS 주의:
-- L4 제품이라고 TLS를 절대 처리하지 않는 것은 아니다.
-- TCP passthrough를 할 수도 있고, 제품에 따라 TLS listener로 termination할 수도 있다.
--->
-
-### L7 Load Balancer
-
-<!--
-작성할 내용:
-- HTTP semantics를 해석하여 request 단위 routing 가능
-- host, path, method, header, query, cookie 등
-- HTTP redirect, authentication, WAF, response modification 등 확장 기능
-- HTTP 내용을 확인하려면 일반적으로 해당 지점에서 TLS를 종료하거나 복호화해야 함
-- client-side connection과 backend-side connection이 분리될 수 있음
--->
+L4 Load Balancer는 Transport Layer의 connection/flow 정보를 중심으로 Target을 선택하고, L7 Load Balancer는 HTTP와 같은 Application Protocol의 내용을 이해하여 request 단위 routing을 수행할 수 있다.
 
 | 구분 | L4 Load Balancer | L7 Load Balancer |
 | ---- | ---------------- | ---------------- |
-| 주요 판단 기준 |  |  |
-| 이해하는 Protocol |  |  |
-| Routing 단위 |  |  |
-| HTTP Host/Path Routing |  |  |
-| TLS 처리 | 제품별로 passthrough 또는 termination |  |
-| 장점 |  |  |
-| 고려 사항 |  |  |
+| 주요 판단 기준 | IP, Port, Transport Protocol, Flow | Host, Path, Header, Method 등 Application Data |
+| 이해하는 Protocol | TCP, UDP 등 | HTTP, HTTPS 등 |
+| Routing 단위 | Connection / Flow | Request |
+| HTTP Host/Path Routing | 불가 | 가능 |
+| TLS 처리 | 제품에 따라 passthrough 또는 termination | 일반적으로 HTTP 내용을 확인하려면 TLS termination 필요 |
+| 장점 | Protocol 의존성이 낮고 높은 처리량에 적합 | 세밀한 HTTP Routing과 Application 기능 제공 |
+| 고려 사항 | HTTP 내용에 따른 Routing 불가 | Application parsing과 TLS termination 등에 따른 추가 처리 |
 
-> 읽기 자료
->
-> - [AWS-NLB] AWS NLB: Layer 4, flow hash, connection lifetime
-> - [AWS-ALB] AWS ALB: Layer 7, listener rules, target groups
+L4 Load Balancer라고 해서 TLS를 절대 처리하지 않는 것은 아니다. 예를 들어 AWS Network Load Balancer는 TCP뿐 아니라 TLS Listener도 지원한다.
 
 ### 부하 분산 방식
 
-<!--
-Generic algorithm과 특정 제품 용어를 구분한다.
+| 방식 | 선택 기준 | 적합한 상황 | 고려 사항 |
+| ---- | --------- | ----------- | --------- |
+| Round Robin | Target을 순서대로 선택 | 처리 시간이 대체로 비슷한 요청 | Long-lived connection이나 Target 처리량 차이가 크면 불균형 가능 |
+| Least Connections | 현재 Connection이 가장 적은 Target 선택 | Connection 유지 시간이 제각각인 경우 | Connection 수가 실제 처리 부하와 항상 일치하지는 않음 |
+| Hash 기반 | Client IP나 Key의 Hash 값으로 Target 선택 | 동일 Client를 같은 Target에 보내고 싶은 경우 | Target 구성이 바뀌면 mapping이 달라질 수 있음 |
 
-- Round Robin
-- Least Connections
-- Least Outstanding Requests
-- Weighted Round Robin / Weighted Random
-- Source IP Hash
-- Consistent Hash
-
-작성할 내용:
-- 어떤 상태를 측정해 target을 고르는가
-- long-lived connection에서 Round Robin이 불균형할 수 있는 이유
-- request 처리 시간이 다양한 경우 least 계열이 유리할 수 있는 이유
-- hash 기반 방식이 affinity를 제공하지만 target 변경 시 재배치가 발생하는 이유
-- AWS ALB의 `least_outstanding_requests`를 generic `least_connections`와 동일시하지 않기
--->
-
-| 방식 | 선택 기준 | 적합한 상황 | 단점 |
-| ---- | --------- | ----------- | ---- |
-| Round Robin |  |  |  |
-| Least Connections |  |  |  |
-| Least Outstanding Requests |  |  |  |
-| Hash 기반 |  |  |  |
-| Weighted 방식 |  |  |  |
-
-> 읽기 자료
->
-> - [NGINX-UPSTREAM] NGINX upstream: round robin, least_conn, ip_hash, hash
-> - [AWS-ALB-TG] AWS ALB target group: round robin, least outstanding requests, weighted random
+제품마다 지원하는 알고리즘과 정확한 동작은 다를 수 있다. 예를 들어 AWS ALB의 `least_outstanding_requests`는 일반적인 `least_connections`와 동일한 알고리즘이 아니다.
 
 ### Health Check
 
-<!--
-Load Balancer health check와 Kubernetes probe를 같은 개념으로 정의하지 않는다.
+Load Balancer는 Backend가 요청을 처리할 수 있는지 확인하기 위해 주기적으로 Health Check를 수행할 수 있다.
 
-Load Balancer:
-- Active health check: 별도 probe를 주기적으로 전송
-- Passive health check: 실제 traffic 결과에서 failure 관찰
-- protocol, port, path
-- interval, timeout
-- healthy threshold, unhealthy threshold
-- success code
-- fail-open/fail-close 등 제품별 동작
-- false positive/false negative와 detection time trade-off
+주요 설정은 다음과 같다.
 
-Kubernetes 비교:
-- readinessProbe: Pod가 Service traffic을 받을 준비가 되었는지 판단
-- livenessProbe: container restart가 필요한지 판단
-- startupProbe: 느린 startup 동안 liveness/readiness 시작을 지연
-- readiness는 LB target eligibility와 목적이 유사하지만 동일한 protocol 개념은 아님
--->
+| 설정 | 의미 | 설정 시 고려 사항 |
+| ---- | ---- | ----------------- |
+| Interval | Health Check 수행 간격 | 짧으면 장애 감지가 빨라지지만 check traffic 증가 |
+| Timeout | 응답을 기다리는 최대 시간 | 너무 짧으면 일시적인 지연을 장애로 판단할 수 있음 |
+| Healthy Threshold | Healthy로 복귀하기 위한 연속 성공 횟수 | 높을수록 복구 판단이 느려짐 |
+| Unhealthy Threshold | Unhealthy로 판단하기 위한 연속 실패 횟수 | 낮을수록 장애 감지는 빠르지만 일시적 오류에 민감 |
+| Success Code | 정상으로 판단할 HTTP Status 범위 | Application의 Health Endpoint 동작과 맞아야 함 |
 
-| 설정 | 의미 | 너무 작을 때 | 너무 클 때 |
-| ---- | ---- | ------------ | ---------- |
-| Interval |  |  |  |
-| Timeout |  |  |  |
-| Healthy Threshold |  |  |  |
-| Unhealthy Threshold |  |  |  |
-| Success Code |  |  |  |
+Load Balancer의 Health Check와 Kubernetes의 Probe는 목적이 비슷해 보일 수 있지만 동일한 개념은 아니다.
 
-> 읽기 자료
->
-> - [AWS-ALB-HC] AWS ALB target health checks
-> - [AWS-NLB-HC] AWS NLB active/passive health checks
-> - [K8S-PROBES] Kubernetes liveness, readiness, startup probes
+- `readinessProbe`: Pod가 Service traffic을 받을 준비가 되었는지 판단
+- `livenessProbe`: Container를 재시작해야 하는지 판단
+- `startupProbe`: 느린 시작 과정에서 liveness/readiness가 너무 빨리 실행되는 것을 방지
 
-### Session Persistence
-
-<!--
-작성할 내용:
-- 동일 client의 후속 request를 같은 target으로 보내는 방식
-- cookie-based stickiness
-- source IP affinity
-- initial target selection 이후 persistence가 algorithm을 우회할 수 있음
-- target failure·deregistration 시 다른 target으로 이동할 수 있음
-
-단점:
-- target별 부하 불균형
-- autoscaling과 rolling deployment 제약
-- target 장애 시 in-memory session 손실
-- proxy/LB 구성에 대한 application 의존성
-
-대안:
-- Backend를 stateless하게 유지
-- session state를 Redis, DB 등 shared store에 저장
-- 단, 모든 application에서 sticky session이 무조건 잘못된 것은 아님
--->
-
-> 읽기 자료
->
-> - [AWS-ALB-TG] AWS ALB Sticky sessions
-
-## TLS Termination 위치
-
-<!--
-두 가지가 아니라 아래 세 가지 구조로 비교한다.
-
-1. Edge Termination
-   Client와 edge 사이만 TLS, edge→backend는 HTTP
-2. TLS Re-encryption / Bridging
-   Edge에서 client TLS 종료 후 backend와 별도의 TLS 연결
-3. TLS Passthrough
-   Edge가 TLS payload를 복호화하지 않고 backend로 전달
-
-주의:
-- "Backend까지 TLS 유지"는 re-encryption과 passthrough를 구분해야 한다.
-- re-encryption은 end-to-end 단일 TLS session이 아니다.
-- passthrough에서는 L7 HTTP routing과 WAF inspection이 제한될 수 있다.
--->
-
-```text
-1. Edge Termination
-Client ── HTTPS ──> Edge ── HTTP ──> Backend
-
-2. TLS Re-encryption
-Client ── HTTPS ──> Edge ── HTTPS ──> Backend
-       TLS Session A       TLS Session B
-
-3. TLS Passthrough
-Client ── TLS/HTTPS ─────────────────> Backend
-               Edge는 암호문 전달
-```
-
-| 방식 | Edge의 HTTP 가시성 | Backend 구간 보호 | 장점 | 고려 사항 |
-| ---- | ------------------ | ----------------- | ---- | --------- |
-| Edge Termination |  |  |  |  |
-| TLS Re-encryption |  |  |  |  |
-| TLS Passthrough |  |  |  |  |
-
-<!--
-추가로 생각할 내용:
-- certificate를 어디에 배포하는가
-- SNI 기반 routing 가능 여부
-- client certificate / mTLS를 어느 지점에서 검증하는가
-- original scheme을 Backend에 어떻게 전달하는가
-- 내부 CA와 certificate rotation 운영 비용
--->
-
-> 읽기 자료
->
-> - [AWS-NLB] AWS NLB protocol 및 TLS listener 개요
-> - [AWS-ALB] AWS ALB HTTPS listener와 Layer 7 processing
-> - [HTTP-SEMANTICS] RFC 9110 intermediary와 connection 분리
-
-## 요청 흐름 종합
-
-<!--
-하나의 URL 예시를 정한 뒤 각 단계에서 "관측 가능한 사실"을 기록한다.
-
-예시:
-https://api.example.com/users?id=1
-
-확인할 내용:
-1. URL
-   - scheme, host, port, path, query
-2. DNS
-   - A/AAAA/CNAME, TTL, authoritative server
-3. Network
-   - 선택된 IP, route, firewall/security group, TCP 또는 QUIC
-4. TLS
-   - SNI, certificate SAN, chain, validity, protocol, cipher, ALPN
-5. Load Balancer
-   - listener, rule, target group, health state
-6. Reverse Proxy
-   - Host/path rewrite, forwarded header, upstream timeout
-7. Backend
-   - application listen port, route mapping, log, dependency 상태
--->
-
-| 단계 | 확인할 정보 | 실패 시 증상 | 진단 방법 |
-| ---- | ----------- | ------------ | --------- |
-| URL 해석 |  |  | Browser DevTools, URL 확인 |
-| Local Name Resolution |  |  | cache flush, hosts 확인 |
-| DNS |  |  | `dig`, `dig +trace` |
-| Network Connection |  |  | `curl -v`, `nc`, `traceroute` |
-| TLS |  |  | `openssl s_client`, `curl -v` |
-| Load Balancer |  |  | listener/rule/target health/log |
-| Reverse Proxy |  |  | access/error log, config 확인 |
-| Backend |  |  | application log, direct request, metrics |
-
-### 계층별 진단 순서
-
-<!--
-무조건 DNS부터 확인해야 한다는 의미가 아니라, 증상에 따라 범위를 줄인다.
-
-작성 예시:
-- 이름 자체가 해석되지 않음 → local resolution / DNS
-- IP 연결 timeout → route, firewall, security group, listener
-- TCP 연결 후 TLS error → SNI, certificate, protocol, cipher
-- TLS 성공 후 404 → Host/path routing, reverse proxy, Backend route
-- 502/503 → upstream connection, target health, readiness, timeout
-- 특정 client만 문제 → local DNS cache, IPv6/IPv4 선택, proxy, trust store
--->
-
-```text
-Name Resolution
-→ Reachability
-→ Transport Connection
-→ TLS
-→ HTTP Intermediary
-→ Backend Application
-→ Backend Dependency
-```
 
 ## 참고 자료
 
