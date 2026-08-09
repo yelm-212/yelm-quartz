@@ -37,20 +37,20 @@ tags:
 
 ## 학습 기록
 
-| 주차 | 주제 | 학습 내용 | 트러블슈팅 / 딥다이브 |
+| 주차 | 주제 | 학습 내용 | 트러블슈팅 또는 딥다이브 |
 | --- | --- | --- | --- |
-| 1주차  | TCP/IP와 연결                      | [TCP IP와 연결](03_Resource/04_network/01_tcp) | [[03_Resource/04_network/02_tcpip_ts|TCP 연결 장애 사례]] |
-| 2주차  | HTTP와 요청/응답                   | [[03_Resource/04_network/03_http|HTTP와 요청/응답]] | [[03_Resource/04_network/04_http_429_ts|HTTP 429 트러블슈팅 사례]] |
-| 3주차  | DNS, HTTPS, Proxy, Load Balancer   | [[03_Resource/04_network/05_dns_https_proxy_lb|DNS, HTTPS, Proxy, Load Balancer]] | [[03_Resource/04_network/06_dns_tls_proxy_lb_ts|DNS, TLS, Proxy, Load Balancer 트러블슈팅 사례]] |
-| 4주차  | Network 종합                       | [[03_Resource/04_network/07_network_summary\|Network 종합]] | [[03_Resource/04_network/08_network_summary_ts\|Network 종합 트러블슈팅 사례]] |
-| 5주차  | Process, Thread, CPU               | [[03_Resource/05_os/01_process_thread_cpu\|Process, Thread와 CPU Scheduling]] | [[03_Resource/05_os/02_process_thread_cpu_ts\|CPU와 Thread 트러블슈팅 사례]] |
-| 6주차  | Virtual Memory와 Paging            | [[03_Resource/05_os/03_virtual_memory\|Virtual Memory와 Memory 문제]] | [[03_Resource/05_os/04_virtual_memory_ts\|Memory 트러블슈팅 사례]] |
-| 7주차  | 동시성과 I/O                       | [[03_Resource/05_os/05_concurrency_io\|동시성과 I/O]] | [[03_Resource/05_os/06_concurrency_io_ts\|동시성과 I/O 트러블슈팅 사례]] |
-| 8주차  | OS 종합과 Linux 진단               | [[03_Resource/05_os/07_os_linux_summary\|OS와 Linux 진단 종합]] | [[03_Resource/05_os/08_os_linux_summary_ts\|File Descriptor 고갈 트러블슈팅 사례]] |
-| 9주차  | Transaction, Isolation Level, MVCC | [[03_Resource/06_database/01_transaction_isolation_mvcc\|Transaction, Isolation Level, MVCC]] | [[03_Resource/06_database/02_transaction_isolation_mvcc_ts\|Transaction 트러블슈팅 사례]] |
-| 10주차 | Index와 Execution Plan             | [[03_Resource/06_database/03_index_execution_plan\|Index와 Execution Plan]] | [[03_Resource/06_database/04_index_execution_plan_ts\|Slow Query 트러블슈팅 사례]] |
-| 11주차 | Lock, Connection Pool, N+1         | [[03_Resource/06_database/05_lock_pool_nplus1\|Lock, Connection Pool, N+1]] | [[03_Resource/06_database/06_lock_pool_nplus1_ts\|Lock과 Connection Pool 트러블슈팅 사례]] |
-| 12주차 | Database 종합                      | [[03_Resource/06_database/07_database_summary\|Database 종합]] | [[03_Resource/06_database/08_database_summary_ts\|Database 종합 장애 사례]] |
+| 1주차  | TCP/IP와 연결                      | [TCP IP와 연결](03_Resource/04_network/01_tcp) | [TCP 연결 장애 사례](03_Resource/04_network/02_tcpip_ts) |
+| 2주차  | HTTP와 요청 및 응답                | [HTTP와 요청 및 응답](03_Resource/04_network/03_http) | [HTTP 429 트러블슈팅 사례](03_Resource/04_network/04_http_429_ts) |
+| 3주차  | DNS, HTTPS, Proxy, Load Balancer   | [DNS, HTTPS, Proxy, Load Balancer](03_Resource/04_network/05_dns_https_proxy_lb) | [DNS, TLS, Proxy, Load Balancer 트러블슈팅 사례](03_Resource/04_network/06_dns_tls_proxy_lb_ts) |
+| 4주차  | Network 종합                       | [Network 종합](03_Resource/04_network/07_network_summary) | [Network 종합 트러블슈팅 사례](03_Resource/04_network/08_network_summary_ts) |
+| 5주차  | Process, Thread, CPU               | [Process, Thread와 CPU Scheduling](03_Resource/05_os/01_process_thread_cpu) | [CPU와 Thread 트러블슈팅 사례](03_Resource/05_os/02_process_thread_cpu_ts) |
+| 6주차  | Virtual Memory와 Paging            | [Virtual Memory와 Memory 문제](03_Resource/05_os/03_virtual_memory) | [Memory 트러블슈팅 사례](03_Resource/05_os/04_virtual_memory_ts) |
+| 7주차  | 동시성과 I/O                       | [동시성과 I/O](03_Resource/05_os/05_concurrency_io) | [동시성과 I/O 트러블슈팅 사례](03_Resource/05_os/06_concurrency_io_ts) |
+| 8주차  | OS 종합과 Linux 진단               | [OS와 Linux 진단 종합](03_Resource/05_os/07_os_linux_summary) | [File Descriptor 고갈 트러블슈팅 사례](03_Resource/05_os/08_os_linux_summary_ts) |
+| 9주차  | Transaction, Isolation Level, MVCC | [Transaction, Isolation Level, MVCC](03_Resource/06_database/01_transaction_isolation_mvcc) | [Transaction 트러블슈팅 사례](03_Resource/06_database/02_transaction_isolation_mvcc_ts) |
+| 10주차 | Index와 Execution Plan             | [Index와 Execution Plan](03_Resource/06_database/03_index_execution_plan) | [Slow Query 트러블슈팅 사례](03_Resource/06_database/04_index_execution_plan_ts) |
+| 11주차 | Lock, Connection Pool, N+1         | [Lock, Connection Pool, N+1](03_Resource/06_database/05_lock_pool_nplus1) | [Lock과 Connection Pool 트러블슈팅 사례](03_Resource/06_database/06_lock_pool_nplus1_ts) |
+| 12주차 | Database 종합                      | [Database 종합](03_Resource/06_database/07_database_summary) | [Database 종합 장애 사례](03_Resource/06_database/08_database_summary_ts) |
 
 ---
 
@@ -60,7 +60,7 @@ tags:
 
 ### 핵심 학습
 
-- OSI / TCP-IP 계층 개념
+- OSI와 TCP-IP 계층 개념
 - TCP와 UDP
 - TCP 신뢰성 보장
 - IP, Port, Socket
@@ -73,8 +73,8 @@ tags:
 
 ### 추가 학습
 
-- NAT / Subnet / Gateway
-- ARP / Routing 기초
+- NAT, Subnet, Gateway
+- ARP와 Routing 기초
 - Connection Timeout
 - Local Port 고갈
 - TIME_WAIT 증가
@@ -117,11 +117,11 @@ tags:
 
 ---
 
-## 2주차 - HTTP와 요청/응답
+## 2주차 - HTTP와 요청 및 응답
 
 ### 핵심 학습
 
-- HTTP Request / Response 구조
+- HTTP 요청과 응답 구조
 - HTTP Method
 - HTTP Status Code
 - HTTP 멱등성
@@ -242,7 +242,7 @@ Kubernetes 장애 대응 경험은 해당 흐름을 이해하는 데 도움이 �
 - Same-Origin Policy
 - CORS
 - CORS Preflight
-- XSS / CSRF 기초
+- XSS와 CSRF 기초
 - REST
 - WebSocket 개념
 - CDN 개념
@@ -363,7 +363,7 @@ CPU 사용률
 → Process
 → Thread
 → Process State
-→ CPU Bound / I/O Bound
+→ CPU Bound와 I/O Bound
 → Context Switching
 ```
 
@@ -444,7 +444,7 @@ Page Replacement Algorithm과 LRU 구현은 필수 범위에서 제외한다.
 ```text
 Memory 사용량 증가
 → Process Memory
-→ Heap / Native Memory
+→ Heap과 Native Memory
 → RSS
 → Page Cache
 → Swap
@@ -493,7 +493,7 @@ Memory 사용량 증가
 * Synchronous
 * Asynchronous
 * I/O Multiplexing
-* select / poll / epoll의 관계
+* select, poll, epoll의 관계
 * epoll이 필요한 이유
 
 ### 연관 학습
@@ -515,7 +515,7 @@ IPC, Spin Lock, Lock-Free, Wait-Free는 필수 범위에서 제외한다.
 * Thread Pool을 사용하는 이유를 설명할 수 있다.
 * CPU Bound와 I/O Bound 작업에 따라 Thread Pool 크기 기준이 달라지는 이유를 설명할 수 있다.
 * Thread Pool이 고갈되었을 때 나타나는 증상을 설명할 수 있다.
-* Blocking / Non-Blocking과 Synchronous / Asynchronous를 구분할 수 있다.
+* Blocking과 Non-Blocking, Synchronous와 Asynchronous를 구분할 수 있다.
 * I/O Multiplexing이 필요한 이유를 설명할 수 있다.
 * epoll이 다수의 연결을 처리하는 데 유리한 이유를 개략적으로 설명할 수 있다.
 
@@ -615,7 +615,7 @@ IPC, Spin Lock, Lock-Free, Wait-Free는 필수 범위에서 제외한다.
 → Process 확인
 → CPU와 Thread 상태 확인
 → Memory와 Swap 확인
-→ Disk / Network I/O 확인
+→ Disk와 Network I/O 확인
 → File Descriptor 확인
 → 필요 시 System Call 추적
 ```
@@ -641,10 +641,10 @@ OS 면접 질문 전체를 다루는 것이 아니라, 백엔드 서버에서 �
 
 ```text
 요청 지연 또는 서버 이상
-→ Process / Thread
-→ CPU / Scheduling
-→ Virtual Memory / Memory
-→ Lock / I/O
+→ Process와 Thread
+→ CPU와 Scheduling
+→ Virtual Memory와 Memory
+→ Lock과 I/O
 → File Descriptor
 → System Call
 ```
@@ -656,7 +656,7 @@ OS 면접 질문 전체를 다루는 것이 아니라, 백엔드 서버에서 �
 * Virtual Memory와 Paging은 왜 필요한가?
 * Page Fault와 Swap은 성능에 어떤 영향을 주는가?
 * Race Condition과 Deadlock은 무엇인가?
-* Blocking / Non-Blocking과 Sync / Async는 어떻게 다른가?
+* Blocking과 Non-Blocking, Sync와 Async는 어떻게 다른가?
 * Thread Pool이 고갈되면 어떤 현상이 나타나는가?
 * File Descriptor가 고갈되면 왜 파일과 Network 연결을 새로 열 수 없는가?
 * CPU, Memory, I/O, FD 문제를 어떤 순서와 도구로 확인할 것인가?
@@ -677,7 +677,7 @@ OS 면접 질문 전체를 다루는 것이 아니라, 백엔드 서버에서 �
 - Non-Repeatable Read
 - Phantom Read
 - MVCC
-- Undo / Redo / WAL
+- Undo, Redo, WAL
 
 ### 연관 학습
 
@@ -736,10 +736,10 @@ Transaction 시작 시점
 - Execution Plan
 - EXPLAIN
 - EXPLAIN ANALYZE
-- Optimizer / CBO
+- Optimizer와 CBO
 - Full Table Scan
 - Index Scan
-- Nested Loop / Hash Join
+- Nested Loop과 Hash Join
 
 ### 학습 목표
 
@@ -941,7 +941,7 @@ Database의 여러 요소가 동시에 영향을 준 실제 장애 사례를 선
 7. 지금 다시 대응한다면 어떤 순서로 볼지 정리
 ```
 
-문서 구조는 [[03_Resource/04_network/06_dns_tls_proxy_lb_ts|3주차 트러블슈팅 사례]]를 기준으로 한다. 가설은 틀린 것으로 밝혀져도 지우지 않고 그대로 남긴다. 무엇을 몰라서 그 가설을 세웠는지가 `당시 몰랐던 개념`으로 이어진다.
+문서 구조는 [3주차 트러블슈팅 사례](03_Resource/04_network/06_dns_tls_proxy_lb_ts)를 기준으로 한다. 가설은 틀린 것으로 밝혀져도 지우지 않고 그대로 남긴다. 무엇을 몰라서 그 가설을 세웠는지가 `당시 몰랐던 개념`으로 이어진다.
 
 ### 딥다이브
 
@@ -990,10 +990,10 @@ PR은 한 주 동안의 학습 기록을 제출하는 단위다.
 
 ```text
 DNS
-→ TCP / QUIC
+→ TCP 또는 QUIC
 → TLS
 → HTTP
-→ Proxy / Load Balancer
+→ Proxy와 Load Balancer
 → Application
 ```
 
@@ -1006,7 +1006,7 @@ Process
 → Thread
 → CPU
 → Memory
-→ Disk / Network I/O
+→ Disk와 Network I/O
 → System Call
 ```
 

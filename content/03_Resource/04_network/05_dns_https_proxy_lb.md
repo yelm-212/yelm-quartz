@@ -601,5 +601,5 @@ Load Balancer의 Health Check와 Kubernetes의 Probe는 목적이 비슷해 보�
 
 ## 함께 읽기
 
-- [[03_Resource/04_network/06_dns_tls_proxy_lb_ts|3주차 - DNS, TLS, Proxy, Load Balancer 트러블슈팅 사례]]
-- [[03_Resource/04_network/03_http|2주차 - HTTP와 요청/응답]]
+- [3주차 - DNS, TLS, Proxy, Load Balancer 트러블슈팅 사례](03_Resource/04_network/06_dns_tls_proxy_lb_ts)
+- [2주차 - HTTP와 요청 응답](03_Resource/04_network/03_http)
