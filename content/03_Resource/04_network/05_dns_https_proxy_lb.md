@@ -1,6 +1,6 @@
 ---
 title: DNS, HTTPS, Proxy, Load Balancer
-draft: true
+draft: false
 tags:
   - network
   - dns
@@ -79,7 +79,7 @@ DNS를 단순히 "Domain Name을 IP 주소로 변환하는 시스템"이라고�
 
 DNS는 인간에게 친숙하게 작성된 domain name(`example.com`)을 연결된 Resource Record를 조회한다.
 
-A·AAAA Record를 이용해 Domain Name에 대응하는 IPv4·IPv6 주소를 조회할 수 있으며, 그 밖에도 mail server를 나타내는 MX, authoritative name server를 나타내는 NS, 문자열 정보를 저장하는 TXT 등 다양한 정보를 조회할 수 있다.
+A/AAAA Record를 이용해 Domain Name에 대응하는 IPv4/IPv6 주소를 조회할 수 있으며, 그 밖에도 mail server를 나타내는 MX, authoritative name server를 나타내는 NS, 문자열 정보를 저장하는 TXT 등 다양한 정보를 조회할 수 있다.
 
 Domain Name에 연결된 정보를 찾는 전체 과정을 DNS resolution이라고 한다. DNS resolution 과정에서 resolver는 질의한 Domain Name과 Record Type에 해당하는 RRset을 찾는다.
 
@@ -101,24 +101,25 @@ Domain Name에 연결된 정보를 찾는 전체 과정을 DNS resolution이라�
 
 ![](https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_domain_name/structure.png)
 
-top level domain server(=TLD, 제일 뒤, .com, .org, .net )부터 우측에서부터 해석
+우측에서부터 root(.) top level domain server(=TLD, 제일 뒤, .com, .org, .net )부터 
 
 유저가 브라우저에 주소를 입력하면, 브라우저 캐시에 없는 경우 recursive server로 질의를 시도한다.
 recursive server에 캐시가 없는 경우 DNS 계층에 따라 하위 dns 계층으로 쿼리해 A/AAAA 레코드에서 IP 주소 등 리소스를 찾는다.
 
-- Stub Resolver 
+- Stub Resolver : Client 측에서 DNS 질의를 시작하는 간단한 resolver
+   - 사용자로부터 요청 받아서 recursive resolver로 전달
 
-- Recursive Resolver : 질의용 서버. (= DNS resolvers)
+- Recursive Resolver : Client를 대신해 DNS resolution을 수행하는 server.
    - 보통 ISP사, 서드파티 DNS 프로바이더에 의해 관리됨.
-   - 질의 결과를 캐시하고 이를 위한 time-to-live 설정 가능
-- Authoritative Name Server : 요청 레코드에 권한이 있는경우 질의해 응답받음
-   - Root Name Server : 최상위에 위치, 루트 존 제공. 적절한 TLD 서버로 요청 전달
-   - TLD Name Server : 해당 TLD 내 다음 계층 서버에 질의할거 찾음 
+   - 질의 결과를 캐시하고 이를 위한 time-to-live 설정 가능.
+   - 요청 들어오면 캐시 확인 > 결과 없으면 하위 Name Server에 iterative query
+- Authoritative Name Server 
+   - 자기 자신의 zone에서 관리하는 레코드에 권한이 있는경우 질의해 응답받음
+   - 하위레코드인 경우 referral을 반환할 수 있음
+   - Root Name Server : 최상위에 위치, 루트 존. TLD 서버로 referrral 반환
+   - TLD Name Server : 해당 TLD 하위 계층 zone name server 정보의 referrral 반환
 
-> 읽기 자료
->
-> - [DNS-TERM] RFC 9499: stub resolver, recursive resolver, authoritative server, referral
-> - [DNS-CONCEPT] RFC 1034 Section 4.3, Section 5.3
+- Referral : 현재 server가 최종 answer 대신 하위 계층의 Authoritative Name Server 정보를 반환하는 응답
 
 ### DNS 조회 과정
 
@@ -156,13 +157,7 @@ sequenceDiagram
     R-->>C: Response
 ```
 
-> 읽기 자료
->
-> - [DNS-CONCEPT] RFC 1034 Section 5.3: resolver algorithm
-> - [DNS-TERM] RFC 9499: recursive mode, iterative mode, referral
-> - [DNS-IMPL] RFC 1035 Section 4: DNS message format
-
-### 주요 DNS Record
+### 주요 DNS Resource Record(RR)
 
 <!--
 Record의 "owner name, TTL, class, type, RDATA" 구조를 먼저 설명한 뒤 표를 작성한다.
@@ -176,20 +171,14 @@ Record의 "owner name, TTL, class, type, RDATA" 구조를 먼저 설명한 뒤 �
 - AAAA 정의는 RFC 3596을 참고한다.
 -->
 
-| Record | 역할 | RDATA 예시 | 주의할 점 |
-| ------ | ---- | ---------- | --------- |
-| A      |      |            |           |
-| AAAA   |      |            |           |
-| CNAME  |      |            |           |
-| NS     |      |            |           |
-| MX     |      |            |           |
-| TXT    |      |            |           |
-
-> 읽기 자료
->
-> - [DNS-IMPL] RFC 1035 Section 3.3: A, CNAME, NS, MX, TXT
-> - [DNS-IPV6] RFC 3596 Section 2: AAAA
-> - [DNS-IANA] IANA DNS Parameters: 현재 등록된 RR TYPE 확인
+| Record | 역할 |
+| ------ | ---- | 
+| A      | 도메인의 호스트 주소 |
+| AAAA   | 도메인의 ipv6 호스트 주소     |
+| CNAME  | 특정 도메인의 별칭 지정 |
+| NS     | authoritative name server |
+| MX     | 메일  |
+| TXT    | 텍스트 형식 |
 
 ### DNS Cache와 TTL
 
@@ -204,10 +193,23 @@ Record의 "owner name, TTL, class, type, RDATA" 구조를 먼저 설명한 뒤 �
 - 실제 cache 정책이 RFC TTL과 완전히 동일하지 않을 수 있는 구현 차이
 -->
 
-> 읽기 자료
->
-> - [DNS-IMPL] RFC 1035 Section 4.1.3: TTL field
-> - [DNS-CONCEPT] RFC 1034 Section 4.2.1: cache와 TTL
+- TTL: RR을 cache에서 재사용할 수 있는 시간
+   - Resolver는 TTL이 남아 있는 동안 cached RR을 재사용할 수 있다.
+   - TTL이 만료되면 해당 RR을 버리고 다시 DNS 조회를 수행한다.
+   - TTL이 0인 RR은 현재 transaction에서만 사용하고 cache하지 않는다.
+   - TTL이 긴 경우: 
+      - Cache hit 증가 DNS query 수 감소
+      - DNS Record가 변경되었을 때 이전 값이 오래 유지될 수 있음
+   - TTL이 짧은 경우:
+      - DNS Record 변경 사항이 비교적 빠르게 반영
+      - cache miss와 DNS query가 증가 → resolver와 authoritative server의 부하가 커질 수 있다.
+
+DNS cache를 사용하면 동일 Domain에 대해 매번 Authoritative Name Server까지 조회하지 않아도 되므로 DNS 조회 latency와 upstream DNS server의 부하를 줄일 수 있다.
+
+이미 cache된 RR은 남아 있는 TTL 동안 사용될 수 있기 때문에 Authoritative Name Server에서 Record나 TTL을 변경해도 기존 cache가 즉시 사라지는 것은 아니다.
+따라서 server 이전이나 장애 전환처럼 DNS Record 변경이 예정된 경우에는 기존 cache가 먼저 만료될 수 있도록 변경 전에 TTL을 낮춰 두기도 한다.
+
+DNS cache는 Recursive Resolver뿐 아니라 Browser나 OS 등에서도 구현될 수 있으며, 세부적인 cache 정책은 구현에 따라 달라질 수 있다.
 
 ### Negative Caching
 
@@ -227,42 +229,83 @@ Record의 "owner name, TTL, class, type, RDATA" 구조를 먼저 설명한 뒤 �
 - RFC 9520에서 resolution failure caching을 요구하는 이유
 -->
 
-> 읽기 자료
->
-> - [DNS-NCACHE] RFC 2308: NXDOMAIN, NODATA negative caching
-> - [DNS-FAILCACHE] RFC 9520: SERVFAIL·timeout 등 resolution failure caching
-> - [DNS-TERM] RFC 9499: negative response 관련 용어
+DNS에서는 정상적으로 조회된 Resource Record뿐 아니라, "해당 정보이 존재하지 않는다"는 응답이나 DNS resolution 자체가 실패했다는 결과도 일정 시간 cache할 수 있다.
+
+Negative response는 크게 다음과 같이 구분할 수 있다.
+
+- `NXDOMAIN`
+   : 질의한 Domain Name 자체가 존재하지 않는 경우
+- `NODATA`
+   : Domain Name은 존재하지만 요청한 Record Type의 데이터가 없는 경우
+   - e.g. example.com은 존재하지만 AAAA Record가 없는 경우
+- Resolution Failure
+   : Resolver가 유용한 DNS 응답을 얻지 못한 경우
+   - e.g. SERVFAIL, timeout, unreachable server, DNSSEC validation failure 등
 
 ### DNS 진단
 
 ```bash
 # 기본 조회: status, flags, answer, authority, 응답 resolver 확인
-dig example.com A
+dig google.com A
+
+; <<>> DiG 9.10.6 <<>> google.com A
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 20616
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;google.com.                    IN      A
+
+;; ANSWER SECTION:
+google.com.             220     IN      A       142.250.198.142
+
+;; Query time: 9 msec
+;; SERVER: 203.248.252.2#53(203.248.252.2)
+;; WHEN: Fri Aug 07 16:40:05 KST 2026
+;; MSG SIZE  rcvd: 55
 
 # 특정 recursive resolver와 결과 비교
-dig @1.1.1.1 example.com A
-dig @8.8.8.8 example.com A
+dig @1.1.1.1 google.com
 
-# local dig가 root부터 delegation을 따라가며 iterative resolution 수행
-dig +trace example.com
+; <<>> DiG 9.10.6 <<>> @1.1.1.1 google.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 49808
+;; flags: qr rd ra; QUERY: 1, ANSWER: 6, AUTHORITY: 0, ADDITIONAL: 1
 
-# 필요한 section만 출력
-dig example.com A +noall +answer +authority +additional
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+;; QUESTION SECTION:
+;google.com.                    IN      A
 
-# authoritative name server에 직접 질의
-dig @<authoritative-name-server> example.com A
+;; ANSWER SECTION:
+google.com.             35      IN      A       172.217.211.113
+google.com.             35      IN      A       172.217.211.100
+google.com.             35      IN      A       172.217.211.138
+google.com.             35      IN      A       172.217.211.101
+google.com.             35      IN      A       172.217.211.139
+google.com.             35      IN      A       172.217.211.102
 
-# 존재하지 않는 이름으로 NXDOMAIN과 SOA 확인
-dig does-not-exist.example.com A
+;; Query time: 10 msec
+;; SERVER: 1.1.1.1#53(1.1.1.1)
+;; WHEN: Fri Aug 07 16:28:23 KST 2026
+;; MSG SIZE  rcvd: 135
 
 # 간단한 이름 조회
-nslookup example.com
+nslookup google.com
+Server:         203.248.252.2
+Address:        203.248.252.2#53
+
+Non-authoritative answer:
+Name:   google.com
+Address: 142.250.198.46
 ```
 
 <!--
-`dig +trace` 주의:
-- 현재 사용 중인 recursive resolver가 내부적으로 수행한 과정을 보여주는 명령이 아니다.
-- dig 자체가 root부터 iterative query를 수행하여 delegation path를 확인한다.
 
 출력에서 확인할 항목:
 - status: NOERROR, NXDOMAIN, SERVFAIL, REFUSED
@@ -275,21 +318,17 @@ nslookup example.com
 - authoritative answer 여부
 -->
 
-| 항목 | 의미 | 장애 시 확인할 내용 |
-| ---- | ---- | ------------------- |
-| `status` |  |  |
-| `aa` |  |  |
-| `rd` / `ra` |  |  |
-| `ANSWER` |  |  |
-| `AUTHORITY` |  |  |
-| `ADDITIONAL` |  |  |
-| `SERVER` |  |  |
-| `Query time` |  |  |
+| 항목 | 의미   | 장애 시 확인할 내용 |
+| --- | ----- | --------------- |
+| `status`     | DNS 응답의 결과 코드(RCODE) `NOERROR`, `NXDOMAIN`, `SERVFAIL`, `REFUSED` 등 | 이름이 없는지(`NXDOMAIN`), resolution 과정에서 실패했는지(`SERVFAIL`), server가 질의를 거부했는지(`REFUSED`) 확인 |
+| `aa`         | Authoritative Answer. 응답한 Name Server가 질의한 이름에 대해 authoritative한 응답을 했음을 의미 | Authoritative Server에 직접 질의했는데 `aa`가 없는지, 현재 응답이 authoritative data인지 cache를 통한 응답인지 확인 |
+| `rd` / `ra`  | `rd`: client가 recursion을 요청 / `ra`: 응답 server가 recursion 기능을 제공 | Recursive Resolver에 질의했는데 `ra`가 없는지, Authoritative Server에 직접 질의한 상황인지 확인 |
+| `ANSWER`     | 질의에 직접 답하는 Resource Record가 포함되는 section| 원하는 A/AAAA/CNAME 등이 존재하는지, 예상한 값인지, TTL이 남아 있는지, CNAME chain이 정상인지 확인|
+| `AUTHORITY`  | 질의와 관련된 authoritative 정보를 담는 section| Delegation에서는 다음 Authoritative Name Server의 NS Record를, negative response에서는 SOA Record 등을 확인|
+| `ADDITIONAL` | Answer나 Authority 처리를 돕는 추가 Resource Record를 담는 section | NS의 주소를 제공하는 glue A/AAAA Record 등이 필요한 상황에서 존재하는지 확인. `dig`에서는 EDNS의 OPT pseudo-record도 별도로 표시될 수 있음 |
+| `SERVER`     | 실제로 `dig` 질의에 응답한 DNS  | 의도한 Recursive/Authoritative Server에 질의했는지 확인 |
+| `Query time` | `dig`가 측정한 DNS query의 요청-응답 소요 시간 | 평소보다 응답 시간이 긴지, 특정 Resolver에서만 지연되는지 비교 |
 
-> 읽기 자료
->
-> - [BIND-DIG] BIND 9 Manual: `dig`, `nslookup`
-> - [DNS-IMPL] RFC 1035 Section 4.1: DNS message sections and flags
 
 ## HTTP와 HTTPS
 
@@ -500,63 +539,6 @@ TLS 1.3 기준으로 cipher suite와 key exchange를 분리해서 작성한다.
 > - [TLS13] RFC 9846 Sections 4.1~4.2
 > - [TLS-SNI] RFC 6066 Section 3
 > - [TLS-ALPN] RFC 7301 Section 3
-
-## TLS 진단
-
-```bash
-# SNI, hostname 검증, certificate chain, ALPN 확인
-openssl s_client \
-  -connect example.com:443 \
-  -servername example.com \
-  -showcerts \
-  -verify_hostname example.com \
-  -alpn h2,http/1.1 \
-  </dev/null
-
-# DNS, connection, TLS, ALPN, HTTP request/response 흐름 확인
-curl -v https://example.com
-
-# DNS만 우회하여 특정 IP의 TLS/HTTP 동작 확인
-# URL hostname은 유지되므로 Host와 SNI도 example.com으로 사용된다.
-curl -v \
-  --resolve example.com:443:203.0.113.10 \
-  https://example.com/
-```
-
-<!--
-OpenSSL에서 확인할 항목:
-- Protocol
-- Cipher
-- Server Temp Key
-- Certificate chain
-- subject / issuer
-- Not Before / Not After
-- Verify return code
-- ALPN protocol
-
-curl -v에서 확인할 항목:
-- resolved IP
-- connection 대상
-- TLS version과 cipher
-- certificate subject, issuer, validity, hostname match
-- ALPN 결과
-- request line / response status
-- redirect
--->
-
-| 증상 | 가능한 원인 | 확인 명령 |
-| ---- | ----------- | --------- |
-| `connection refused` |  |  |
-| timeout |  |  |
-| certificate expired |  |  |
-| hostname mismatch |  |  |
-| unknown CA / chain error |  |  |
-| ALPN mismatch |  |  |
-
-> 읽기 자료
->
-> - [OPENSSL-SCLIENT] OpenSSL `s_client` manual
-> - [CURL] curl command-line manual
 
 ## 인증서
 
