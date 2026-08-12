@@ -116,6 +116,11 @@ http 기반 헤더를 사용한 메커니즘으로, same-origin 정책을 완화
 → 실제 요청 전송
 ```
 
+- Simple Request: Preflight를 필요로 하지 않는 요청
+- Preflight request: CORS 요청이 가능한지 확인하는 요청
+
+Preflight request는 OPTIONS 메서드로 요청되며 CORS 요청 헤더들을 포함한다. 정상적인 경우 클라이언트에서 자동적으로 요청되므로 fe 개발시 구현할 필요는 없다.
+
 ### CORS 오류를 진단하는 순서
 
 <!-- 브라우저 콘솔 메시지, 실제 요청 도달 여부, 응답 header를 어떤 순서로 확인할지 기록한다. 서버 오류와 CORS 차단을 구분하는 기준도 함께 정리한다. -->
