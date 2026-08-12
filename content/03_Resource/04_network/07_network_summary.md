@@ -8,7 +8,6 @@ tags:
   - websocket
   - cdn
 ---
-
 # Network 종합
 
 ## 학습 목표
@@ -37,15 +36,17 @@ DNS 조회
 
 ### 단계별 정리
 
-| 단계 | 하는 일 | 관여하는 구성 요소 | 실패했을 때의 증상 |
-| ---- | ------- | ------------------ | ------------------ |
-| DNS 조회 |  |  |  |
-| TCP 또는 QUIC 연결 |  |  |  |
-| TLS |  |  |  |
-| HTTP 요청 |  |  |  |
-| Proxy와 Load Balancer |  |  |  |
-| 서버 처리 |  |  |  |
-| HTTP 응답 |  |  |  |
+
+| 단계                   | 하는 일 | 관여하는 구성 요소 | 실패했을 때의 증상 |
+| -------------------- | ---- | ---------- | ---------- |
+| DNS 조회               |      |            |            |
+| TCP 또는 QUIC 연결       |      |            |            |
+| TLS                  |      |            |            |
+| HTTP 요청              |      |            |            |
+| Proxy와 Load Balancer |      |            |            |
+| 서버 처리                |      |            |            |
+| HTTP 응답              |      |            |            |
+
 
 ## Authentication과 Authorization
 
@@ -63,6 +64,16 @@ DNS 조회
 
 <!-- scheme, host, port로 구성된 origin의 정의와 같은 origin으로 판단되는 조건을 기록한다. -->
 
+두 url이 host, protocol, port가 동일한 경우 same origin이라 할 수 있다. 이를 튜플이라 칭할 수 있다. 아래는 `http://store.company.com/dir/page.html` URL과의 origin 비교 예시이다.
+
+| URL |	Outcome |	Reason |
+|-----|---------|--------|
+| http://store.company.com/dir2/other.html	| Same origin	| path 만 다름 |
+| http://store.company.com/dir/inner/another.html	| Same origin	| path 만 다름 |
+| https://store.company.com/page.html	| Failure	| protocol 차이 |
+| http://store.company.com:81/dir/page.html	| Failure	| port (http는 80을 디폴트로 씀) |
+| http://news.company.com/dir/page.html	| Failure	| host 차이 |
+
 ### Same-Origin Policy가 필요한 이유
 
 <!-- 브라우저가 다른 origin의 리소스 접근을 제한하는 이유를 공격 시나리오와 함께 정리한다. -->
@@ -75,14 +86,16 @@ DNS 조회
 
 ### 주요 Header
 
-| Header | 방향 | 역할 |
-| ------ | ---- | ---- |
-| `Origin` | Request |  |
-| `Access-Control-Allow-Origin` | Response |  |
-| `Access-Control-Allow-Methods` | Response |  |
-| `Access-Control-Allow-Headers` | Response |  |
-| `Access-Control-Allow-Credentials` | Response |  |
-| `Access-Control-Max-Age` | Response |  |
+
+| Header                             | 방향       | 역할  |
+| ---------------------------------- | -------- | --- |
+| `Origin`                           | Request  |     |
+| `Access-Control-Allow-Origin`      | Response |     |
+| `Access-Control-Allow-Methods`     | Response |     |
+| `Access-Control-Allow-Headers`     | Response |     |
+| `Access-Control-Allow-Credentials` | Response |     |
+| `Access-Control-Max-Age`           | Response |     |
+
 
 ### CORS Preflight
 
@@ -112,11 +125,13 @@ DNS 조회
 
 ### 두 공격의 차이
 
-| 구분 | XSS | CSRF |
-| ---- | --- | ---- |
-| 공격 대상 |  |  |
-| 악용하는 신뢰 관계 |  |  |
-| 기본 방어 |  |  |
+
+| 구분         | XSS | CSRF |
+| ---------- | --- | ---- |
+| 공격 대상      |     |      |
+| 악용하는 신뢰 관계 |     |      |
+| 기본 방어      |     |      |
+
 
 ## REST
 
@@ -156,3 +171,4 @@ DNS 조회
 - [2주차 - HTTP와 요청 및 응답](03_Resource/04_network/03_http)
 - [3주차 - DNS, HTTPS, Proxy, Load Balancer](03_Resource/04_network/05_dns_https_proxy_lb)
 - [Network 종합 트러블슈팅 사례](03_Resource/04_network/08_network_summary_ts)
+
