@@ -78,23 +78,30 @@ DNS 조회
 
 <!-- 브라우저가 다른 origin의 리소스 접근을 제한하는 이유를 공격 시나리오와 함께 정리한다. -->
 
+<!-- It helps isolate potentially malicious documents, reducing possible attack vectors. For example, it prevents a malicious website on the Internet from running JS in a browser to read data from a third-party webmail service (which the user is signed into) or a company intranet (which is protected from direct access by the attacker by not having a public IP address) and relaying that data to the attacker. -->
+
+의심스러운 리소스 등을 공격 벡터로부터 분리하는데 도움을 준다.
+
+가령, 클라이언트 브라우저에서 악의적인 JS 스크립트를 실행해 서드파티 웹메일 혹은 회사 인트라넷에서 데이터를 읽어 공격자에게 전송하는 행위를 방지할 수 있다.
+
 ## CORS
 
 ### CORS의 역할
 
 <!-- Same-Origin Policy를 완화하기 위해 server가 어떤 header로 접근을 허용하는지 기록한다. -->
 
+http 기반 헤더를 사용한 메커니즘으로, same-origin 정책을 완화하기 위해 다른 origin에서 리소스에 접근을 가능하게 하는 정책을 정의할 수 있다. Preflight 요청을 보내 cross-origin source에서 실제로 요청이 가능한지 확인하는 과정을 거치며, 이때 실제 요청의 메서드와 헤더 값을 지시하는 요청을 먼저 보낸다.
+
 ### 주요 Header
 
-
-| Header                             | 방향       | 역할  |
+| Header                             | 방향      | 역할  |
 | ---------------------------------- | -------- | --- |
-| `Origin`                           | Request  |     |
-| `Access-Control-Allow-Origin`      | Response |     |
-| `Access-Control-Allow-Methods`     | Response |     |
-| `Access-Control-Allow-Headers`     | Response |     |
-| `Access-Control-Allow-Credentials` | Response |     |
-| `Access-Control-Max-Age`           | Response |     |
+| `Origin`                           | Request  | CORS의 요청 origin값을 명시, nullable |
+| `Access-Control-Allow-Origin`      | Response | resource에 접근 가능한 origin을 명시   |
+| `Access-Control-Allow-Methods`     | Response | resource에 접근 가능한 메서드 명시      |
+| `Access-Control-Allow-Headers`     | Response | 실제 요청 시 사용 가능한 http header    |
+| `Access-Control-Allow-Credentials` | Response | 실제 요청 시 credential 필요 여부      |
+| `Access-Control-Max-Age`           | Response | Preflight 요청의 캐시 가능 시간        |
 
 
 ### CORS Preflight
