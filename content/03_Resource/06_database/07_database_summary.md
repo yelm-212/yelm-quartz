@@ -93,7 +93,7 @@ Connection Pool
 
 ## Database 4주 정리
 
-<!-- 9~12주차 내용을 하나의 흐름으로 연결한다. -->
+<!-- 11~14주차 내용을 하나의 흐름으로 연결한다. -->
 
 ```text
 Connection Pool
@@ -121,7 +121,7 @@ Connection Pool
 
 ## 함께 읽기
 
-- [9주차 - Transaction, Isolation Level, MVCC](03_Resource/06_database/01_transaction_isolation_mvcc)
-- [10주차 - Index와 Execution Plan](03_Resource/06_database/03_index_execution_plan)
-- [11주차 - Lock, Connection Pool, N+1](03_Resource/06_database/05_lock_pool_nplus1)
+- [11주차 - Transaction, Isolation Level, MVCC](03_Resource/06_database/01_transaction_isolation_mvcc)
+- [12주차 - Index와 Execution Plan](03_Resource/06_database/03_index_execution_plan)
+- [13주차 - Lock, Connection Pool, N+1](03_Resource/06_database/05_lock_pool_nplus1)
 - [Database 종합 장애 사례](03_Resource/06_database/08_database_summary_ts)

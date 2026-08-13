@@ -77,4 +77,4 @@ Query 자체가 느린가?
 
 ## 함께 읽기
 
-- [10주차 - Index와 Execution Plan](03_Resource/06_database/03_index_execution_plan)
+- [12주차 - Index와 Execution Plan](03_Resource/06_database/03_index_execution_plan)

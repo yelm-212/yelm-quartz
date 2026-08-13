@@ -136,5 +136,5 @@ Application Thread
 
 ## 함께 읽기
 
-- [9주차 - Transaction, Isolation Level, MVCC](03_Resource/06_database/01_transaction_isolation_mvcc)
+- [11주차 - Transaction, Isolation Level, MVCC](03_Resource/06_database/01_transaction_isolation_mvcc)
 - [Lock과 Connection Pool 트러블슈팅 사례](03_Resource/06_database/06_lock_pool_nplus1_ts)

@@ -1,5 +1,5 @@
 ---
-title: 12주 CS 학습 계획
+title: CS 학습 계획
 draft: false
 tags:
   - project
@@ -9,22 +9,22 @@ tags:
   - database
 ---
 
-# 12주 CS 학습 계획
+# CS 학습 계획
 
 ## 전체 구성
 
 - 1~4주차: Network
-- 5~8주차: OS
-- 9~12주차: Database
+- 5~10주차: OS
+- 11~14주차: Database
 
 ## 매주 진행할 일
 
 - 해당 주차 핵심 개념 학습 및 백지복습
-- **트러블슈팅 역추론 또는 딥다이브 중 택 1**
+- 주제별 추가 기록 작성
 - 일요일까지 PR 제출
 - 팀원 PR 1개 이상 리뷰
 
-매주 둘 중 하나만 진행한다. 그 주 개념을 어느 쪽으로 더 확실하게 확인할 수 있는지를 기준으로 고른다.
+Network와 Database는 트러블슈팅 역추론 또는 딥다이브 중 하나를 진행한다. 그 주 개념을 어느 쪽으로 더 확실하게 확인할 수 있는지를 기준으로 고른다. OS는 트러블슈팅 글 대신 학습 중 새롭게 이해하거나 연결한 내용을 인사이트로 정리한다.
 
 | 선택 | 하는 일 | 고르는 기준 |
 | --- | --- | --- |
@@ -37,20 +37,22 @@ tags:
 
 ## 학습 기록
 
-| 주차 | 주제 | 학습 내용 | 트러블슈팅 또는 딥다이브 |
+| 주차 | 주제 | 학습 내용 | 추가 기록 |
 | --- | --- | --- | --- |
 | 1주차  | TCP/IP와 연결                      | [TCP IP와 연결](03_Resource/04_network/01_tcp) | [TCP 연결 장애 사례](03_Resource/04_network/02_tcpip_ts) |
 | 2주차  | HTTP와 요청 및 응답                | [HTTP와 요청 및 응답](03_Resource/04_network/03_http) | [HTTP 429 트러블슈팅 사례](03_Resource/04_network/04_http_429_ts) |
 | 3주차  | DNS, HTTPS, Proxy, Load Balancer   | [DNS, HTTPS, Proxy, Load Balancer](03_Resource/04_network/05_dns_https_proxy_lb) | [DNS, TLS, Proxy, Load Balancer 트러블슈팅 사례](03_Resource/04_network/06_dns_tls_proxy_lb_ts) |
 | 4주차  | Network 종합                       | [Network 종합](03_Resource/04_network/07_network_summary) | [Network 종합 트러블슈팅 사례](03_Resource/04_network/08_network_summary_ts) |
-| 5주차  | Process, Thread, CPU               | [Process, Thread와 CPU Scheduling](03_Resource/05_os/01_process_thread_cpu) | [CPU와 Thread 트러블슈팅 사례](03_Resource/05_os/02_process_thread_cpu_ts) |
-| 6주차  | Virtual Memory와 Paging            | [Virtual Memory와 Memory 문제](03_Resource/05_os/03_virtual_memory) | [Memory 트러블슈팅 사례](03_Resource/05_os/04_virtual_memory_ts) |
-| 7주차  | 동시성과 I/O                       | [동시성과 I/O](03_Resource/05_os/05_concurrency_io) | [동시성과 I/O 트러블슈팅 사례](03_Resource/05_os/06_concurrency_io_ts) |
-| 8주차  | OS 종합과 Linux 진단               | [OS와 Linux 진단 종합](03_Resource/05_os/07_os_linux_summary) | [File Descriptor 고갈 트러블슈팅 사례](03_Resource/05_os/08_os_linux_summary_ts) |
-| 9주차  | Transaction, Isolation Level, MVCC | [Transaction, Isolation Level, MVCC](03_Resource/06_database/01_transaction_isolation_mvcc) | [Transaction 트러블슈팅 사례](03_Resource/06_database/02_transaction_isolation_mvcc_ts) |
-| 10주차 | Index와 Execution Plan             | [Index와 Execution Plan](03_Resource/06_database/03_index_execution_plan) | [Slow Query 트러블슈팅 사례](03_Resource/06_database/04_index_execution_plan_ts) |
-| 11주차 | Lock, Connection Pool, N+1         | [Lock, Connection Pool, N+1](03_Resource/06_database/05_lock_pool_nplus1) | [Lock과 Connection Pool 트러블슈팅 사례](03_Resource/06_database/06_lock_pool_nplus1_ts) |
-| 12주차 | Database 종합                      | [Database 종합](03_Resource/06_database/07_database_summary) | [Database 종합 장애 사례](03_Resource/06_database/08_database_summary_ts) |
+| 5주차  | 가상화: 프로세스와 CPU             | [프로세스 가상화](03_Resource/05_os/01_virtualization_process) | [프로세스 가상화 인사이트](03_Resource/05_os/02_virtualization_process_insight) |
+| 6주차  | 가상화: 주소 공간과 메모리         | [메모리 가상화](03_Resource/05_os/03_virtualization_memory) | [메모리 가상화 인사이트](03_Resource/05_os/04_virtualization_memory_insight) |
+| 7주차  | 병행성: 스레드와 락                | [병행성 기초](03_Resource/05_os/05_concurrency_basics) | [병행성 기초 인사이트](03_Resource/05_os/06_concurrency_basics_insight) |
+| 8주차  | 병행성: 동기화와 교착 상태         | [병행성 제어](03_Resource/05_os/07_concurrency_coordination) | [병행성 제어 인사이트](03_Resource/05_os/08_concurrency_coordination_insight) |
+| 9주차  | 영속성: I/O와 저장 장치            | [I/O와 저장 장치](03_Resource/05_os/09_persistence_io_storage) | [I/O와 저장 장치 인사이트](03_Resource/05_os/10_persistence_io_storage_insight) |
+| 10주차 | 영속성: 파일과 파일 시스템         | [파일 시스템과 데이터 무결성](03_Resource/05_os/11_persistence_filesystems) | [파일 시스템 인사이트](03_Resource/05_os/12_persistence_filesystems_insight) |
+| 11주차 | Transaction, Isolation Level, MVCC | [Transaction, Isolation Level, MVCC](03_Resource/06_database/01_transaction_isolation_mvcc) | [Transaction 트러블슈팅 사례](03_Resource/06_database/02_transaction_isolation_mvcc_ts) |
+| 12주차 | Index와 Execution Plan             | [Index와 Execution Plan](03_Resource/06_database/03_index_execution_plan) | [Slow Query 트러블슈팅 사례](03_Resource/06_database/04_index_execution_plan_ts) |
+| 13주차 | Lock, Connection Pool, N+1         | [Lock, Connection Pool, N+1](03_Resource/06_database/05_lock_pool_nplus1) | [Lock과 Connection Pool 트러블슈팅 사례](03_Resource/06_database/06_lock_pool_nplus1_ts) |
+| 14주차 | Database 종합                      | [Database 종합](03_Resource/06_database/07_database_summary) | [Database 종합 장애 사례](03_Resource/06_database/08_database_summary_ts) |
 
 ---
 
@@ -281,389 +283,195 @@ DNS 조회
 
 ---
 
-# 5~8주차 OS
+# 5~10주차 OS
 
-## 5주차 - Process, Thread와 CPU Scheduling
+## 학습 방향
 
-### 핵심 학습
+OS는 OSTEP의 큰 목차를 기준으로 가상화, 병행성, 영속성을 각각 2주씩 학습한다. OSTEP을 기본 안내서로 활용하되 반드시 한 권을 순서대로 읽을 필요는 없다. 강의, 공식 문서, 다른 책 등 어떤 자료를 사용해도 되며, 각 주차의 범위와 학습 목표를 충족하면 된다.
 
-#### Process와 Thread
+세부 챕터는 이해도와 진도에 따라 조정한다. 처음 정한 챕터 수를 채우는 것보다 각 영역의 핵심 질문에 답하고 개념 사이의 연결을 설명하는 것을 우선한다.
 
-* Program
-* Process
-* Thread
-* Process State
-* PCB의 역할
+OS 기간에도 다음 진행 방식은 유지한다.
 
-#### Process Memory
+- 일요일까지 학습 내용과 인사이트를 PR로 제출한다.
+- 팀원 PR을 1개 이상 리뷰한다.
+- 같은 영역을 공부하므로 리뷰할 때 배경지식 부담이 낮아지고, 서로 다른 해석과 자료를 비교할 수 있다.
+- 트러블슈팅 글 대신 학습 전후에 관점이 달라진 지점이나 개념 사이의 연결을 인사이트로 정리한다.
 
-* Code
-* Data
-* BSS
-* Heap
-* Stack
-* Thread별 Stack
-
-#### CPU와 Scheduling
-
-* CPU Bound
-* I/O Bound
-* CPU Scheduling의 목적
-* FCFS
-* Round Robin
-* Time Slice
-
-#### Context Switching
-
-* Context Switching
-* Process와 Thread의 Context Switching 차이
-* Context Switching 비용
-
-#### 실행 모델
-
-* 동시성
-* 병렬성
-
-### 연관 학습
-
-Java 서버와 연결해서 다음 정도를 확인한다.
-
-* JVM은 OS 관점에서 하나의 Process인가?
-* Java Thread와 OS Thread는 어떤 관계인가?
-* Spring 서버는 요청을 어떤 Thread에서 처리하는가?
-
-JVM이나 Thread 구현을 깊게 파는 것이 목적은 아니다.
-
-### 학습 목표
-
-* Program, Process, Thread의 차이를 설명할 수 있다.
-* Process의 주요 상태와 상태 전이를 설명할 수 있다.
-* PCB가 어떤 정보를 관리하는지 개략적으로 설명할 수 있다.
-* Process의 주요 Memory 영역을 설명할 수 있다.
-* Context Switching이 발생하는 이유와 비용을 설명할 수 있다.
-* CPU Bound와 I/O Bound 작업을 구분할 수 있다.
-* CPU Scheduling이 필요한 이유를 설명할 수 있다.
-* FCFS와 Round Robin의 기본 동작과 차이를 설명할 수 있다.
-* 동시성과 병렬성을 구분할 수 있다.
-
-### 트러블슈팅
-
-실제 공개 사례 중 다음과 관련된 사례를 선정한다.
-
-* CPU 사용률 급증
-* 특정 Process 또는 Thread의 CPU 과점유
-* Context Switching 증가
-* CPU는 낮지만 Load Average가 높은 문제
-
-역추론 시 다음을 확인한다.
-
-```text
-CPU 사용률
-→ Load Average
-→ Process
-→ Thread
-→ Process State
-→ CPU Bound와 I/O Bound
-→ Context Switching
-```
-
-### 딥다이브
-
-다음 중 하나를 골라 직접 실행하고 관측한다.
-
-* CPU Bound 프로그램과 I/O Bound 프로그램을 각각 돌려 `top -H`, `vmstat`에서 어떤 지표가 다르게 움직이는지 비교한다.
-* Thread 수를 1개부터 코어 수 이상까지 늘려가며 처리량과 context switch 수의 변화를 측정한다.
-* `taskset`으로 사용할 CPU를 제한하고 같은 작업의 처리 시간이 어떻게 변하는지 확인한다.
-
----
-
-## 6주차 - Virtual Memory와 Memory 문제
+## 5주차 - 가상화 1: 프로세스와 CPU
 
 ### 핵심 학습
 
-#### Virtual Memory
-
-* Virtual Memory가 필요한 이유
-* Virtual Address
-* Physical Address
-* Page
-* Frame
-* Paging
-* Page Table
-* Page Fault
-
-#### 주소 변환
-
-* MMU의 역할
-* TLB의 역할
-* Virtual Address에서 Physical Address로 변환되는 기본 흐름
-
-#### Memory 문제
-
-* Swap
-* Thrashing
-* OOM
-* OOM Killer
-
-### 연관 학습
-
-* Heap과 Process Memory의 차이
-* JVM Heap과 실제 Process Memory의 차이
-* RSS
-* Paging과 Segmentation의 차이
-* 내부 단편화와 외부 단편화
-
-Segmentation과 단편화는 Paging과 비교하기 위한 개념 수준으로만 학습한다.
-
-Page Replacement Algorithm과 LRU 구현은 필수 범위에서 제외한다.
+- 프로세스와 프로세스 상태
+- 프로세스 생성과 제어를 위한 API
+- 제한적 직접 실행
+- CPU 스케줄링의 목적과 기본 정책
+- 멀티 레벨 피드백 큐
+- 문맥 교환과 CPU 가상화 비용
 
 ### 학습 목표
 
-* Virtual Memory가 필요한 이유를 설명할 수 있다.
-* Page와 Frame의 차이를 설명할 수 있다.
-* Paging과 Page Table의 역할을 설명할 수 있다.
-* MMU와 TLB가 필요한 이유를 설명할 수 있다.
-* Page Fault가 발생했을 때 어떤 일이 일어나는지 설명할 수 있다.
-* Swap이 증가하면 성능이 저하될 수 있는 이유를 설명할 수 있다.
-* Thrashing이 무엇인지 설명할 수 있다.
-* Process Memory와 JVM Heap의 차이를 설명할 수 있다.
-* OOM과 OOM Killer의 기본적인 동작을 설명할 수 있다.
+- 운영체제가 하나의 CPU를 여러 프로세스가 사용하는 것처럼 보이게 만드는 방식을 설명할 수 있다.
+- 프로세스 생성, 실행, 대기, 종료 흐름을 설명할 수 있다.
+- 스케줄링 정책이 응답 시간, 반환 시간, 공정성에 미치는 영향을 비교할 수 있다.
+- 문맥 교환이 필요한 이유와 비용을 설명할 수 있다.
 
-### 트러블슈팅
+### 인사이트 기록
 
-실제 공개 사례 중 다음과 관련된 사례를 선정한다.
-
-* Memory Leak
-* Swap 증가
-* Thrashing
-* OOM
-* OOM Killer에 의한 Process 종료
-
-분석 관점:
-
-```text
-Memory 사용량 증가
-→ Process Memory
-→ Heap과 Native Memory
-→ RSS
-→ Page Cache
-→ Swap
-→ Page Fault
-→ Thrashing
-→ OOM Killer
-```
-
-모든 항목을 실제 사례에 억지로 적용하지 않고, 공개된 증상과 관련된 범위만 확인한다.
-
-### 딥다이브
-
-다음 중 하나를 골라 직접 실행하고 관측한다.
-
-* 메모리를 점진적으로 할당하면서 RSS, page fault, swap 사용량이 각각 언제부터 움직이는지 측정한다.
-* JVM Heap 사용량과 process RSS를 함께 측정해 두 값의 차이가 어디서 오는지 확인한다.
-* cgroup memory limit을 낮게 걸고 OOM Killer가 동작하는 지점과 `dmesg` 기록을 확인한다.
+프로세스 추상화 또는 스케줄링 정책을 학습하며 기존 생각이 바뀐 지점, 실제 애플리케이션 실행과 연결한 내용을 하나 이상 정리한다.
 
 ---
 
-## 7주차 - 동시성과 I/O
+## 6주차 - 가상화 2: 주소 공간과 메모리
 
 ### 핵심 학습
 
-#### 동시성 제어
-
-* Race Condition
-* Critical Section
-* Mutex
-* Semaphore
-* Deadlock
-* Deadlock의 네 가지 발생 조건
-* Thread Safe
-
-#### Thread 관리
-
-* Thread Pool
-* Thread Pool을 사용하는 이유
-* Thread 수 결정 시 고려 사항
-* Thread Pool Exhaustion
-
-#### I/O Model
-
-* Blocking
-* Non-Blocking
-* Synchronous
-* Asynchronous
-* I/O Multiplexing
-* select, poll, epoll의 관계
-* epoll이 필요한 이유
-
-### 연관 학습
-
-* CPU Bound 작업과 Thread Pool
-* I/O Bound 작업과 Thread Pool
-* Lock 대기와 I/O 대기의 차이
-
-`select`, `poll`, `epoll`의 내부 구현을 자세히 비교하기보다, 기존 방식의 한계와 epoll이 필요한 이유를 중심으로 학습한다.
-
-IPC, Spin Lock, Lock-Free, Wait-Free는 필수 범위에서 제외한다.
+- 주소 공간
+- 주소 변환
+- 세그멘테이션과 페이징
+- 페이지 테이블과 TLB
+- 페이지 폴트와 스와핑
+- 메모리 가상화의 비용과 한계
 
 ### 학습 목표
 
-* Race Condition과 Critical Section을 설명할 수 있다.
-* Mutex와 Semaphore의 차이를 설명할 수 있다.
-* Deadlock의 네 가지 발생 조건을 설명할 수 있다.
-* Thread Safe의 의미를 설명할 수 있다.
-* Thread Pool을 사용하는 이유를 설명할 수 있다.
-* CPU Bound와 I/O Bound 작업에 따라 Thread Pool 크기 기준이 달라지는 이유를 설명할 수 있다.
-* Thread Pool이 고갈되었을 때 나타나는 증상을 설명할 수 있다.
-* Blocking과 Non-Blocking, Synchronous와 Asynchronous를 구분할 수 있다.
-* I/O Multiplexing이 필요한 이유를 설명할 수 있다.
-* epoll이 다수의 연결을 처리하는 데 유리한 이유를 개략적으로 설명할 수 있다.
+- 운영체제가 프로세스마다 독립된 주소 공간을 제공하는 이유를 설명할 수 있다.
+- 가상 주소가 물리 주소로 변환되는 흐름을 설명할 수 있다.
+- 페이징과 TLB가 성능과 메모리 사용량에 미치는 영향을 설명할 수 있다.
+- 페이지 폴트와 스와핑이 지연으로 이어지는 과정을 설명할 수 있다.
 
-### 트러블슈팅
+### 인사이트 기록
 
-실제 공개 사례 중 다음 중 하나를 선정한다.
-
-* Blocking I/O로 인한 요청 적체
-* Thread Pool Exhaustion
-* Lock 대기 또는 Deadlock
-* Event Loop에서 Blocking 작업을 실행해 발생한 지연
-
-역추론 시 다음을 구분한다.
-
-```text
-요청이 적체됨
-→ CPU 사용률 확인
-→ 실행 중인 Thread 수 확인
-→ Thread State 확인
-→ I/O 대기인가?
-→ Lock 대기인가?
-→ Thread Pool이 고갈됐는가?
-```
-
-### 딥다이브
-
-다음 중 하나를 골라 직접 실행하고 관측한다.
-
-* 공유 카운터를 Lock 없이 여러 Thread에서 증가시켜 Race Condition을 재현하고, Lock 적용 후 결과와 처리 시간을 비교한다.
-* Thread Pool 크기를 바꿔가며 Blocking 호출이 섞였을 때 처리량과 대기 시간이 어떻게 달라지는지 측정한다.
-* 동시 연결 수를 늘려가며 Thread 기반 서버와 epoll 기반 서버의 처리량 차이를 비교한다.
+주소 공간이라는 추상화가 격리와 편의성을 제공하는 방식, 그 대가로 생기는 변환 비용을 연결해 정리한다.
 
 ---
 
-## 8주차 - OS와 Linux 진단 종합
+## 7주차 - 병행성 1: 스레드와 락
 
 ### 핵심 학습
 
-#### Kernel Interface
-
-* User Mode
-* Kernel Mode
-* System Call
-* Application과 Kernel의 관계
-
-#### File Descriptor
-
-* File Descriptor
-* Process별 File Descriptor Table
-* File, Socket, Pipe와 File Descriptor의 관계
-* Soft Limit
-* Hard Limit
-* Process별 `nofile`
-* 시스템 전체 File Handle Limit
-* File Descriptor 고갈
-
-#### 주요 진단 도구
-
-* `top`
-* `ps`
-* `free`
-* `vmstat`
-* `iostat`
-* `lsof`
-* `ss`
-* `strace`
-* `prlimit`
-* `/proc`
-
-명령어의 모든 옵션을 외우기보다 다음을 구분하는 데 집중한다.
-
-* CPU 문제를 확인할 때 사용할 도구
-* Memory와 Swap 문제를 확인할 때 사용할 도구
-* Disk I/O 문제를 확인할 때 사용할 도구
-* Network Socket 문제를 확인할 때 사용할 도구
-* File Descriptor 문제를 확인할 때 사용할 도구
-* Process가 어떤 System Call에서 대기하는지 확인할 때 사용할 도구
+- 병행성이 필요한 이유
+- 스레드와 스레드 API
+- 공유 상태와 경쟁 조건
+- 임계 영역
+- 락의 기본 동작
+- 효율적인 락을 위한 자료구조와 하드웨어 지원
 
 ### 학습 목표
 
-* User Mode와 Kernel Mode를 구분하는 이유를 설명할 수 있다.
-* System Call이 Application과 Kernel을 연결하는 방식을 설명할 수 있다.
-* File Descriptor가 무엇인지 설명할 수 있다.
-* 일반 파일뿐 아니라 Socket과 Pipe도 FD로 관리되는 이유를 설명할 수 있다.
-* Process별 FD Limit과 시스템 전체 File Handle Limit을 구분할 수 있다.
-* File Descriptor가 고갈되었을 때 나타나는 증상을 설명할 수 있다.
-* CPU, Memory, Disk I/O, Network, FD 문제를 어떤 도구로 확인할지 설명할 수 있다.
+- 병행 실행에서 비결정적인 결과가 발생하는 이유를 설명할 수 있다.
+- 경쟁 조건과 임계 영역을 구분할 수 있다.
+- 락이 상호 배제를 제공하는 방식을 설명할 수 있다.
+- 정확성뿐 아니라 대기와 공정성 관점에서도 락을 비교할 수 있다.
 
-### 종합 질문
+### 인사이트 기록
 
-> 서버의 CPU 또는 Memory 사용량이 급증하거나 요청 처리가 지연될 때 어떤 순서로 원인을 확인할 것인가?
-
-기본 흐름:
-
-```text
-증상과 영향 범위 확인
-→ Process 확인
-→ CPU와 Thread 상태 확인
-→ Memory와 Swap 확인
-→ Disk와 Network I/O 확인
-→ File Descriptor 확인
-→ 필요 시 System Call 추적
-```
-
-### 트러블슈팅
-
-1. 직접 경험한 Jenkins `Too many open files` 사례를 사용
-2. 실제 공개 사례 중 다음과 관련된 사례를 선정한다.
-
-### 딥다이브
-
-다음 중 하나를 골라 직접 실행하고 관측한다.
-
-* `ulimit`을 낮춘 뒤 파일과 socket을 계속 열어 `Too many open files`를 재현하고, `lsof`로 FD 종류별 분포를 확인한다.
-* `strace`로 프로그램이 어떤 System Call에서 대기하는지 추적하고, User Mode와 Kernel Mode 전환 지점을 확인한다.
-* CPU, Memory, Disk I/O 부하를 하나씩 만들고 `top`, `free`, `vmstat`, `iostat` 중 어떤 지표가 먼저 반응하는지 매핑한다.
+순차 실행을 전제로 한 직관이 병행 실행에서 깨지는 사례와 락이 해결하는 문제 및 새로 만드는 비용을 함께 정리한다.
 
 ---
 
-# OS 4주 완료 목표
+## 8주차 - 병행성 2: 동기화와 교착 상태
 
-OS 면접 질문 전체를 다루는 것이 아니라, 백엔드 서버에서 발생할 수 있는 주요 문제를 OS 개념과 연결하는 것을 목표로 한다.
+### 핵심 학습
+
+- 조건 변수
+- 세마포어
+- 생산자와 소비자 문제
+- 교착 상태의 발생 조건과 대응
+- 이벤트 기반 병행성
+- 스레드 기반 모델과 이벤트 기반 모델의 차이
+
+### 학습 목표
+
+- 락과 조건 변수의 역할을 구분할 수 있다.
+- 세마포어로 실행 순서와 자원 개수를 제어하는 방식을 설명할 수 있다.
+- 교착 상태의 발생 조건과 예방, 회피, 탐지 전략을 설명할 수 있다.
+- 스레드 기반 처리와 이벤트 기반 처리의 장단점을 비교할 수 있다.
+
+### 인사이트 기록
+
+상호 배제만으로 해결되지 않는 실행 순서 문제나 교착 상태의 구조를 정리하고, 익숙한 서버 모델과 연결한다.
+
+---
+
+## 9주차 - 영속성 1: I/O와 저장 장치
+
+### 핵심 학습
+
+- 장치와 운영체제의 상호작용
+- 인터럽트와 DMA
+- 하드 디스크의 구조와 접근 비용
+- 디스크 스케줄링
+- RAID의 성능과 내결함성
+- 저장 장치 추상화의 한계
+
+### 학습 목표
+
+- CPU와 장치가 I/O 요청을 주고받는 흐름을 설명할 수 있다.
+- 저장 장치의 물리적 특성이 접근 지연에 미치는 영향을 설명할 수 있다.
+- RAID 구성이 성능, 용량, 내결함성 사이에서 만드는 절충을 설명할 수 있다.
+- 메모리 접근과 저장 장치 접근의 비용 차이를 애플리케이션 관점에서 설명할 수 있다.
+
+### 인사이트 기록
+
+I/O가 단순히 느린 연산이 아니라 장치 특성과 운영체제 정책의 영향을 받는 과정임을 보여주는 내용을 정리한다.
+
+---
+
+## 10주차 - 영속성 2: 파일 시스템과 데이터 무결성
+
+### 핵심 학습
+
+- 파일과 디렉터리 추상화
+- 파일 시스템의 자료구조와 접근 경로
+- 빈 공간 관리와 지역성
+- 충돌 일관성과 저널링
+- 로그 구조 파일 시스템
+- 체크섬과 데이터 무결성
+
+### 학습 목표
+
+- 파일과 디렉터리가 저장 장치의 블록에 매핑되는 방식을 설명할 수 있다.
+- 파일을 읽고 쓸 때 파일 시스템 내부에서 일어나는 주요 단계를 설명할 수 있다.
+- 비정상 종료가 파일 시스템 일관성을 깨뜨리는 이유와 복구 방식을 설명할 수 있다.
+- 저널링, 로그 구조 설계, 체크섬이 각각 해결하려는 문제를 구분할 수 있다.
+
+### 인사이트 기록
+
+영속성 보장이 단순한 쓰기 완료가 아니라 순서, 복구, 무결성의 문제라는 점을 중심으로 새롭게 이해한 내용을 정리한다.
+
+---
+
+# OS 6주 완료 목표
+
+6주 동안 개별 용어를 암기하기보다 운영체제가 제공하는 세 가지 핵심 추상화와 그 비용을 연결해서 설명하는 것을 목표로 한다.
 
 ```text
-요청 지연 또는 서버 이상
-→ Process와 Thread
-→ CPU와 Scheduling
-→ Virtual Memory와 Memory
-→ Lock과 I/O
-→ File Descriptor
-→ System Call
+가상화
+→ CPU와 메모리를 여러 실행 주체가 안전하게 공유
+
+병행성
+→ 여러 실행 흐름이 공유 상태를 올바르게 다루도록 조정
+
+영속성
+→ 장치 위에 파일과 파일 시스템을 구성하고 장애 이후에도 데이터를 보존
 ```
 
-4주 완료 후에는 다음 질문에 자료 없이 답할 수 있어야 한다.
+6주 완료 후에는 다음 질문에 자료 없이 답할 수 있어야 한다.
 
-* Process와 Thread는 무엇이 다른가?
-* CPU가 높은 상황과 Thread가 대기 중인 상황을 어떻게 구분할 것인가?
-* Virtual Memory와 Paging은 왜 필요한가?
-* Page Fault와 Swap은 성능에 어떤 영향을 주는가?
-* Race Condition과 Deadlock은 무엇인가?
-* Blocking과 Non-Blocking, Sync와 Async는 어떻게 다른가?
-* Thread Pool이 고갈되면 어떤 현상이 나타나는가?
-* File Descriptor가 고갈되면 왜 파일과 Network 연결을 새로 열 수 없는가?
-* CPU, Memory, I/O, FD 문제를 어떤 순서와 도구로 확인할 것인가?
+- 운영체제는 CPU와 메모리를 어떻게 가상화하는가?
+- 프로세스 스케줄링 정책은 어떤 기준으로 비교할 수 있는가?
+- 가상 주소는 어떻게 물리 주소로 변환되는가?
+- 병행 실행에서 경쟁 조건은 왜 발생하며 락은 무엇을 보장하는가?
+- 조건 변수와 세마포어는 어떤 문제를 해결하는가?
+- 교착 상태는 어떤 조건에서 발생하며 어떻게 대응할 수 있는가?
+- 운영체제는 저장 장치와 어떻게 통신하는가?
+- 파일 시스템은 파일과 디렉터리를 디스크에 어떻게 배치하는가?
+- 비정상 종료 이후 파일 시스템의 일관성과 데이터 무결성을 어떻게 지키는가?
 
-# 9~12주차 Database
+# 11~14주차 Database
 
-## 9주차 - Transaction, Isolation Level, MVCC
+## 11주차 - Transaction, Isolation Level, MVCC
 
 ### 핵심 학습
 
@@ -721,7 +529,7 @@ Transaction 시작 시점
 
 ---
 
-## 10주차 - Index와 Execution Plan
+## 12주차 - Index와 Execution Plan
 
 ### 핵심 학습
 
@@ -790,7 +598,7 @@ Index 없음
 
 ---
 
-## 11주차 - Lock, Connection Pool, N+1
+## 13주차 - Lock, Connection Pool, N+1
 
 ### 핵심 학습
 
@@ -843,7 +651,7 @@ Application Thread
 
 ---
 
-## 12주차 - Database 종합
+## 14주차 - Database 종합
 
 ### 추가 복습
 
@@ -916,9 +724,9 @@ Database의 여러 요소가 동시에 영향을 준 실제 장애 사례를 선
 
 백지복습 후 자료를 다시 확인하고 부족한 부분만 보완한다.
 
-## 3. 트러블슈팅 역추론 또는 딥다이브
+## 3. 추가 기록
 
-매주 둘 중 하나를 택해 1개만 진행한다.
+Network와 Database는 트러블슈팅 역추론 또는 딥다이브 중 하나를 택해 1개만 진행한다. OS는 트러블슈팅 글 대신 인사이트를 작성한다.
 
 ### 트러블슈팅 역추론
 
@@ -964,6 +772,20 @@ Database의 여러 요소가 동시에 영향을 준 실제 장애 사례를 선
 - 예상과 결과가 같아도 왜 그런지 설명할 수 없으면 아직 확인된 것이 아니다.
 - 여러 조건을 비교할 때는 한 번에 한 가지만 바꾼다.
 
+### OS 인사이트
+
+학습 내용을 다시 요약하기보다 공부 전후에 생각이 달라진 지점을 기록한다. 다음 항목을 모두 채울 필요는 없지만, 주장과 근거가 드러나도록 작성한다.
+
+```text
+1. 학습 전에 갖고 있던 생각 또는 질문
+2. 새롭게 이해한 핵심 내용
+3. 기존 생각이 달라진 이유
+4. 다른 OS 개념이나 실제 시스템과의 연결
+5. 아직 남은 질문
+```
+
+인사이트의 크기는 작아도 된다. 개념 하나를 정확히 구분하게 된 계기, 서로 떨어져 보이던 개념의 연결, 설계상 절충을 발견한 지점처럼 학습 과정에서 실제로 생긴 변화에 집중한다.
+
 ## 4. PR
 
 PR은 한 주 동안의 학습 기록을 제출하는 단위다.
@@ -973,16 +795,18 @@ PR은 한 주 동안의 학습 기록을 제출하는 단위다.
 
 ## 백지복습
 
-## 트러블슈팅 역추론 또는 딥다이브
+## 추가 기록
 
 ## 이전 PR에서 배운 내용
 ```
 
 필요한 경우 실습 결과나 추가 정리를 포함한다.
 
+OS 기간에도 팀원 PR을 1개 이상 리뷰한다. 같은 영역과 비슷한 범위를 공부한 상태에서 서로 다른 설명, 자료, 인사이트를 비교하고 이해가 어긋난 부분을 확인한다.
+
 ---
 
-# 12주 완료 목표
+# 14주 완료 목표
 
 ## Network
 
@@ -999,15 +823,17 @@ DNS
 
 ## OS
 
-서버의 CPU 또는 Memory 사용량이 높다는 현상에서 끝나지 않고 다음 관점으로 원인을 좁힐 수 있다.
+운영체제가 제공하는 핵심 추상화와 이를 구현하기 위한 비용을 세 영역으로 나누어 설명할 수 있다.
 
 ```text
-Process
-→ Thread
-→ CPU
-→ Memory
-→ Disk와 Network I/O
-→ System Call
+가상화
+→ CPU와 메모리 공유
+
+병행성
+→ 공유 상태와 실행 순서 조정
+
+영속성
+→ 파일 시스템과 데이터 무결성
 ```
 
 ## Database
@@ -1024,7 +850,7 @@ Connection Pool
 → Replication
 ```
 
-12주 동안 개별 개념을 암기하는 것이 아니라 Network, OS, Database 각각에서 실제 장애 상황을 만났을 때 어떤 계층을 어떤 순서로 확인해야 하는지 판단할 수 있는 수준을 목표로 한다.
+14주 동안 개별 개념을 암기하는 것이 아니라 Network, OS, Database의 핵심 원리를 연결해 설명하고, 실제 시스템의 동작과 문제를 구조적으로 바라볼 수 있는 수준을 목표로 한다.
 
 ---
 

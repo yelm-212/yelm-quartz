@@ -9,7 +9,7 @@ tags:
 
 Database의 동작 원리를 학습하고, 공개된 장애 사례를 바탕으로 문제를 역추론한 기록입니다.
 
-> 전체 일정과 진행 방식은 [12주 CS 학습 계획](01_Project/12_week_cs_study)에서 관리합니다.
+> 전체 일정과 진행 방식은 [CS 학습 계획](01_Project/12_week_cs_study)에서 관리합니다.
 
 ## 학습 원칙
 
@@ -20,22 +20,22 @@ Database의 동작 원리를 학습하고, 공개된 장애 사례를 바탕으�
 
 ## 학습 목차
 
-### 9주차
+### 11주차
 
 - 학습내용: [Transaction, Isolation Level, MVCC](03_Resource/06_database/01_transaction_isolation_mvcc)
 - 트러블슈팅: [Transaction 트러블슈팅 사례](03_Resource/06_database/02_transaction_isolation_mvcc_ts)
 
-### 10주차
+### 12주차
 
 - 학습내용: [Index와 Execution Plan](03_Resource/06_database/03_index_execution_plan)
 - 트러블슈팅: [Slow Query 트러블슈팅 사례](03_Resource/06_database/04_index_execution_plan_ts)
 
-### 11주차
+### 13주차
 
 - 학습내용: [Lock, Connection Pool, N+1](03_Resource/06_database/05_lock_pool_nplus1)
 - 트러블슈팅: [Lock과 Connection Pool 트러블슈팅 사례](03_Resource/06_database/06_lock_pool_nplus1_ts)
 
-### 12주차
+### 14주차
 
 - 학습내용: [Database 종합](03_Resource/06_database/07_database_summary)
 - 트러블슈팅: [Database 종합 장애 사례](03_Resource/06_database/08_database_summary_ts)

@@ -81,4 +81,4 @@ Connection Pool
 
 ## 함께 읽기
 
-- [12주차 - Database 종합](03_Resource/06_database/07_database_summary)
+- [14주차 - Database 종합](03_Resource/06_database/07_database_summary)

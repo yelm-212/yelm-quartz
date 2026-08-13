@@ -77,4 +77,4 @@ Application Thread
 
 ## 함께 읽기
 
-- [11주차 - Lock, Connection Pool, N+1](03_Resource/06_database/05_lock_pool_nplus1)
+- [13주차 - Lock, Connection Pool, N+1](03_Resource/06_database/05_lock_pool_nplus1)
