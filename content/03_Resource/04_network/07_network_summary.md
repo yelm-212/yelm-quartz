@@ -68,7 +68,7 @@ Authentication에서 확인된 유저의 신원에 따라 권한을 부여한다
 
 파일 시스템 내에서 유저 생성/읽기/수정/삭제 권한을 정의하는 것이 대표적인 예이며, 각 유저가 특정 리소스/네트워크 내에서 무엇을 할 수 있는지를 정의한다.
 
-- RBAC(Role-based Access Control), MAC(Mandatory Access Control), 
+RBAC(Role-based Access Control), MAC(Mandatory Access Control), DAC(Direct Access Control) 등이 있다.
 
 ## Same-Origin Policy
 
@@ -146,9 +146,26 @@ Preflight request는 OPTIONS 메서드로 요청되며 CORS 요청 헤더들을 
 
 <!-- 공격이 성립하는 조건과 기본 방어 방법을 기록한다. -->
 
+cross-site scripting은 공격자가 대상이 되는 사이트에서 악의적인 JS 스크립트를 실행하는 것을 의미한다.
+
+![](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS/xss.svg)
+
+공격자가 작성한 악의적인 input값을 허용하거나, 이 input을 페이지에 노출시키는 것을 허용한다.
+
+
 ### CSRF
 
 <!-- 공격이 성립하는 조건, SameSite Cookie와 CSRF Token의 역할을 기록한다. -->
+
+![](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/CSRF/form-post.svg)
+
+cross-site request forgery (CSRF) attack은 공격자가 유저 혹은 클라이언트가 target site로 보낼 요청을 악성 사이트로 보내게 한다.
+
+위 예시에서, 유저의 로그인 세션 쿠키를 클라이언트(브라우저)가 가지고 있다. 페이지는 `<form>` element를 가지며 유저가 다른 사람에게 전송이 가능하도록 한다. 유저가 submit 버튼을 누르면 브라우저가 서버에 쿠키를 포함하는 POST 요청을 보내게 된다.  
+
+![](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/CSRF/csrf-form-post.svg)
+
+위 그림과 같이 CSRF 공격이 일어나는 경우, 공격자가 form을 포함한 웹사이트를 만들고 form 내 `action` attribute가 bank website로 설정되며 form은 bank의 input field를 흉내내게 한다. 
 
 ### 두 공격의 차이
 
