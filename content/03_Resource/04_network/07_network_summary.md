@@ -56,11 +56,19 @@ DNS 조회
 
 유저의 신원을 확인하는 과정이다.
 
+<!-- The authentication process relies on credentials, such as passwords or fingerprint scans, that users present to prove they are who they claim to be. The authorization process uses user permissions to define what each user can do within a particular resource or network. For example, permissions in a file system might dictate whether a user can create, read, update or delete files. -->
+
+authentication 프로세스는 패스워드 혹은 핑거프린트 등과 같은 신원 확인이 가능한 credential에 의존한다. 
+
 ### Authorization
 
 <!-- 확인된 신원에 대해 권한을 판단하는 과정을 기록한다. 401과 403의 차이도 함께 정리한다. -->
 
-Authentication에서 확인된 유저의 신원을
+Authentication에서 확인된 유저의 신원에 따라 권한을 부여한다. 
+
+파일 시스템 내에서 유저 생성/읽기/수정/삭제 권한을 정의하는 것이 대표적인 예이며, 각 유저가 특정 리소스/네트워크 내에서 무엇을 할 수 있는지를 정의한다.
+
+- RBAC(Role-based Access Control), MAC(Mandatory Access Control), 
 
 ## Same-Origin Policy
 
@@ -70,13 +78,15 @@ Authentication에서 확인된 유저의 신원을
 
 두 url이 host, protocol, port가 동일한 경우 same origin이라 할 수 있다. 이를 튜플이라 칭할 수 있다. 아래는 `http://store.company.com/dir/page.html` URL과의 origin 비교 예시이다.
 
-| URL |	Outcome |	Reason |
-|-----|---------|--------|
-| http://store.company.com/dir2/other.html	| Same origin	| path 만 다름 |
-| http://store.company.com/dir/inner/another.html	| Same origin	| path 만 다름 |
-| https://store.company.com/page.html	| Failure	| protocol 차이 |
-| http://store.company.com:81/dir/page.html	| Failure	| port (http는 80을 디폴트로 씀) |
-| http://news.company.com/dir/page.html	| Failure	| host 차이 |
+
+| URL                                                                                                | Outcome     | Reason                  |
+| -------------------------------------------------------------------------------------------------- | ----------- | ----------------------- |
+| [http://store.company.com/dir2/other.html](http://store.company.com/dir2/other.html)               | Same origin | path 만 다름               |
+| [http://store.company.com/dir/inner/another.html](http://store.company.com/dir/inner/another.html) | Same origin | path 만 다름               |
+| [https://store.company.com/page.html](https://store.company.com/page.html)                         | Failure     | protocol 차이             |
+| [http://store.company.com:81/dir/page.html](http://store.company.com:81/dir/page.html)             | Failure     | port (http는 80을 디폴트로 씀) |
+| [http://news.company.com/dir/page.html](http://news.company.com/dir/page.html)                     | Failure     | host 차이                 |
+
 
 ### Same-Origin Policy가 필요한 이유
 
@@ -98,14 +108,15 @@ http 기반 헤더를 사용한 메커니즘으로, same-origin 정책을 완화
 
 ### 주요 Header
 
-| Header                             | 방향      | 역할  |
-| ---------------------------------- | -------- | --- |
+
+| Header                             | 방향       | 역할                             |
+| ---------------------------------- | -------- | ------------------------------ |
 | `Origin`                           | Request  | CORS의 요청 origin값을 명시, nullable |
-| `Access-Control-Allow-Origin`      | Response | resource에 접근 가능한 origin을 명시   |
-| `Access-Control-Allow-Methods`     | Response | resource에 접근 가능한 메서드 명시      |
-| `Access-Control-Allow-Headers`     | Response | 실제 요청 시 사용 가능한 http header    |
-| `Access-Control-Allow-Credentials` | Response | 실제 요청 시 credential 필요 여부      |
-| `Access-Control-Max-Age`           | Response | Preflight 요청의 캐시 가능 시간        |
+| `Access-Control-Allow-Origin`      | Response | resource에 접근 가능한 origin을 명시    |
+| `Access-Control-Allow-Methods`     | Response | resource에 접근 가능한 메서드 명시        |
+| `Access-Control-Allow-Headers`     | Response | 실제 요청 시 사용 가능한 http header     |
+| `Access-Control-Allow-Credentials` | Response | 실제 요청 시 credential 필요 여부       |
+| `Access-Control-Max-Age`           | Response | Preflight 요청의 캐시 가능 시간         |
 
 
 ### CORS Preflight
