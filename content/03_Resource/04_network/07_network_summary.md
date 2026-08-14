@@ -64,9 +64,9 @@ authentication 프로세스는 패스워드 혹은 핑거프린트 등과 같은
 
 <!-- 확인된 신원에 대해 권한을 판단하는 과정을 기록한다. 401과 403의 차이도 함께 정리한다. -->
 
-Authentication에서 확인된 유저의 신원에 따라 권한을 부여한다. 
+유저 또는 entity가 특정 resource에 대해 어떤 행위를 수행할 수 있는지를 결정하는 과정이다.
 
-파일 시스템 내에서 유저 생성/읽기/수정/삭제 권한을 정의하는 것이 대표적인 예이며, 각 유저가 특정 리소스/네트워크 내에서 무엇을 할 수 있는지를 정의한다.
+Authentication에서 확인된 identity에 기반해 접근 권한을 판단한다.
 
 RBAC(Role-based Access Control), MAC(Mandatory Access Control), DAC(Direct Access Control) 등이 있다.
 
@@ -76,7 +76,7 @@ RBAC(Role-based Access Control), MAC(Mandatory Access Control), DAC(Direct Acces
 
 <!-- scheme, host, port로 구성된 origin의 정의와 같은 origin으로 판단되는 조건을 기록한다. -->
 
-두 url이 host, protocol, port가 동일한 경우 same origin이라 할 수 있다. 이를 튜플이라 칭할 수 있다. 아래는 `http://store.company.com/dir/page.html` URL과의 origin 비교 예시이다.
+두 url의 host, scheme, port가 동일한 경우 same origin이라 할 수 있다. 이를 튜플이라 칭할 수 있다. 아래는 `http://store.company.com/dir/page.html` URL과의 origin 비교 예시이다.
 
 
 | URL                                                                                                | Outcome     | Reason                  |
@@ -94,7 +94,7 @@ RBAC(Role-based Access Control), MAC(Mandatory Access Control), DAC(Direct Acces
 
 <!-- It helps isolate potentially malicious documents, reducing possible attack vectors. For example, it prevents a malicious website on the Internet from running JS in a browser to read data from a third-party webmail service (which the user is signed into) or a company intranet (which is protected from direct access by the attacker by not having a public IP address) and relaying that data to the attacker. -->
 
-의심스러운 리소스 등을 공격 벡터로부터 분리하는데 도움을 준다.
+Same-Origin Policy는 한 origin에서 실행된 script가 다른 origin의 resource를 임의로 읽는 것을 제한하는 브라우저의 보안 메커니즘이다.
 
 가령, 클라이언트 브라우저에서 악의적인 JS 스크립트를 실행해 서드파티 웹메일 혹은 회사 인트라넷에서 데이터를 읽어 공격자에게 전송하는 행위를 방지할 수 있다.
 
@@ -104,18 +104,20 @@ RBAC(Role-based Access Control), MAC(Mandatory Access Control), DAC(Direct Acces
 
 <!-- Same-Origin Policy를 완화하기 위해 server가 어떤 header로 접근을 허용하는지 기록한다. -->
 
-http 기반 헤더를 사용한 메커니즘으로, same-origin 정책을 완화하기 위해 다른 origin에서 리소스에 접근을 가능하게 하는 정책을 정의할 수 있다. Preflight 요청을 보내 cross-origin source에서 실제로 요청이 가능한지 확인하는 과정을 거치며, 이때 실제 요청의 메서드와 헤더 값을 지시하는 요청을 먼저 보낸다.
+http 기반 헤더를 사용한 메커니즘으로, 어떤 origin의 브라우저 script에게 response를 공유할지를 HTTP header로 나타내는 메커니즘이다. 
+
+Preflight 요청을 보내 cross-origin source에서 실제로 요청이 가능한지 확인하는 과정을 거치며, 이때 실제 요청의 메서드와 헤더 값을 지시하는 요청을 먼저 보낸다.
 
 ### 주요 Header
 
 
 | Header                             | 방향       | 역할                             |
 | ---------------------------------- | -------- | ------------------------------ |
-| `Origin`                           | Request  | CORS의 요청 origin값을 명시, nullable |
+| `Origin`                           | Request  | CORS의 요청 origin값을 명시, null 값이 올 수 있음 |
 | `Access-Control-Allow-Origin`      | Response | resource에 접근 가능한 origin을 명시    |
 | `Access-Control-Allow-Methods`     | Response | resource에 접근 가능한 메서드 명시        |
 | `Access-Control-Allow-Headers`     | Response | 실제 요청 시 사용 가능한 http header     |
-| `Access-Control-Allow-Credentials` | Response | 실제 요청 시 credential 필요 여부       |
+| `Access-Control-Allow-Credentials` | Response | credentials가 포함된 요청의 response 공유 허용 여부 |
 | `Access-Control-Max-Age`           | Response | Preflight 요청의 캐시 가능 시간         |
 
 
@@ -131,14 +133,33 @@ http 기반 헤더를 사용한 메커니즘으로, same-origin 정책을 완화
 → 실제 요청 전송
 ```
 
+cross-origin 요청 중 CORS-safelisted request 조건을 만족하지 않는 경우, 브라우저는 실제 요청 전에 Preflight 요청을 수행한다.
+
+대표적으로 다음과 같은 요청은 Preflight가 발생한다.
+
+- PUT, PATCH, DELETE 등의 method 사용
+- Authorization 등의 safelisted되지 않은 header 사용
+- POST 요청에서 Content-Type으로 application/json 사용
+
+브라우저는 OPTIONS 요청에 `Access-Control-Request-Method`, `Access-Control-Request-Headers`를 포함해 실제 요청 조건을 전달한다.
+
 - Simple Request: Preflight를 필요로 하지 않는 요청
 - Preflight request: CORS 요청이 가능한지 확인하는 요청
 
-Preflight request는 OPTIONS 메서드로 요청되며 CORS 요청 헤더들을 포함한다. 정상적인 경우 클라이언트에서 자동적으로 요청되므로 fe 개발시 구현할 필요는 없다.
+Preflight request는 OPTIONS 메서드로 요청되며 CORS 요청 헤더들을 포함한다. 브라우저에서 자동적으로 수행하므로 어플리케이션 코드 상에서 직접 구현할 필요는 없다.
 
-### CORS 오류를 진단하는 순서
+### CORS 오류 진단 순서
 
 <!-- 브라우저 콘솔 메시지, 실제 요청 도달 여부, 응답 header를 어떤 순서로 확인할지 기록한다. 서버 오류와 CORS 차단을 구분하는 기준도 함께 정리한다. -->
+
+1. Browser DevTools Network에서 Preflight(OPTIONS)가 발생했는지 확인
+2. OPTIONS 요청이 실패했다면 response의 
+  `Access-Control-Allow-Origin`, `Access-Control-Allow-Methods` `Access-Control-Allow-Headers` 확인
+3. Credential을 사용하는 경우
+   `Access-Control-Allow-Credentials` 및 `Access-Control-Allow-Origin` 설정 확인
+4. Preflight 성공 후 실제 요청이 전송되었는지 확인
+5. 실제 요청이 4xx/5xx라면 CORS가 아닌 서버 오류 가능성도 확인
+6. 서버 로그와 브라우저 Network 응답을 함께 확인
 
 ## XSS와 CSRF
 
@@ -146,12 +167,17 @@ Preflight request는 OPTIONS 메서드로 요청되며 CORS 요청 헤더들을 
 
 <!-- 공격이 성립하는 조건과 기본 방어 방법을 기록한다. -->
 
-cross-site scripting은 공격자가 대상이 되는 사이트에서 악의적인 JS 스크립트를 실행하는 것을 의미한다.
+cross-site scripting은 공격자가 주입한 악성 script가 신뢰되는 웹사이트의 context에서 다른 사용자의 브라우저에 의해 실행되는 공격이다.
 
 ![](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS/xss.svg)
 
-공격자가 작성한 악의적인 input값을 허용하거나, 이 input을 페이지에 노출시키는 것을 허용한다.
+사용자 입력 등의 신뢰할 수 없는 데이터가 적절한 output encoding이나 sanitization 없이 실행 가능한 HTML/JavaScript context에 삽입되는 경우 발생할 수 있다.
 
+아래와 같은 방식으로 방어할 수 있다. 단, CSP는 추가적인 방어 계층으로 사용해야 한다.
+
+- context에 맞는 output encoding
+- 필요한 경우 HTML sanitization
+- 안전한 DOM API 사용
 
 ### CSRF
 
@@ -159,7 +185,7 @@ cross-site scripting은 공격자가 대상이 되는 사이트에서 악의적�
 
 ![](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/CSRF/form-post.svg)
 
-cross-site request forgery (CSRF) attack은 공격자가 유저 혹은 클라이언트가 target site로 보낼 요청을 악성 사이트로 보내게 한다.
+cross-site request forgery (CSRF) attack은 악성 사이트가 피해자의 브라우저를 이용해 target site로 원하지 않는 요청을 보내게 한다.
 
 위 예시에서, 유저의 로그인 세션 쿠키를 클라이언트(브라우저)가 가지고 있다. 페이지는 `<form>` element를 가지며 유저가 다른 사람에게 전송이 가능하도록 한다. 유저가 submit 버튼을 누르면 브라우저가 서버에 쿠키를 포함하는 POST 요청을 보내게 된다.  
 
@@ -172,15 +198,31 @@ cross-site request forgery (CSRF) attack은 공격자가 유저 혹은 클라이
 
 <!-- Resource, Method, 표현, Stateless 등 REST가 전제하는 제약을 HTTP와 연결해 정리한다. -->
 
-REST (Representational State Transfer) 는 resource가 인지하기 쉽고, 언어에 무관하게 표준화된 클라이언트-서버와 상호작용을 한다면 RESTful하다고 정의한다.
+RES (Representational State Transfer)는 분산 hypermedia system을 위한 architectural style로, 시스템의 component 간 상호작용에 여러 제약 조건을 적용한다.
+
+주요 constraint는 다음과 같다.
+
+- Client-Server
+- Stateless
+- Cache
+- Uniform Interface
+- Layered System
+- Code-On-Demand (optional)
 
 ## WebSocket
 
 <!-- HTTP Upgrade로 연결이 전환되는 과정과 요청 및 응답 모델과의 차이를 기록한다. -->
 
+WebSocket (API)는 유저의 브라우저와 서버가 양방향으로 전송이 가능한 세션을 생성한다. 이를 통해 서버에 메시지를 보내고, 이에 대한 응답을 polling할 필요 없이 받아볼 수 있다.
+
+- `WebSocket` interface : 안정적이고 클라이언트 브라우저 및 서버 지원이 잘 되는 편이지만 backpressure를 지원하지 않음
+- `WebSocketStream` interface : `WebSocket`을 대체하기 위한 `Promise`기반 대체재. Streams API를 사용해 backpressure를 지원한다. 현재 표준 X
+
 ## CDN
 
 <!-- Edge 캐싱이 요청 흐름의 어느 지점에 위치하는지, Cache Hit과 Miss가 응답 경로에 어떤 차이를 만드는지 기록한다. -->
+
+CDN (Content Delivery Network) 여러 위치에 서버를 분산시킨 그룹이다. 이 서버들이 데이터의 사본을 가지며, 각 end-user에게 가장 가까운 서버로부터 요청을 처리할 데이터를 제공한다. 트래픽이 몰릴 때에도 빠른 서비스를 제공할 수 있게 한다. 
 
 ## 백지복습 질문
 
