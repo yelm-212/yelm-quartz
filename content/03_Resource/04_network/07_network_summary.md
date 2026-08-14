@@ -167,19 +167,12 @@ cross-site request forgery (CSRF) attack은 공격자가 유저 혹은 클라이
 
 위 그림과 같이 CSRF 공격이 일어나는 경우, 공격자가 form을 포함한 웹사이트를 만들고 form 내 `action` attribute가 bank website로 설정되며 form은 bank의 input field를 흉내내게 한다. 
 
-### 두 공격의 차이
-
-
-| 구분         | XSS | CSRF |
-| ---------- | --- | ---- |
-| 공격 대상      |     |      |
-| 악용하는 신뢰 관계 |     |      |
-| 기본 방어      |     |      |
-
 
 ## REST
 
 <!-- Resource, Method, 표현, Stateless 등 REST가 전제하는 제약을 HTTP와 연결해 정리한다. -->
+
+REST (Representational State Transfer) 는 resource가 인지하기 쉽고, 언어에 무관하게 표준화된 클라이언트-서버와 상호작용을 한다면 RESTful하다고 정의한다.
 
 ## WebSocket
 
