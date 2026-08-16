@@ -194,7 +194,13 @@ WebSocket은 클라이언트와 서버가 양방향으로 전송이 가능한 �
 
 <!-- Edge 캐싱이 요청 흐름의 어느 지점에 위치하는지, Cache Hit과 Miss가 응답 경로에 어떤 차이를 만드는지 기록한다. -->
 
-CDN (Content Delivery Network) 여러 위치에 서버를 분산시킨 그룹이다. 이 서버들이 데이터의 사본을 가지며, 각 end-user에게 가장 가까운 서버로부터 요청을 처리할 데이터를 제공한다. 트래픽이 몰릴 때에도 빠른 서비스를 제공할 수 있게 한다. 
+CDN (Content Delivery Network) 여러 지역에 분산된 edge server를 이용해 사용자에게 콘텐츠를 전달하는 시스템이다.
+
+사용자의 요청은 일반적으로 낮은 latency로 콘텐츠를 제공할 수 있는 edge server로 전달된다.
+
+요청한 콘텐츠가 edge server에 cache되어 있는 경우 바로 응답하고, cache되어 있지 않거나 만료된 경우 origin server로부터 콘텐츠를 가져온 뒤 사용자에게 전달하며 필요에 따라 이를 cache한다.
+
+이를 통해 사용자와 콘텐츠를 제공하는 서버 사이의 네트워크 거리를 줄여 latency를 줄일 수 있고, origin server로 직접 전달되는 요청도 감소시킬 수 있다.
 
 
 ## 참고 자료
