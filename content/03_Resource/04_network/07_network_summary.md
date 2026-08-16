@@ -18,36 +18,6 @@ tags:
 - XSS와 CSRF의 차이와 기본 방어 방법을 설명할 수 있다.
 - REST, WebSocket, CDN의 역할을 요청 흐름과 연결해 설명할 수 있다.
 
-## 전체 요청 흐름
-
-> 브라우저에서 URL을 입력한 뒤 서버의 응답을 받기까지 어떤 과정이 일어나는가?
-
-```text
-DNS 조회
-→ TCP 또는 QUIC 연결
-→ TLS
-→ HTTP 요청
-→ Proxy 또는 Load Balancer
-→ 서버 처리
-→ HTTP 응답
-```
-
-<!-- 새로운 개념을 추가하기보다 1~3주차 내용을 하나의 흐름으로 연결한다. 각 단계에서 무엇이 결정되고 무엇이 실패할 수 있는지 정리한다. -->
-
-### 단계별 정리
-
-
-| 단계                   | 하는 일 | 관여하는 구성 요소 | 실패했을 때의 증상 |
-| -------------------- | ---- | ---------- | ---------- |
-| DNS 조회               |      |            |            |
-| TCP 또는 QUIC 연결       |      |            |            |
-| TLS                  |      |            |            |
-| HTTP 요청              |      |            |            |
-| Proxy와 Load Balancer |      |            |            |
-| 서버 처리                |      |            |            |
-| HTTP 응답              |      |            |            |
-
-
 ## Authentication과 Authorization
 
 ### Authentication
@@ -213,10 +183,12 @@ RES (Representational State Transfer)는 분산 hypermedia system을 위한 arch
 
 <!-- HTTP Upgrade로 연결이 전환되는 과정과 요청 및 응답 모델과의 차이를 기록한다. -->
 
-WebSocket (API)는 유저의 브라우저와 서버가 양방향으로 전송이 가능한 세션을 생성한다. 이를 통해 서버에 메시지를 보내고, 이에 대한 응답을 polling할 필요 없이 받아볼 수 있다.
+WebSocket은 클라이언트와 서버가 양방향으로 전송이 가능한 연결을 생성하는 프로토콜이다. 이를 통해 서버와 클라이언트가 독립적으로 메시지를 보내고, 이에 대한 응답을 polling할 필요 없이 받아볼 수 있다.
 
-- `WebSocket` interface : 안정적이고 클라이언트 브라우저 및 서버 지원이 잘 되는 편이지만 backpressure를 지원하지 않음
-- `WebSocketStream` interface : `WebSocket`을 대체하기 위한 `Promise`기반 대체재. Streams API를 사용해 backpressure를 지원한다. 현재 표준 X
+채팅, 실시간 알림, 게임 등 실시간 양방향 통신이 필요한 경우 사용할 수 있다.
+
+- `WebSocket` interface : 브라우저에서 널리 사용되는 WebSocket API, application-level backpressure를 지원하지 않음
+- `WebSocketStream` interface : `WebSocket`을 대체하기 위한 `Promise` 기반 대체재. Streams API를 사용해 backpressure를 지원한다. 현재 표준 X
 
 ## CDN
 
@@ -224,13 +196,6 @@ WebSocket (API)는 유저의 브라우저와 서버가 양방향으로 전송이
 
 CDN (Content Delivery Network) 여러 위치에 서버를 분산시킨 그룹이다. 이 서버들이 데이터의 사본을 가지며, 각 end-user에게 가장 가까운 서버로부터 요청을 처리할 데이터를 제공한다. 트래픽이 몰릴 때에도 빠른 서비스를 제공할 수 있게 한다. 
 
-## 백지복습 질문
-
-<!-- 자료를 보지 않고 답해 본 뒤 막힌 부분만 보완한다. -->
-
-- 브라우저에서 URL을 입력한 뒤 응답을 받기까지의 과정을 설명할 수 있는가?
-- 요청이 실패했을 때 DNS, 연결, TLS, HTTP, Proxy 중 어느 계층의 문제인지 구분할 수 있는가?
-- CORS 오류와 서버 오류를 어떻게 구분하는가?
 
 ## 참고 자료
 
@@ -243,6 +208,7 @@ CDN (Content Delivery Network) 여러 위치에 서버를 분산시킨 그룹이
 - [MDN - Same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy)
 - [OWASP - Cross Site Scripting Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
 - [OWASP - Cross-Site Request Forgery Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
+- [CDN](https://developer.mozilla.org/en-US/docs/Glossary/CDN)
 
 ## 함께 읽기
 
