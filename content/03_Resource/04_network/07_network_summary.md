@@ -1,6 +1,6 @@
 ---
 title: Network 종합
-draft: true
+draft: false
 tags:
   - network
   - cors
