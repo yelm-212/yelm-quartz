@@ -43,12 +43,12 @@ Network와 Database는 트러블슈팅 역추론 또는 딥다이브 중 하나�
 | 2주차  | HTTP와 요청 및 응답                | [HTTP와 요청 및 응답](03_Resource/04_network/03_http) | [HTTP 429 트러블슈팅 사례](03_Resource/04_network/04_http_429_ts) |
 | 3주차  | DNS, HTTPS, Proxy, Load Balancer   | [DNS, HTTPS, Proxy, Load Balancer](03_Resource/04_network/05_dns_https_proxy_lb) | [DNS, TLS, Proxy, Load Balancer 트러블슈팅 사례](03_Resource/04_network/06_dns_tls_proxy_lb_ts) |
 | 4주차  | Network 종합                       | [Network 종합](03_Resource/04_network/07_network_summary) | [Network 종합 트러블슈팅 사례](03_Resource/04_network/08_network_summary_ts) |
-| 5주차  | 가상화: 프로세스와 CPU             | [프로세스 가상화](03_Resource/05_os/01_virtualization_process) | [프로세스 가상화 인사이트](03_Resource/05_os/02_virtualization_process_insight) |
-| 6주차  | 가상화: 주소 공간과 메모리         | [메모리 가상화](03_Resource/05_os/03_virtualization_memory) | [메모리 가상화 인사이트](03_Resource/05_os/04_virtualization_memory_insight) |
-| 7주차  | 병행성: 스레드와 락                | [병행성 기초](03_Resource/05_os/05_concurrency_basics) | [병행성 기초 인사이트](03_Resource/05_os/06_concurrency_basics_insight) |
-| 8주차  | 병행성: 동기화와 교착 상태         | [병행성 제어](03_Resource/05_os/07_concurrency_coordination) | [병행성 제어 인사이트](03_Resource/05_os/08_concurrency_coordination_insight) |
-| 9주차  | 영속성: I/O와 저장 장치            | [I/O와 저장 장치](03_Resource/05_os/09_persistence_io_storage) | [I/O와 저장 장치 인사이트](03_Resource/05_os/10_persistence_io_storage_insight) |
-| 10주차 | 영속성: 파일과 파일 시스템         | [파일 시스템과 데이터 무결성](03_Resource/05_os/11_persistence_filesystems) | [파일 시스템 인사이트](03_Resource/05_os/12_persistence_filesystems_insight) |
+| 5주차  | 가상화 1: OSTEP Ch 3~11            | [프로세스 가상화](03_Resource/05_os/01_virtualization_process) | [프로세스 가상화 인사이트](03_Resource/05_os/02_virtualization_process_insight) |
+| 6주차  | 가상화 2: OSTEP Ch 12~24           | [메모리 가상화](03_Resource/05_os/03_virtualization_memory) | [메모리 가상화 인사이트](03_Resource/05_os/04_virtualization_memory_insight) |
+| 7주차  | 병행성 1: OSTEP Ch 25~29           | [병행성 기초](03_Resource/05_os/05_concurrency_basics) | [병행성 기초 인사이트](03_Resource/05_os/06_concurrency_basics_insight) |
+| 8주차  | 병행성 2: OSTEP Ch 30~34           | [병행성 제어](03_Resource/05_os/07_concurrency_coordination) | [병행성 제어 인사이트](03_Resource/05_os/08_concurrency_coordination_insight) |
+| 9주차  | 영속성 1: OSTEP Ch 35~40           | [I/O와 파일 시스템 기초](03_Resource/05_os/09_persistence_io_storage) | [I/O와 파일 시스템 기초 인사이트](03_Resource/05_os/10_persistence_io_storage_insight) |
+| 10주차 | 영속성 2: OSTEP Ch 41~51           | [파일 시스템 복구와 데이터 무결성](03_Resource/05_os/11_persistence_filesystems) | [파일 시스템 인사이트](03_Resource/05_os/12_persistence_filesystems_insight) |
 | 11주차 | Transaction, Isolation Level, MVCC | [Transaction, Isolation Level, MVCC](03_Resource/06_database/01_transaction_isolation_mvcc) | [Transaction 트러블슈팅 사례](03_Resource/06_database/02_transaction_isolation_mvcc_ts) |
 | 12주차 | Index와 Execution Plan             | [Index와 Execution Plan](03_Resource/06_database/03_index_execution_plan) | [Slow Query 트러블슈팅 사례](03_Resource/06_database/04_index_execution_plan_ts) |
 | 13주차 | Lock, Connection Pool, N+1         | [Lock, Connection Pool, N+1](03_Resource/06_database/05_lock_pool_nplus1) | [Lock과 Connection Pool 트러블슈팅 사례](03_Resource/06_database/06_lock_pool_nplus1_ts) |
@@ -287,9 +287,9 @@ DNS 조회
 
 ## 학습 방향
 
-OS는 OSTEP의 큰 목차를 기준으로 가상화, 병행성, 영속성을 각각 2주씩 학습한다. OSTEP을 기본 안내서로 활용하되 반드시 한 권을 순서대로 읽을 필요는 없다. 강의, 공식 문서, 다른 책 등 어떤 자료를 사용해도 되며, 각 주차의 범위와 학습 목표를 충족하면 된다.
+OS는 OSTEP 목차를 기준으로 가상화, 병행성, 영속성을 각각 2주씩 학습한다. 주차별 챕터 범위는 고정한다. 강의, 공식 문서, 다른 책을 사용해도 해당 챕터의 주제와 범위를 모두 다룬다.
 
-세부 챕터는 이해도와 진도에 따라 조정한다. 처음 정한 챕터 수를 채우는 것보다 각 영역의 핵심 질문에 답하고 개념 사이의 연결을 설명하는 것을 우선한다.
+스터디 시작 전에 Intro Ch 1~2를 읽는다. 6주 학습을 마친 뒤 Security Ch 52~57을 별도 범위로 공부한다.
 
 OS 기간에도 다음 진행 방식은 유지한다.
 
@@ -298,7 +298,15 @@ OS 기간에도 다음 진행 방식은 유지한다.
 - 같은 영역을 공부하므로 리뷰할 때 배경지식 부담이 낮아지고, 서로 다른 해석과 자료를 비교할 수 있다.
 - 트러블슈팅 글 대신 학습 전후에 관점이 달라진 지점이나 개념 사이의 연결을 인사이트로 정리한다.
 
-## 5주차 - 가상화 1: 프로세스와 CPU
+## 사전 범위 - Intro: OSTEP Ch 1~2
+
+- 학습 문서: [OSTEP Intro](03_Resource/05_os/00_intro)
+- 운영체제가 자원을 가상화하고 병행 실행을 조정하며 데이터를 영속화하는 이유
+- OSTEP이 가상화, 병행성, 영속성으로 운영체제를 설명하는 방식
+
+---
+
+## 5주차 - 가상화 1: OSTEP Ch 3~11
 
 ### 핵심 학습
 
@@ -307,6 +315,8 @@ OS 기간에도 다음 진행 방식은 유지한다.
 - 제한적 직접 실행
 - CPU 스케줄링의 목적과 기본 정책
 - 멀티 레벨 피드백 큐
+- 추첨 스케줄링
+- 멀티 CPU 스케줄링
 - 문맥 교환과 CPU 가상화 비용
 
 ### 학습 목표
@@ -314,6 +324,7 @@ OS 기간에도 다음 진행 방식은 유지한다.
 - 운영체제가 하나의 CPU를 여러 프로세스가 사용하는 것처럼 보이게 만드는 방식을 설명할 수 있다.
 - 프로세스 생성, 실행, 대기, 종료 흐름을 설명할 수 있다.
 - 스케줄링 정책이 응답 시간, 반환 시간, 공정성에 미치는 영향을 비교할 수 있다.
+- 멀티 CPU 환경에서 캐시 친화성과 작업 이동을 고려해야 하는 이유를 설명할 수 있다.
 - 문맥 교환이 필요한 이유와 비용을 설명할 수 있다.
 
 ### 인사이트 기록
@@ -322,15 +333,17 @@ OS 기간에도 다음 진행 방식은 유지한다.
 
 ---
 
-## 6주차 - 가상화 2: 주소 공간과 메모리
+## 6주차 - 가상화 2: OSTEP Ch 12~24
 
 ### 핵심 학습
 
 - 주소 공간
+- 메모리 API
 - 주소 변환
 - 세그멘테이션과 페이징
+- 빈 공간 관리
 - 페이지 테이블과 TLB
-- 페이지 폴트와 스와핑
+- 페이지 폴트, 페이지 교체, 스와핑
 - 메모리 가상화의 비용과 한계
 
 ### 학습 목표
@@ -346,7 +359,7 @@ OS 기간에도 다음 진행 방식은 유지한다.
 
 ---
 
-## 7주차 - 병행성 1: 스레드와 락
+## 7주차 - 병행성 1: OSTEP Ch 25~29
 
 ### 핵심 학습
 
@@ -370,7 +383,7 @@ OS 기간에도 다음 진행 방식은 유지한다.
 
 ---
 
-## 8주차 - 병행성 2: 동기화와 교착 상태
+## 8주차 - 병행성 2: OSTEP Ch 30~34
 
 ### 핵심 학습
 
@@ -394,7 +407,7 @@ OS 기간에도 다음 진행 방식은 유지한다.
 
 ---
 
-## 9주차 - 영속성 1: I/O와 저장 장치
+## 9주차 - 영속성 1: OSTEP Ch 35~40
 
 ### 핵심 학습
 
@@ -403,42 +416,58 @@ OS 기간에도 다음 진행 방식은 유지한다.
 - 하드 디스크의 구조와 접근 비용
 - 디스크 스케줄링
 - RAID의 성능과 내결함성
-- 저장 장치 추상화의 한계
+- 파일과 디렉터리
+- 파일 시스템 구현
 
 ### 학습 목표
 
 - CPU와 장치가 I/O 요청을 주고받는 흐름을 설명할 수 있다.
 - 저장 장치의 물리적 특성이 접근 지연에 미치는 영향을 설명할 수 있다.
 - RAID 구성이 성능, 용량, 내결함성 사이에서 만드는 절충을 설명할 수 있다.
-- 메모리 접근과 저장 장치 접근의 비용 차이를 애플리케이션 관점에서 설명할 수 있다.
+- 파일과 디렉터리가 저장 장치의 블록에 매핑되는 방식을 설명할 수 있다.
+- 파일 시스템의 주요 자료구조와 파일 접근 경로를 설명할 수 있다.
 
 ### 인사이트 기록
 
-I/O가 단순히 느린 연산이 아니라 장치 특성과 운영체제 정책의 영향을 받는 과정임을 보여주는 내용을 정리한다.
+I/O 장치부터 파일 시스템 구현까지 요청이 거치는 경로와 각 계층의 역할을 연결해 정리한다.
 
 ---
 
-## 10주차 - 영속성 2: 파일 시스템과 데이터 무결성
+## 10주차 - 영속성 2: OSTEP Ch 41~51
 
 ### 핵심 학습
 
-- 파일과 디렉터리 추상화
-- 파일 시스템의 자료구조와 접근 경로
-- 빈 공간 관리와 지역성
-- 충돌 일관성과 저널링
+- Fast File System
+- 파일 시스템 검사와 저널링
 - 로그 구조 파일 시스템
+- Flash 기반 SSD
 - 체크섬과 데이터 무결성
+- 분산 시스템
+- Network File System과 Andrew File System
 
 ### 학습 목표
 
-- 파일과 디렉터리가 저장 장치의 블록에 매핑되는 방식을 설명할 수 있다.
-- 파일을 읽고 쓸 때 파일 시스템 내부에서 일어나는 주요 단계를 설명할 수 있다.
 - 비정상 종료가 파일 시스템 일관성을 깨뜨리는 이유와 복구 방식을 설명할 수 있다.
 - 저널링, 로그 구조 설계, 체크섬이 각각 해결하려는 문제를 구분할 수 있다.
+- Flash 기반 SSD의 특성이 파일 시스템 설계에 미치는 영향을 설명할 수 있다.
+- 분산 파일 시스템의 캐시, 일관성, 장애 문제를 설명할 수 있다.
 
 ### 인사이트 기록
 
-영속성 보장이 단순한 쓰기 완료가 아니라 순서, 복구, 무결성의 문제라는 점을 중심으로 새롭게 이해한 내용을 정리한다.
+복구와 무결성, 분산 파일 시스템을 학습하며 영속성을 보는 관점이 달라진 지점을 정리한다.
+
+---
+
+## 추가 범위 - Security: OSTEP Ch 52~57
+
+- 학습 문서: [OSTEP Security](03_Resource/05_os/13_security)
+- 보안의 목표와 위협 모델
+- 인증
+- 접근 제어
+- 암호학
+- 분산 시스템 보안
+
+Security는 OS 6주 학습을 마친 뒤 별도 범위로 진행한다.
 
 ---
 

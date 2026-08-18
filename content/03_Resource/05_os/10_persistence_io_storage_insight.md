@@ -1,5 +1,5 @@
 ---
-title: I/O와 저장 장치 인사이트
+title: I/O와 파일 시스템 기초 인사이트
 draft: true
 tags:
   - os
@@ -9,9 +9,9 @@ tags:
   - insight
 ---
 
-# I/O와 저장 장치 인사이트
+# I/O와 파일 시스템 기초 인사이트
 
-> I/O를 단순히 느린 연산으로 보던 관점에서 장치 특성과 운영체제 정책을 함께 보는 관점으로 달라진 지점을 기록한다.
+> OSTEP Ch 35~40을 학습하며 I/O 장치부터 파일 시스템 구현까지 연결한 내용을 기록한다.
 
 ## 이번 주 핵심 질문
 
@@ -53,4 +53,4 @@ tags:
 
 ## 함께 읽기
 
-- [I/O와 저장 장치](03_Resource/05_os/09_persistence_io_storage)
+- [I/O와 파일 시스템 기초](03_Resource/05_os/09_persistence_io_storage)
